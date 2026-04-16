@@ -49,4 +49,12 @@ DEPENDENCY_ANALYSIS.md
 CIRCULAR_DEPENDENCIES_ANALYSIS.md
 INDEX.md
 RESEARCH_SUMMARY.md
-
+.ps1
+*.log
+compose_live_run.log
+swagger_check_current.log
+docs/*.log
+docs/*.out
+docs/*.txt
+docs/*.ps1
+docs/_*

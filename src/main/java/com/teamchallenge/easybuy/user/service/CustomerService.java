@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.user.service;
+﻿package com.teamchallenge.easybuy.user.service;
 
 import com.teamchallenge.easybuy.user.dto.AddressDto;
 import com.teamchallenge.easybuy.user.dto.CustomerProfileDto;
@@ -23,6 +23,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
+/**
+ * Provides business operations for CustomerService.
+ */
 @Service
 @RequiredArgsConstructor
 public class CustomerService {

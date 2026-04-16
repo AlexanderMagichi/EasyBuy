@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.user.entity;
+﻿package com.teamchallenge.easybuy.user.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 
+/**
+ * Represents the User persistence entity.
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")

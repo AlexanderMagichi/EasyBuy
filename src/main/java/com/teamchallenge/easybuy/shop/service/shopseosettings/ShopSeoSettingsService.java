@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.service.shopseosettings;
+﻿package com.teamchallenge.easybuy.shop.service.shopseosettings;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopSeoSettings;
@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Provides business operations for ShopSeoSettingsService.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

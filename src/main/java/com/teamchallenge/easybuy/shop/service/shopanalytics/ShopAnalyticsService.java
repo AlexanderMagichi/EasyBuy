@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.service.shopanalytics;
+﻿package com.teamchallenge.easybuy.shop.service.shopanalytics;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopAnalytics;
@@ -21,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Provides business operations for ShopAnalyticsService.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

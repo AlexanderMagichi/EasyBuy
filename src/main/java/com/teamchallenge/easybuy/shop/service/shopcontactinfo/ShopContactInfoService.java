@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.service.shopcontactinfo;
+﻿package com.teamchallenge.easybuy.shop.service.shopcontactinfo;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopContactInfo;
@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Provides business operations for ShopContactInfoService.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

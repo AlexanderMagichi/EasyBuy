@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.user.entity;
+﻿package com.teamchallenge.easybuy.user.entity;
 
 import com.teamchallenge.easybuy.user.entity.Address;
 import jakarta.persistence.*;
@@ -10,6 +10,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
+/**
+ * Represents the Customer persistence entity.
+ */
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor

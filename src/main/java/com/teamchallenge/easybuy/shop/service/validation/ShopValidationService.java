@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.service.validation;
+﻿package com.teamchallenge.easybuy.shop.service.validation;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.dto.ShopDTO;
@@ -6,6 +6,9 @@ import com.teamchallenge.easybuy.shop.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Provides business operations for ShopValidationService.
+ */
 @Service
 @RequiredArgsConstructor
 public class ShopValidationService {

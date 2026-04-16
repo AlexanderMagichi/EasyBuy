@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.service.shoptaxinfo;
+﻿package com.teamchallenge.easybuy.shop.service.shoptaxinfo;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopTaxInfo;
@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Provides business operations for ShopTaxService.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

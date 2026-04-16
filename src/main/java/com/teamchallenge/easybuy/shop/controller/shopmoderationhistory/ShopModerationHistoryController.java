@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.controller.shopmoderationhistory;
+﻿package com.teamchallenge.easybuy.shop.controller.shopmoderationhistory;
 
 import com.teamchallenge.easybuy.shop.dto.shopmoderationhistory.ShopModerationHistoryDTO;
 import com.teamchallenge.easybuy.shop.dto.shopmoderationhistory.ShopModerationReversalDTO;
@@ -18,6 +18,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in ShopModerationHistoryController.
+ */
 @RestController
 @RequestMapping("/api/v1/shops/{shopId}/moderation-history")
 @RequiredArgsConstructor

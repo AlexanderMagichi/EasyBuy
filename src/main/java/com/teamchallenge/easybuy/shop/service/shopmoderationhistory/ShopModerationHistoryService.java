@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.service.shopmoderationhistory;
+﻿package com.teamchallenge.easybuy.shop.service.shopmoderationhistory;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopModerationHistory;
@@ -25,6 +25,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Provides business operations for ShopModerationHistoryService.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

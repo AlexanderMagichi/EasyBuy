@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.auth.controller;
+﻿package com.teamchallenge.easybuy.auth.controller;
 
 import com.teamchallenge.easybuy.auth.dto.*;
 import com.teamchallenge.easybuy.user.entity.User;
@@ -24,6 +24,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * Exposes API endpoints in AuthController.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")

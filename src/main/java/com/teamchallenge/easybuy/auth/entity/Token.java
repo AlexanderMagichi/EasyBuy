@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.auth.entity;
+﻿package com.teamchallenge.easybuy.auth.entity;
 
 import com.teamchallenge.easybuy.user.entity.User;
 import jakarta.persistence.*;
@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Represents the Token persistence entity.
+ */
 @Entity
 @Data
 @Table(name = "token")

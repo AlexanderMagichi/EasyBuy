@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.entity;
+﻿package com.teamchallenge.easybuy.shop.entity;
 
 import com.teamchallenge.easybuy.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +18,9 @@ import java.util.UUID;
         @Index(name = "idx_moderation_action_type", columnList = "action_type"),
         @Index(name = "idx_moderation_created_at", columnList = "created_at")
 })
+/**
+ * Represents the ShopModerationHistory persistence entity.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -158,7 +161,7 @@ public class ShopModerationHistory {
         summary.append(actionType.name());
 
         if (previousStatus != null && newStatus != null) {
-            summary.append(": ").append(previousStatus).append(" → ").append(newStatus);
+            summary.append(": ").append(previousStatus).append(" в†’ ").append(newStatus);
         }
 
         if (reason != null && !reason.trim().isEmpty()) {

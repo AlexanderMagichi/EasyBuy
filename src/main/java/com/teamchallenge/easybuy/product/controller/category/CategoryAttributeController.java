@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.controller.category;
+﻿package com.teamchallenge.easybuy.product.controller.category;
 
 import com.teamchallenge.easybuy.product.dto.category.CategoryAttributeDTO;
 import com.teamchallenge.easybuy.product.entity.category.AttributeType;
@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in CategoryAttributeController.
+ */
 @RestController
 @RequestMapping("/api/category-attributes")
 @Tag(name = "Category Attributes", description = "API for managing category attributes")

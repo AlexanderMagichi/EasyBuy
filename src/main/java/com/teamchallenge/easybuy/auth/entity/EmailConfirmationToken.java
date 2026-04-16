@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.auth.entity;
+﻿package com.teamchallenge.easybuy.auth.entity;
 
 import com.teamchallenge.easybuy.user.entity.User;
 import jakarta.persistence.*;
@@ -7,6 +7,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Represents the EmailConfirmationToken persistence entity.
+ */
 @Entity
 @Data
 @Table(name = "email_confirmation_token")

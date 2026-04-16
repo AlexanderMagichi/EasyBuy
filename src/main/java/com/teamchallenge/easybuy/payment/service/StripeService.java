@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.payment.service;
+﻿package com.teamchallenge.easybuy.payment.service;
 
 import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
@@ -9,6 +9,9 @@ import com.stripe.param.AccountLinkCreateParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * Provides business operations for StripeService.
+ */
 @Service
 public class StripeService {
 

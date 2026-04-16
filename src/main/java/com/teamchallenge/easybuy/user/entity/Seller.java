@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.user.entity;
+﻿package com.teamchallenge.easybuy.user.entity;
 
 import com.teamchallenge.easybuy.user.entity.Address;
 import com.teamchallenge.easybuy.shop.entity.Shop;
@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Represents the Seller persistence entity.
+ */
 @SuperBuilder
 @AllArgsConstructor
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.entity;
+﻿package com.teamchallenge.easybuy.shop.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -24,6 +24,9 @@ import static com.teamchallenge.easybuy.common.util.StringUtils.hasText;
         @Index(name = "idx_contact_info_location", columnList = "city,country"),
         @Index(name = "idx_contact_info_status", columnList = "is_active,is_verified")
 })
+/**
+ * Represents the ShopContactInfo persistence entity.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

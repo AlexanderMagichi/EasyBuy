@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.service.category;
+﻿package com.teamchallenge.easybuy.product.service.category;
 
 import com.teamchallenge.easybuy.product.dto.category.GoodsAttributeValueDTO;
 import com.teamchallenge.easybuy.product.exception.GoodsAttributeValueException;
@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Provides business operations for GoodsAttributeValueService.
+ */
 @Service
 public class GoodsAttributeValueService {
 

@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.user.entity;
+﻿package com.teamchallenge.easybuy.user.entity;
 
 import com.teamchallenge.easybuy.common.enums.AdminLevel;
 import com.teamchallenge.easybuy.common.enums.AdminPermission;
@@ -7,6 +7,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import java.util.Set;
 
+/**
+ * Represents the Admin persistence entity.
+ */
 @SuperBuilder
 @Data
 @AllArgsConstructor

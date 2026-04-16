@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.user.controller;
+﻿package com.teamchallenge.easybuy.user.controller;
 
 import com.teamchallenge.easybuy.user.dto.AddressDto;
 import com.teamchallenge.easybuy.user.dto.CustomerProfileDto;
@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+/**
+ * Exposes API endpoints in CustomerController.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/customer")

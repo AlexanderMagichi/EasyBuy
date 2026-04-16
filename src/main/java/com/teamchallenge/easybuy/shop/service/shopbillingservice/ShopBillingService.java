@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.service.shopbillingservice;
+﻿package com.teamchallenge.easybuy.shop.service.shopbillingservice;
 
 import com.stripe.exception.StripeException;
 import com.teamchallenge.easybuy.shop.entity.Shop;
@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Provides business operations for ShopBillingService.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

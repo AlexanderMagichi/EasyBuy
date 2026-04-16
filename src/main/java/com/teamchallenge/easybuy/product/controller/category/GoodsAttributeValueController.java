@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.controller.category;
+﻿package com.teamchallenge.easybuy.product.controller.category;
 
 import com.teamchallenge.easybuy.product.dto.category.GoodsAttributeValueDTO;
 import com.teamchallenge.easybuy.product.service.category.GoodsAttributeValueService;
@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.UUID;
 
 // todo Note: Caching is implemented at the service level. To control the cache on the client side, you can add @CacheControl.
+/**
+ * Exposes API endpoints in GoodsAttributeValueController.
+ */
 @RestController
 @RequestMapping("/api/attribute-values")
 @Tag(name = "Goods Attribute Values", description = "API for managing goods attribute values")

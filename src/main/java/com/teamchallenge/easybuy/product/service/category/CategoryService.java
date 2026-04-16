@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.service.category;
+﻿package com.teamchallenge.easybuy.product.service.category;
 
 import com.teamchallenge.easybuy.product.dto.category.CategoryDTO;
 import com.teamchallenge.easybuy.product.exception.CategoryNotFoundException;
@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Provides business operations for CategoryService.
+ */
 @Service
 public class CategoryService {
 

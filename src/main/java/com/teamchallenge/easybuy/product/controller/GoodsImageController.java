@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.controller;
+﻿package com.teamchallenge.easybuy.product.controller;
 
 import com.teamchallenge.easybuy.product.dto.GoodsImageDTO;
 import com.teamchallenge.easybuy.product.service.image.GoodsImageService;
@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in GoodsImageController.
+ */
 @RestController
 @RequestMapping("/api/goods-images")
 @Tag(name = "Goods Images", description = "API for managing goods images")

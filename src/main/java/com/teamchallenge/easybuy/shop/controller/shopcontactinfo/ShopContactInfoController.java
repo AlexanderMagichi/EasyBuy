@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.controller.shopcontactinfo;
+﻿package com.teamchallenge.easybuy.shop.controller.shopcontactinfo;
 
 import com.teamchallenge.easybuy.shop.dto.shopcontact.ShopContactInfoDTO;
 import com.teamchallenge.easybuy.shop.service.shopcontactinfo.ShopContactInfoService;
@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in ShopContactInfoController.
+ */
 @RestController
 @RequestMapping("/api/v1/shops/{shopId}/contact-info")
 @RequiredArgsConstructor

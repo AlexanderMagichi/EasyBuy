@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.controller.shopseosettings;
+﻿package com.teamchallenge.easybuy.shop.controller.shopseosettings;
 
 import com.teamchallenge.easybuy.shop.dto.ShopSeoSettingsDTO;
 import com.teamchallenge.easybuy.shop.service.shopseosettings.ShopSeoSettingsService;
@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in ShopSeoSettingsController.
+ */
 @RestController
 @RequestMapping("/api/v1/shops/{shopId}/seo-settings")
 @RequiredArgsConstructor

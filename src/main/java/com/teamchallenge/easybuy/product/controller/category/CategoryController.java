@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.controller.category;
+﻿package com.teamchallenge.easybuy.product.controller.category;
 
 import com.teamchallenge.easybuy.product.dto.category.CategoryDTO;
 import com.teamchallenge.easybuy.product.service.category.CategoryService;
@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in CategoryController.
+ */
 @RestController
 @RequestMapping("/api/categories")
 @Tag(name = "Categories", description = "API for managing categories")

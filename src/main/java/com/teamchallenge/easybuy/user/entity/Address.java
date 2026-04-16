@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.user.entity;
+﻿package com.teamchallenge.easybuy.user.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * Represents the Address persistence entity.
+ */
 @Entity
 @Data
 @Table(name = "address")

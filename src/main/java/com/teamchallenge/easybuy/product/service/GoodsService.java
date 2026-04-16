@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.service;
+﻿package com.teamchallenge.easybuy.product.service;
 
 import com.teamchallenge.easybuy.product.dto.GoodsDTO;
 import com.teamchallenge.easybuy.user.entity.Manager;
@@ -27,6 +27,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Provides business operations for GoodsService.
+ */
 @Service
 public class GoodsService {
 

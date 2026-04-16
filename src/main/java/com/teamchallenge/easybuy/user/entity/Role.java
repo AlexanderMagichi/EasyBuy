@@ -1,5 +1,8 @@
-package com.teamchallenge.easybuy.user.entity;
+﻿package com.teamchallenge.easybuy.user.entity;
 
+/**
+ * Represents the Role domain model.
+ */
 public enum Role {
     CUSTOMER,
     SELLER,

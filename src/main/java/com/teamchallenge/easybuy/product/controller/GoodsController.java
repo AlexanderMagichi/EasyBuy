@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.controller;
+﻿package com.teamchallenge.easybuy.product.controller;
 
 import com.teamchallenge.easybuy.product.dto.GoodsDTO;
 import com.teamchallenge.easybuy.product.entity.Goods;
@@ -19,6 +19,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in GoodsController.
+ */
 @RestController
 @RequestMapping("/api/goods")
 @Tag(name = "Goods", description = "API for managing goods")

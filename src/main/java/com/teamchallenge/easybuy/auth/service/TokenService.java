@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.auth.service;
+﻿package com.teamchallenge.easybuy.auth.service;
 
 import com.teamchallenge.easybuy.auth.entity.Token;
 import com.teamchallenge.easybuy.user.entity.User;
@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * Provides business operations for TokenService.
+ */
 @Service
 @RequiredArgsConstructor
 public class TokenService {

@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.entity;
+﻿package com.teamchallenge.easybuy.shop.entity;
 
 import com.teamchallenge.easybuy.common.persistence.BaseEntity;
 import com.teamchallenge.easybuy.product.entity.Goods;
@@ -34,6 +34,9 @@ import java.util.UUID;
         @Index(name = "idx_shop_shopId", columnList = "shop_id"),
         @Index(name = "idx_shop_name", columnList = "shop_name")
 })
+/**
+ * Represents the Shop persistence entity.
+ */
 public class Shop extends BaseEntity {
 
     @Id

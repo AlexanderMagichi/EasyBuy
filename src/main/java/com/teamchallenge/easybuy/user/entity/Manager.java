@@ -1,10 +1,13 @@
-package com.teamchallenge.easybuy.user.entity;
+﻿package com.teamchallenge.easybuy.user.entity;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Represents the Manager persistence entity.
+ */
 @SuperBuilder
 @Data
 @AllArgsConstructor

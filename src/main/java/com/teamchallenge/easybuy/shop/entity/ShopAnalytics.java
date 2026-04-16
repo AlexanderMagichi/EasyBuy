@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.entity;
+﻿package com.teamchallenge.easybuy.shop.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -23,6 +23,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
+/**
+ * Represents the ShopAnalytics persistence entity.
+ */
 @Entity
 @Table(name = "shop_analytics")
 @Getter

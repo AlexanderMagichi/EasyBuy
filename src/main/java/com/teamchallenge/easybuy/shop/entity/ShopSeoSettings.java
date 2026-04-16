@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.entity;
+﻿package com.teamchallenge.easybuy.shop.entity;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +15,9 @@ import java.util.UUID;
         @Index(name = "idx_shop_seo_meta_title", columnList = "meta_title"),
         @Index(name = "idx_shop_seo_meta_keywords", columnList = "meta_keywords")
 })
+/**
+ * Represents the ShopSeoSettings persistence entity.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

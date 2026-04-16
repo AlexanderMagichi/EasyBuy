@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.controller.shoptaxinfo;
+﻿package com.teamchallenge.easybuy.shop.controller.shoptaxinfo;
 
 import com.teamchallenge.easybuy.shop.dto.shoptaxinfo.ShopTaxInfoDTO;
 import com.teamchallenge.easybuy.shop.service.shoptaxinfo.ShopTaxService;
@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in ShopTaxController.
+ */
 @RestController
 @RequestMapping("/api/v1/shops/{shopId}/tax-info")
 @RequiredArgsConstructor

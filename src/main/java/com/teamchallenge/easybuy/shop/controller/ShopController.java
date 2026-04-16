@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.controller;
+﻿package com.teamchallenge.easybuy.shop.controller;
 
 import com.teamchallenge.easybuy.shop.dto.ShopDTO;
 import com.teamchallenge.easybuy.shop.dto.ShopSearchParams;
@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in ShopController.
+ */
 @RestController
 @RequestMapping("/api/v1/shops")
 @RequiredArgsConstructor

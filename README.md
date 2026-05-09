@@ -4,7 +4,8 @@ EasyBuy is a Spring Boot marketplace project built with a feature-based architec
 PostgreSQL persistence, Stripe payments, Cloudinary media handling, email notifications, and full Swagger documentation.
 
 **Architecture migration status:** ✅ completed on 2026-04-14
-**You can check Swagger: http://89.168.115.138:8080/swagger-ui.html
+
+You can check Swagger: http://89.168.115.138:8080/swagger-ui.html
 
 ## Project overview
 

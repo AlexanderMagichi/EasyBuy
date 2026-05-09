@@ -5,6 +5,8 @@ PostgreSQL persistence, Stripe payments, Cloudinary media handling, email notifi
 
 **Architecture migration status:** ✅ completed on 2026-04-14
 
+You can check Swagger: http://89.168.115.138:8080/swagger-ui.html
+
 ## Project overview
 
 The repository currently contains a marketplace domain with the following features:

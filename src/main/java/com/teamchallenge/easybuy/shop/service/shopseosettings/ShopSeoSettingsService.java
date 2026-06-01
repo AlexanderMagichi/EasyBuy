@@ -17,6 +17,8 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
@@ -29,10 +31,15 @@ import java.util.UUID;
 @Transactional
 public class ShopSeoSettingsService {
 
+    private static final String DEFAULT_OG_TYPE = "website";
+
     private final ShopSeoSettingsRepository seoRepository;
     private final ShopRepository shopRepository;
     private final ShopSeoSettingsMapper mapper;
     private final ShopAccessGuard accessGuard;
+
+    @Value("${frontend.server.url}")
+    private String frontendServerUrl;
 
     @Transactional(readOnly = true)
     public ShopSeoSettingsDTO getByShopId(@NotNull UUID shopId) {
@@ -61,6 +68,7 @@ public class ShopSeoSettingsService {
         ShopSeoSettings entity = mapper.toEntity(dto);
         entity.setId(shopId);
         entity.setShop(shop);
+        applyOgDefaults(shop, entity);
         entity.calculateSeoScore();
 
         ShopSeoSettings saved = seoRepository.save(entity);
@@ -77,6 +85,8 @@ public class ShopSeoSettingsService {
                 .orElseThrow(() -> new IllegalArgumentException("SEO settings not found for shop: " + shopId));
 
         mapper.updateEntityFromDto(dto, entity);
+        entity.setShop(findShopOrThrow(shopId));
+        applyOgDefaults(entity.getShop(), entity);
         entity.calculateSeoScore();
 
         ShopSeoSettings updated = seoRepository.save(entity);
@@ -106,6 +116,81 @@ public class ShopSeoSettingsService {
     private Shop findShopOrThrow(UUID shopId) {
         return shopRepository.findById(shopId)
                 .orElseThrow(() -> new ShopNotFoundException("Shop not found: " + shopId));
+    }
+
+    private void applyOgDefaults(Shop shop, ShopSeoSettings entity) {
+        if (shop == null || entity == null) {
+            return;
+        }
+
+        String canonicalUrl = buildShopUrl(shop);
+        if (!StringUtils.hasText(entity.getCanonicalUrl())) {
+            entity.setCanonicalUrl(canonicalUrl);
+        }
+
+        if (!StringUtils.hasText(entity.getOgUrl())) {
+            entity.setOgUrl(StringUtils.hasText(entity.getCanonicalUrl()) ? entity.getCanonicalUrl() : canonicalUrl);
+        }
+
+        if (!StringUtils.hasText(entity.getOgType())) {
+            entity.setOgType(DEFAULT_OG_TYPE);
+        }
+
+        if (!StringUtils.hasText(entity.getOgSiteName())) {
+            entity.setOgSiteName(shop.getShopName());
+        }
+
+        if (!StringUtils.hasText(entity.getOgLocale())) {
+            entity.setOgLocale(normalizeLocale(shop.getLanguage()));
+        }
+
+        if (!StringUtils.hasText(entity.getOgTitle())) {
+            entity.setOgTitle(entity.getDefaultMetaTitle());
+        }
+
+        if (!StringUtils.hasText(entity.getOgDescription())) {
+            entity.setOgDescription(entity.getDefaultMetaDescription());
+        }
+
+        if (!StringUtils.hasText(entity.getOgImageAlt())) {
+            entity.setOgImageAlt(shop.getShopName());
+        }
+
+        if (!StringUtils.hasText(entity.getOgImageSecureUrl()) && StringUtils.hasText(entity.getOgImageUrl())
+                && entity.getOgImageUrl().startsWith("https://")) {
+            entity.setOgImageSecureUrl(entity.getOgImageUrl());
+        }
+
+        if (!StringUtils.hasText(entity.getOgImageUrl()) && StringUtils.hasText(shop.getShopContactInfo() != null ? shop.getShopContactInfo().getLogoUrl() : null)) {
+            entity.setOgImageUrl(shop.getShopContactInfo().getLogoUrl());
+        }
+
+        if (!StringUtils.hasText(entity.getOgImageSecureUrl()) && StringUtils.hasText(entity.getOgImageUrl())
+                && entity.getOgImageUrl().startsWith("https://")) {
+            entity.setOgImageSecureUrl(entity.getOgImageUrl());
+        }
+    }
+
+    private String buildShopUrl(Shop shop) {
+        String baseUrl = StringUtils.hasText(frontendServerUrl) ? frontendServerUrl : "";
+        String slug = StringUtils.hasText(shop.getSlug()) ? shop.getSlug() : String.valueOf(shop.getShopId());
+        return baseUrl + "/shops/" + slug;
+    }
+
+    private String normalizeLocale(String language) {
+        if (!StringUtils.hasText(language)) {
+            return "en_US";
+        }
+
+        String normalized = language.trim().toLowerCase();
+        return switch (normalized) {
+            case "uk" -> "uk_UA";
+            case "en" -> "en_US";
+            case "pl" -> "pl_PL";
+            case "de" -> "de_DE";
+            case "fr" -> "fr_FR";
+            default -> normalized.replace('-', '_');
+        };
     }
 }
 

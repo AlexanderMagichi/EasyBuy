@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -27,6 +28,7 @@ import org.springframework.web.filter.CorsFilter;
  * registers the JWT filter, sets up password encryption, and configures authentication provider.
  */
 @Configuration
+@Profile("!dev") // TODO: Security is disabled for 'dev' profile. Remove @Profile or change to production-safe setting before releasing to production.
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {

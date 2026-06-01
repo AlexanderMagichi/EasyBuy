@@ -1,6 +1,5 @@
 package com.teamchallenge.easybuy.cart.entity;
 
-import com.teamchallenge.easybuy.cart.ShoppingCart;
 import com.teamchallenge.easybuy.product.entity.Goods;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;

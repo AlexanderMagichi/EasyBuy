@@ -140,6 +140,7 @@ public class ShopController {
         ShopDTO dto = new ShopDTO();
         dto.setShopName(request.getShopName());
         dto.setShopDescription(request.getShopDescription());
+        dto.setSlug(request.getSlug());
         dto.setSellerId(request.getSellerId());
         dto.setCurrency(request.getCurrency());
         dto.setLanguage(request.getLanguage());
@@ -152,6 +153,7 @@ public class ShopController {
         dto.setShopName(request.getShopName());
         dto.setShopDescription(request.getShopDescription());
         dto.setShopStatus(request.getShopStatus());
+        dto.setSlug(request.getSlug());
         dto.setSellerId(request.getSellerId());
         dto.setCurrency(request.getCurrency());
         dto.setLanguage(request.getLanguage());
@@ -164,6 +166,7 @@ public class ShopController {
         dto.setShopName(request.getShopName());
         dto.setShopDescription(request.getShopDescription());
         dto.setShopStatus(request.getShopStatus());
+        dto.setSlug(request.getSlug());
         dto.setSellerId(request.getSellerId());
         dto.setCurrency(request.getCurrency());
         dto.setLanguage(request.getLanguage());

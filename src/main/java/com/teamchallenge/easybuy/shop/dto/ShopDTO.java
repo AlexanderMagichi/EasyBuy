@@ -84,8 +84,10 @@ public class ShopDTO {
             example = "https://shop.com/logo.png")
     private String shopLogoUrl;
 
-    @Schema(description = "URL-friendly identifier (slug) of the shop.",
-            example = "coffee-world-kyiv")
+    @Size(min = 3, max = 100, message = "Slug must be between 3 and 100 characters long")
+    @Pattern(regexp = "^[a-z0-9-]+$", message = "Slug must contain only lowercase letters, numbers, and hyphens")
+    @Schema(description = "URL-friendly identifier (slug) of the shop. Lowercase letters, numbers, and hyphens only.",
+            example = "coffee-world-kyiv", minLength = 3, maxLength = 100)
     private String slug;
 
     @Schema(description = "Reason why the shop was rejected, if applicable.",

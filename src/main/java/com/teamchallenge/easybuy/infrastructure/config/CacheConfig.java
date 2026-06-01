@@ -15,7 +15,14 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("goods", "goodsSearch", "categories", "goodsImages");
+        // Добавили "categoryAttributes" в список разрешенных кэшей
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager(
+                "goods",
+                "goodsSearch",
+                "categories",
+                "goodsImages",
+                "categoryAttributes"
+        );
         cacheManager.setCaffeine(caffeineCacheBuilder());
         return cacheManager;
     }
@@ -25,6 +32,5 @@ public class CacheConfig {
                 .expireAfterWrite(10, TimeUnit.MINUTES)
                 .maximumSize(1000)
                 .recordStats();
-
     }
 }

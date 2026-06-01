@@ -116,7 +116,10 @@ public class Shop extends BaseEntity {
     @Schema(description = "Type of store, e.g. Sale, Manufacturer, Reseller", example = "Producer")
     private ShopType shopType;
 
-    @Column(name = "slug", unique = true)
+    @NotBlank(message = "Slug is required")
+    @Size(min = 3, max = 100, message = "Slug must be between 3 and 100 characters long")
+    @Pattern(regexp = "^[a-z0-9-]+$", message = "Slug must contain only lowercase letters, numbers, and hyphens")
+    @Column(name = "slug", unique = true, length = 100)
     private String slug;
 
     @Column(name = "rejection_reason", columnDefinition = "TEXT")

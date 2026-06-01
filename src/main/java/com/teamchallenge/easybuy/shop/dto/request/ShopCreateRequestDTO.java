@@ -2,6 +2,7 @@ package com.teamchallenge.easybuy.shop.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -23,6 +24,11 @@ public class ShopCreateRequestDTO {
     @Size(max = 1000)
     @Schema(description = "Shop description", example = "Leading seller of shoes and dresses.", requiredMode = Schema.RequiredMode.REQUIRED)
     private String shopDescription;
+
+    @Size(min = 3, max = 100)
+    @Pattern(regexp = "^[a-z0-9-]+$")
+    @Schema(description = "URL-friendly identifier (slug) of the shop", example = "mystore-shoes")
+    private String slug;
 
     @Schema(description = "Seller ID (required for ADMIN, ignored for SELLER)", example = "123e4567-e89b-12d3-a456-426614174000")
     private UUID sellerId;

@@ -59,19 +59,25 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AUTH_WHITELIST).permitAll()
+                                // TODO: Temporary allowed all requests for development purposes.
+                                //  Remove 'anyRequest().permitAll()' and restore role-based restrictions once user management and auth flow are implemented.
+                                .anyRequest().permitAll()
+                        /* .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/user/**").hasAnyRole("ADMIN", "CUSTOMER", "SELLER")
                         .requestMatchers("/api/seller/**").hasAnyRole("ADMIN", "SELLER")
                         .requestMatchers("/api/customer/**").hasAnyRole("ADMIN", "CUSTOMER")
                         .anyRequest().authenticated()
+                        */
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, authEx) ->
                                 res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                         .accessDeniedHandler(customAccessDeniedHandler)
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                );
+        // TODO: Uncomment the JWT filter block below after completing the user authentication logic.
+        // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
     }
 

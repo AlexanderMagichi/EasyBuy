@@ -6,6 +6,7 @@ import com.teamchallenge.easybuy.shop.dto.request.ShopCreateRequestDTO;
 import com.teamchallenge.easybuy.shop.dto.request.ShopPatchRequestDTO;
 import com.teamchallenge.easybuy.shop.dto.request.ShopUpdateRequestDTO;
 import com.teamchallenge.easybuy.shop.service.ShopService;
+import com.teamchallenge.easybuy.user.service.RBACGuardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,6 +30,7 @@ import java.util.UUID;
 public class ShopController {
 
     private final ShopService shopService;
+    private final RBACGuardService rbacGuardService;
 
     // ===================== GET ALL =====================
 
@@ -60,6 +62,7 @@ public class ShopController {
     public ResponseEntity<ShopDTO> createShop(
             @Valid @RequestBody ShopCreateRequestDTO request) {
 
+        // Shop creation is allowed for any SELLER — no store-scoped check needed
         ShopDTO shopDTO = mapCreateRequestToShopDto(request);
 
         ShopDTO created = shopService.createShop(shopDTO);
@@ -78,6 +81,7 @@ public class ShopController {
             @PathVariable @NotNull UUID id,
             @Valid @RequestBody ShopUpdateRequestDTO request) {
 
+        rbacGuardService.requireStoreOwner(id);
         ShopDTO shopDTO = mapUpdateRequestToShopDto(request);
 
         return ResponseEntity.ok(shopService.updateShop(id, shopDTO));
@@ -92,6 +96,7 @@ public class ShopController {
             @PathVariable @NotNull UUID id,
             @RequestBody ShopPatchRequestDTO request) {
 
+        rbacGuardService.requireStoreOwner(id);
         ShopDTO shopDTO = mapPatchRequestToShopDto(request);
 
         return ResponseEntity.ok(shopService.patchShop(id, shopDTO));
@@ -105,6 +110,7 @@ public class ShopController {
             @PathVariable @NotNull UUID id,
             @RequestBody ShopDTO shopDTO) {
 
+        rbacGuardService.requireStoreOwner(id);
         return ResponseEntity.ok(shopService.updateShopProfile(id, shopDTO));
     }
 
@@ -116,6 +122,7 @@ public class ShopController {
     public ResponseEntity<Void> deleteShop(
             @PathVariable @NotNull UUID id) {
 
+        rbacGuardService.requireCanModerate();
         shopService.deleteShop(id);
         return ResponseEntity.noContent().build();
     }

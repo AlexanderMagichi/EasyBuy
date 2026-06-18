@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.auth.repository;
 
 import com.teamchallenge.easybuy.auth.entity.Token;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface TokenRepository extends JpaRepository<Token, Integer> {
     Optional<Token> findByToken(String token);
 
-    void deleteAllByUser(User user);
+    void deleteAllByUser(UserEntity user);
 
-    List<Token> findAllByUserAndRevokedFalse(User user);
+    List<Token> findAllByUserAndRevokedFalse(UserEntity user);
 }

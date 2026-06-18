@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.auth.repository;
 
 import com.teamchallenge.easybuy.auth.entity.PasswordResetToken;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +15,5 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
 
     void deleteAllByExpiresAtBefore(LocalDateTime expiresAt);
 
-    void deleteAllByUser(User user);
+    void deleteAllByUser(UserEntity user);
 }

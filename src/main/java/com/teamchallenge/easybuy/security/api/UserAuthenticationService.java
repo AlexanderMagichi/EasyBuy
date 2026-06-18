@@ -1,0 +1,84 @@
+package com.teamchallenge.easybuy.security.api;
+
+
+import com.teamchallenge.easybuy.security.exception.InvalidCredentialsException;
+import com.teamchallenge.easybuy.security.exception.UserAccountLockedException;
+import com.teamchallenge.easybuy.security.jwt.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class UserAuthenticationService {
+
+    @Value("${login-attempts.lockout-duration-minutes}")
+    private int userAccountLockoutDurationMinutes;
+
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+    private final LoginFailureHandler loginFailureHandler;
+    private final ResetLoginAttemptsService resetLoginAttemptsService;
+
+    public UserAuthenticationResponse authenticate(final UserAuthenticationRequest request) {
+        String userEmail = request.getEmail();
+        String userPassword = request.getPassword();
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userEmail, userPassword)
+            );
+            if (!(authentication.getPrincipal() instanceof UserDetails userDetails)) {
+                // amazonq-ignore-next-line
+                throw new InvalidCredentialsException();
+            }
+            return buildResponse(userDetails, userEmail);
+
+        } catch (UsernameNotFoundException exception) {
+            log.warn("auth.failed: reason=user_not_found");
+            throw new InvalidCredentialsException(exception);
+        } catch (BadCredentialsException exception) {
+            log.warn("auth.failed: reason=invalid_credentials");
+            loginFailureHandler.handle(userEmail);
+            throw new InvalidCredentialsException(exception);
+        } catch (LockedException exception) {
+            log.warn("auth.failed: reason=account_locked");
+            throw new UserAccountLockedException(userAccountLockoutDurationMinutes);
+        } catch (AuthenticationException exception) {
+            log.error("auth.error: message={}", exception.getMessage(), exception);
+            throw exception;
+        }
+    }
+// amazonq-ignore-next-line
+
+    public UserAuthenticationResponse authenticate(final UserDetails userDetails, String userEmail) {
+        return buildResponse(userDetails, userEmail);
+    }
+
+    private static String maskEmail(String email) {
+        if (email == null || !email.contains("@")) return "***";
+        int at = email.indexOf('@');
+        return (at > 1 ? email.charAt(0) + "***" : "***") + email.substring(at);
+    }
+
+    private UserAuthenticationResponse buildResponse(UserDetails userDetails, String userEmail) {
+        String jwtToken = jwtTokenProvider.generateToken(userDetails);
+        String jwtRefreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+        log.info("auth.token.generated: email={}", maskEmail(userEmail));
+        resetLoginAttemptsService.reset(userEmail);
+        UserAuthenticationResponse response = new UserAuthenticationResponse();
+        response.setToken(jwtToken);
+        response.setRefreshToken(jwtRefreshToken);
+        return response;
+    }
+}

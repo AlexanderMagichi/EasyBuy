@@ -1,6 +1,6 @@
 package com.teamchallenge.easybuy.shop.entity;
 
-import com.teamchallenge.easybuy.common.persistence.BaseEntity;
+import com.teamchallenge.easybuy.infrastructure.persistence.BaseEntity;
 import com.teamchallenge.easybuy.product.entity.Goods;
 import com.teamchallenge.easybuy.user.entity.Manager;
 import com.teamchallenge.easybuy.user.entity.Seller;
@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
@@ -34,6 +35,7 @@ import java.util.UUID;
         @Index(name = "idx_shop_shopId", columnList = "shop_id"),
         @Index(name = "idx_shop_name", columnList = "shop_name")
 })
+@SQLRestriction("deleted_at IS NULL")
 public class Shop extends BaseEntity {
 
     @Id
@@ -178,6 +180,12 @@ public class Shop extends BaseEntity {
     @Builder.Default
     @Schema(description = "List of manager link records for this shop")
     private List<Manager> shopManagers = new ArrayList<>();
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
+
+    @Column(name = "deleted_by")
+    private UUID deletedBy;
 
     // Lifecycle callbacks
 

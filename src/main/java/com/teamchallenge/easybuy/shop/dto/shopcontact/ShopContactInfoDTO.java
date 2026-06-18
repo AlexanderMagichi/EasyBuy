@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.shop.dto.shopcontact;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.teamchallenge.easybuy.common.enums.ContactMethod;
+import com.teamchallenge.easybuy.infrastructure.enums.ContactMethod;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.URL;
 import java.time.Instant;
 import java.util.UUID;
 
-import static com.teamchallenge.easybuy.common.util.StringUtils.hasText;
+import static com.teamchallenge.easybuy.infrastructure.util.StringUtils.hasText;
 
 @Data
 @Builder

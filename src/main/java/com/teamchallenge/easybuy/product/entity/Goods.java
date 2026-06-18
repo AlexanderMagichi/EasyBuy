@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -25,6 +26,7 @@ import java.util.UUID;
         @Index(name = "idx_goods_shopId", columnList = "shop_id")
 })
 @Schema(description = "Goods entity used to display goods in the catalog.")
+@SQLRestriction("deleted_at IS NULL")
 public class Goods {
 
     @Id
@@ -122,6 +124,12 @@ public class Goods {
     @Builder.Default
     @Schema(description = "List of additional images for the product")
     private List<GoodsImage> additionalImages = new ArrayList<>();
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
+
+    @Column(name = "deleted_by")
+    private UUID deletedBy;
 
     @PrePersist
     @Schema(hidden = true)

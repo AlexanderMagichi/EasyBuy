@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.shop.repository.shopcontact;
 
 import com.teamchallenge.easybuy.shop.entity.ShopContactInfo;
-import com.teamchallenge.easybuy.common.enums.ContactMethod;
+import com.teamchallenge.easybuy.infrastructure.enums.ContactMethod;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;

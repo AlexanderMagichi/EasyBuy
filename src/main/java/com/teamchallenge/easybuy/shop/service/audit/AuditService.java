@@ -1,7 +1,6 @@
 package com.teamchallenge.easybuy.shop.service.audit;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
-import com.teamchallenge.easybuy.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;

@@ -6,15 +6,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.validator.constraints.URL;
 
-import com.teamchallenge.easybuy.common.enums.ContactMethod;
+import com.teamchallenge.easybuy.infrastructure.enums.ContactMethod;
 
 import java.time.Instant;
 import java.util.UUID;
 
-import static com.teamchallenge.easybuy.common.util.StringUtils.hasText;
+import static com.teamchallenge.easybuy.infrastructure.util.StringUtils.hasText;
 
 @Entity
 @Table(name = "shop_contact_info", indexes = {

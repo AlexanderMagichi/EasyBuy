@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.auth.controller;
 
 import com.teamchallenge.easybuy.auth.dto.*;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.infrastructure.image.CloudinaryImageService;
 import com.teamchallenge.easybuy.auth.service.AuthenticationService;
 import com.teamchallenge.easybuy.auth.service.EmailConfirmationService;
@@ -57,13 +57,13 @@ public class AuthController {
                             examples = @ExampleObject(
                                     name = "Validation error",
                                     value = "{\"email\": \"Incorrect email format\", \"password\": \"Password cannot be empty\"}"
-                            )
+                             )
                     )
             )
     })
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto registerRequestDto) {
-        User user = authenticationService.register(registerRequestDto);
+        UserEntity user = authenticationService.register(registerRequestDto);
         emailConfirmationService.sendConfirmationEmail(user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -3,29 +3,62 @@ package com.teamchallenge.easybuy.user.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-@Entity
-@Data
-@Table(name = "address")
-@RequiredArgsConstructor
-@AllArgsConstructor
+@Getter
 @Builder
-public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
-    private UUID id;
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "address")
+public class Address implements Serializable {
 
-    @Column(name = "country")
+    @Id
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID addressId;
+
+    @Column(name = "country", nullable = false)
     private String country;
 
-    @Column(name = "city")
+    @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "street")
-    private String street;
+    @Column(name = "line", nullable = false)
+    private String line;
+
+    @Column(name = "postcode", nullable = false)
+    private String postcode;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Address address = (Address) o;
+        return new EqualsBuilder()
+                .append(addressId, address.addressId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(addressId)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + addressId +
+                '}';
+    }
 }

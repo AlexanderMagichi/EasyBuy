@@ -1,6 +1,6 @@
 package com.teamchallenge.easybuy.auth.entity;
 
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,7 +20,7 @@ public class EmailConfirmationToken {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;

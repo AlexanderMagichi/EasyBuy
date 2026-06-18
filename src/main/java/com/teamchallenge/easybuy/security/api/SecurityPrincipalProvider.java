@@ -1,0 +1,34 @@
+package com.teamchallenge.easybuy.security.api;
+
+
+import com.teamchallenge.easybuy.user.converter.UserDtoConverter;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
+import com.teamchallenge.easybuy.openapi.dto.UserDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class SecurityPrincipalProvider {
+
+    private final UserDtoConverter userDtoConverter;
+
+    public UserDto get() {
+        return userDtoConverter.toDto(getAuthenticatedUser());
+    }
+
+    public UUID getUserId() {
+        return getAuthenticatedUser().getId();
+    }
+
+    private UserEntity getAuthenticatedUser() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof UserEntity userEntity)) {
+            throw new IllegalStateException("No authenticated UserEntity in security context");
+        }
+        return userEntity;
+    }
+}

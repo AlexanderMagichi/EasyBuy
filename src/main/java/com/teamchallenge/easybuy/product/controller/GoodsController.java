@@ -4,13 +4,14 @@ import com.teamchallenge.easybuy.product.dto.GoodsDTO;
 import com.teamchallenge.easybuy.product.entity.Goods;
 import com.teamchallenge.easybuy.product.entity.category.Category;
 import com.teamchallenge.easybuy.product.service.GoodsService;
+import com.teamchallenge.easybuy.user.service.RBACGuardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +22,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/goods")
+@RequiredArgsConstructor
 @Tag(name = "Goods", description = "API for managing goods")
 public class GoodsController {
 
     private final GoodsService goodsService;
-
-    @Autowired
-    public GoodsController(GoodsService goodsService) {
-        this.goodsService = goodsService;
-    }
+    private final RBACGuardService rbacGuardService;
 
     @GetMapping
     @Operation(summary = "Get all goods with optional filters", responses = {
@@ -79,6 +77,7 @@ public class GoodsController {
                     content = @Content(schema = @Schema(implementation = GoodsDTO.class)))
     })
     public ResponseEntity<GoodsDTO> createGoods(@Valid @RequestBody GoodsDTO dto) { // Added @Valid
+        rbacGuardService.requireCanManageProducts(dto.getShopId());
         return ResponseEntity.status(201).body(goodsService.createGoods(dto));
     }
 
@@ -90,6 +89,7 @@ public class GoodsController {
             @ApiResponse(responseCode = "404", description = "Goods not found")
     })
     public ResponseEntity<GoodsDTO> updateGoods(@PathVariable UUID id, @Valid @RequestBody GoodsDTO dto) { // Added @Valid
+        rbacGuardService.requireCanManageProducts(dto.getShopId());
         return ResponseEntity.ok(goodsService.updateGoods(id, dto));
     }
 
@@ -99,7 +99,9 @@ public class GoodsController {
             @ApiResponse(responseCode = "200", description = "Successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Goods not found")
     })
-    public ResponseEntity<Void> deleteGoods(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteGoods(@PathVariable UUID id,
+                                                @RequestParam UUID shopId) {
+        rbacGuardService.requireCanManageProducts(shopId);
         goodsService.deleteGoods(id);
         return ResponseEntity.ok().build();
     }

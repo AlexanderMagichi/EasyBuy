@@ -84,6 +84,9 @@ public class UserEntity extends AuditableEntity implements UserDetails {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     // --- Методы UserDetails ---
 
     @Override

@@ -1,78 +1,113 @@
 package com.teamchallenge.easybuy.user.endpoint;
 
-import com.teamchallenge.easybuy.openapi.dto.DeliveryAddressDto;
-import com.teamchallenge.easybuy.openapi.dto.DeliveryAddressRequest;
-import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
+import com.teamchallenge.easybuy.email.api.*;
+import com.teamchallenge.easybuy.filestorage.file.*;
+import com.teamchallenge.easybuy.openapi.dto.*;
+import com.teamchallenge.easybuy.security.api.*;
 import com.teamchallenge.easybuy.user.api.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.teamchallenge.easybuy.user.api.avatar.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.UUID;
 
-/**
- * Controller for managing user delivery addresses.
- * Provides endpoints for CRUD operations and default address configuration.
- */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(UserEndpoint.API_CUSTOMERS + "/addresses")
-@Tag(name = "Delivery Addresses", description = "Operations for managing user delivery addresses")
-public class DeliveryAddressEndpoint {
+@Validated
+@RequestMapping(value = UserEndpoint.API_CUSTOMERS)
+public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.UserApi {
 
+    public static final String API_CUSTOMERS = "/api/v1/users";
+
+    private final UpdateUserOperationPerformer updateUserOperationPerformer;
+    private final SingleUserProvider singleUserProvider;
+    private final ChangeUserPasswordOperationPerformer changeUserPasswordOperationPerformer;
+    private final DeleteUserOperationPerformer deleteUserOperationPerformer;
     private final SecurityPrincipalProvider securityPrincipalProvider;
-    private final DeliveryAddressProvider provider;
-    private final DeliveryAddressCreator creator;
-    private final DeliveryAddressUpdater updater;
-    private final DeliveryAddressDeleter deleter;
-    private final DeliveryAddressDefaultSetter defaultSetter;
+    private final UserAvatarUploader userAvatarUploader;
+    private final FileDeleter fileDeleter;
+    private final UserAvatarLinkProvider userAvatarLinkProvider;
+    private final EmailTokenConformer emailTokenConformer;
 
+    @Override
     @GetMapping
-    @Operation(summary = "Get all addresses", description = "Retrieves a list of all saved delivery addresses for the current user.")
-    public ResponseEntity<List<DeliveryAddressDto>> getAll() {
+    public ResponseEntity<UserDto> getUserProfile() {
         var userId = securityPrincipalProvider.getUserId();
-        log.info("delivery_address.get_all: userId={}", userId);
-        return ResponseEntity.ok(provider.getAll(userId));
+        log.info("user.profile.get: userId={}", userId);
+        return ResponseEntity.ok(singleUserProvider.getUserById(userId));
     }
 
-    @PostMapping
-    @Operation(summary = "Create an address", description = "Adds a new delivery address to the user's profile.")
-    public ResponseEntity<DeliveryAddressDto> create(@Valid @RequestBody DeliveryAddressRequest request) {
+    @Override
+    @PutMapping
+    public ResponseEntity<UserDto> editUserProfile(@Valid @RequestBody UpdateUserAccountRequest updateUserAccountRequest) {
         var userId = securityPrincipalProvider.getUserId();
-        log.info("delivery_address.create: userId={}", userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(creator.create(userId, request));
+        log.info("user.profile.update: userId={}", userId);
+        return ResponseEntity.ok(updateUserOperationPerformer.updateUser(updateUserAccountRequest));
     }
 
-    @PutMapping("/{addressId}")
-    @Operation(summary = "Update an address", description = "Updates details of an existing delivery address.")
-    public ResponseEntity<DeliveryAddressDto> update(@PathVariable UUID addressId,
-                                                     @Valid @RequestBody DeliveryAddressRequest request) {
-        var userId = securityPrincipalProvider.getUserId();
-        log.info("delivery_address.update: userId={}, addressId={}", userId, addressId);
-        return ResponseEntity.ok(updater.update(userId, addressId, request));
+    @Override
+    @PatchMapping
+    public ResponseEntity<Void> changeUserPassword(@Valid @RequestBody ChangeUserPasswordRequest changeUserPasswordRequest) {
+        log.info("user.password.change: userId={}", securityPrincipalProvider.getUserId());
+        changeUserPasswordOperationPerformer.changeUserPassword(changeUserPasswordRequest);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{addressId}")
-    @Operation(summary = "Delete an address", description = "Removes a specific delivery address from the user's account.")
-    public ResponseEntity<Void> delete(@PathVariable UUID addressId) {
+    @Override
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUserProfile() {
         var userId = securityPrincipalProvider.getUserId();
-        log.info("delivery_address.delete: userId={}, addressId={}", userId, addressId);
-        deleter.delete(userId, addressId);
-        return ResponseEntity.noContent().build();
+        log.info("user.account.delete: userId={}", userId);
+        deleteUserOperationPerformer.deleteUser(userId);
+        return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{addressId}/default")
-    @Operation(summary = "Set as default", description = "Marks a specific delivery address as the default one for the user.")
-    public ResponseEntity<DeliveryAddressDto> setDefault(@PathVariable UUID addressId) {
+    @Override
+    @PostMapping(path = "/avatar", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Void> uploadUserAvatar(@Validated @RequestPart("file") MultipartFile file) {
         var userId = securityPrincipalProvider.getUserId();
-        log.info("delivery_address.set_default: userId={}, addressId={}", userId, addressId);
-        return ResponseEntity.ok(defaultSetter.setDefault(userId, addressId));
+        log.info("user.avatar.upload: userId={}", userId);
+        userAvatarUploader.uploadUserAvatar(userId, file);
+        return ResponseEntity.ok().build();
     }
+
+    @Override
+    @GetMapping(path = "/avatar")
+    public ResponseEntity<String> getUserAvatarLink() {
+        var userId = securityPrincipalProvider.getUserId();
+        log.info("user.avatar.get: userId={}", userId);
+        return ResponseEntity.ok(userAvatarLinkProvider.getLink(userId));
+    }
+
+    @Override
+    @DeleteMapping(path = "/avatar")
+    public ResponseEntity<Void> deleteUserAvatar() {
+        var userId = securityPrincipalProvider.getUserId();
+        log.info("user.avatar.delete: userId={}", userId);
+        fileDeleter.delete(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @PostMapping(path = "/password/reset")
+    public ResponseEntity<Void> resetUserPassword(@Valid @RequestBody InitiatePasswordResetRequest initiatePasswordResetRequest) {
+        var user = singleUserProvider.getUserByEmail(initiatePasswordResetRequest.getEmail());
+        log.info("user.password.reset: userId={}", user.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @PostMapping(path = "/password/reset/confirm")
+    public ResponseEntity<Void> confirmResetUserPassword(@RequestBody final ConfirmPasswordResetRequest confirmEmailRequest) {
+        log.info("user.password.reset.confirm");
+        emailTokenConformer.confirmResetPasswordEmailByCode(new ConfirmEmailRequest(confirmEmailRequest.getToken()));
+        return ResponseEntity.ok().build();
+    }
+
 }

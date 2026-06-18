@@ -1,6 +1,6 @@
 package com.teamchallenge.easybuy.user.api.avatar;
 
-import com.teamchallenge.easybuy.filestorage.file.FileProvider;
+import com.cloudinary.Cloudinary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,40 +8,40 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 /**
- * Service responsible for retrieving the public access link (URL) for a user's avatar image.
- * <p>
- * It interacts with the underlying file storage system to resolve the URL and
- * provides safe fallback behaviors (returning a default image link) in case
- * the avatar is missing or a storage error occurs.
+ * Service responsible for generating the public access link (URL) for a user's avatar image using Cloudinary.
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserAvatarLinkProvider {
 
-    private final FileProvider fileProvider;
+    private final Cloudinary cloudinary;
+
+    // Эти константы должны совпадать с теми, что используются в UserAvatarUploader
+    private static final String AVATAR_FOLDER = "user-avatars";
+    private static final String AVATAR_NAME_PREFIX = "user-avatar-";
 
     /**
-     * Retrieves the avatar URL for the specified user.
+     * Generates the Cloudinary URL for the user's avatar.
      * <p>
-     * If the user does not have a custom avatar uploaded, or if a runtime exception
-     * occurs during the storage retrieval process, this method logs the event and
-     * safely falls back to a predefined default file link. This ensures that UI
-     * profile requests do not fail entirely just because an image is missing or unreachable.
+     * Note: Cloudinary URLs are generated based on the public_id. This method assumes
+     * the image exists at that path. If the image doesn't exist, Cloudinary will
+     * return a 404 on the frontend, which is standard behavior for CDN-hosted images.
      *
-     * @param userId the unique identifier of the user whose avatar link is being requested
-     * @return the URL string pointing to the user's avatar, or "default file" if unavailable
+     * @param userId the unique identifier of the user
+     * @return the URL string pointing to the user's avatar
      */
     public String getLink(final UUID userId) {
         try {
-            return fileProvider.getRelatedObjectUrl(userId)
-                    .orElseGet(() -> {
-                        log.debug("user.avatar.not_found: userId={}", userId);
-                        return "default file";
-                    });
-        } catch (RuntimeException exception) {
-            log.error("user.avatar.error: message={}", exception.getMessage(), exception);
+            // Формируем такой же publicId, как при загрузке: папка + префикс + ID
+            String publicId = AVATAR_FOLDER + "/" + AVATAR_NAME_PREFIX + userId.toString();
+
+            // Генерируем URL
+            return cloudinary.url().generate(publicId);
+
+        } catch (Exception e) {
+            log.error("user.avatar.error: failed to generate URL for userId={}", userId, e);
+            return "default file"; // Или URL на дефолтную картинку
         }
-        return "default file";
     }
 }

@@ -1,8 +1,8 @@
 package com.teamchallenge.easybuy.shop.service.shoptaxinfo;
 
+import com.teamchallenge.easybuy.shop.dto.shoptaxinfo.ShopTaxInfoDTO;
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopTaxInfo;
-import com.teamchallenge.easybuy.shop.dto.shoptaxinfo.ShopTaxInfoDTO;
 import com.teamchallenge.easybuy.shop.exception.ShopNotFoundException;
 import com.teamchallenge.easybuy.shop.mapper.ShopTaxMapper;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;

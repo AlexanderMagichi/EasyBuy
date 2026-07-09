@@ -1,8 +1,8 @@
 package com.teamchallenge.easybuy.shop.service.shopseosettings;
 
+import com.teamchallenge.easybuy.shop.dto.ShopSeoSettingsDTO;
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopSeoSettings;
-import com.teamchallenge.easybuy.shop.dto.ShopSeoSettingsDTO;
 import com.teamchallenge.easybuy.shop.exception.ShopNotFoundException;
 import com.teamchallenge.easybuy.shop.mapper.ShopSeoSettingsMapper;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;

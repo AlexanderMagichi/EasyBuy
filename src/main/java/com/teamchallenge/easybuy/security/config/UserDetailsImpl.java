@@ -1,6 +1,5 @@
 package com.teamchallenge.easybuy.security.config;
 
-import com.teamchallenge.easybuy.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,14 +9,14 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Adapter class that wraps a User entity and implements the UserDetails interface.
+ * Adapter class that wraps a UserEntity entity and implements the UserDetails interface.
  * Allows integration of custom user data with Spring Security.
  */
 @Getter
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
-    private final User user;
+    private final UserEntity user;
 
     @Override
     public boolean isAccountNonExpired() {

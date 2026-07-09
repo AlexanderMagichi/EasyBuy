@@ -2,9 +2,9 @@ package com.teamchallenge.easybuy.infrastructure.exception.handler;
 
 
 import com.teamchallenge.easybuy.infrastructure.exception.dto.ApiErrorResponse;
-import com.teamchallenge.easybuy.shop.exception.ShopNotFoundException;
-import com.teamchallenge.easybuy.shop.exception.ShopBillingIntegrationException;
 import com.teamchallenge.easybuy.product.exception.*;
+import com.teamchallenge.easybuy.shop.exception.ShopBillingIntegrationException;
+import com.teamchallenge.easybuy.shop.exception.ShopNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,9 @@
 package com.teamchallenge.easybuy.shop.dto;
 
-import com.teamchallenge.easybuy.shop.entity.Shop;
-import com.teamchallenge.easybuy.shop.dto.shopcontact.ShopContactInfoDTO;
 import com.teamchallenge.easybuy.shop.dto.shopbillinginfo.ShopBillingInfoDTO;
+import com.teamchallenge.easybuy.shop.dto.shopcontact.ShopContactInfoDTO;
 import com.teamchallenge.easybuy.shop.dto.shoptaxinfo.ShopTaxInfoDTO;
+import com.teamchallenge.easybuy.shop.entity.Shop;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

@@ -169,7 +169,7 @@ public class AuditService {
     private void logAuditEvent(String eventType, UUID resourceId, String username, String description) {
         // todo:This can be saved to a separate audit tabl or sent to an external monitoring system
 
-        log.info("[AUDIT_EVENT] Type: {} | Resource: {} | User: {} | Description: {} | Timestamp: {}",
+        log.info("[AUDIT_EVENT] Type: {} | Resource: {} | UserEntity: {} | Description: {} | Timestamp: {}",
                 eventType,
                 resourceId,
                 username,

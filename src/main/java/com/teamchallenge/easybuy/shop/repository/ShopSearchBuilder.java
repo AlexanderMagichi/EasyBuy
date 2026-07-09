@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.shop.repository;
 
-import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.dto.ShopSearchParams;
+import com.teamchallenge.easybuy.shop.entity.Shop;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ShopSearchBuilder {

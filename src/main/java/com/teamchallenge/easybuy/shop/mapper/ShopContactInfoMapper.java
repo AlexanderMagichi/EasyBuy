@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.shop.mapper;
 
-import com.teamchallenge.easybuy.shop.entity.ShopContactInfo;
 import com.teamchallenge.easybuy.shop.dto.shopcontact.ShopContactInfoDTO;
+import com.teamchallenge.easybuy.shop.entity.ShopContactInfo;
 import org.mapstruct.*;
 
 @Mapper(

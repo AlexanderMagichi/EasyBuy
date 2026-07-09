@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS store_memberships (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    store_id UUID NOT NULL,
+    membership_role VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    granted_by UUID NOT NULL,
+    granted_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    revoked_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_store ON store_memberships(user_id, store_id);
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS deleted_by UUID;
+
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS deleted_by UUID;
+
+ALTER TABLE products ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS deleted_by UUID;

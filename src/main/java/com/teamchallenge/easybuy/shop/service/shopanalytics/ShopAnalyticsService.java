@@ -1,8 +1,8 @@
 package com.teamchallenge.easybuy.shop.service.shopanalytics;
 
+import com.teamchallenge.easybuy.shop.dto.shopanalytics.ShopAnalyticsDTO;
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopAnalytics;
-import com.teamchallenge.easybuy.shop.dto.shopanalytics.ShopAnalyticsDTO;
 import com.teamchallenge.easybuy.shop.exception.ShopNotFoundException;
 import com.teamchallenge.easybuy.shop.mapper.ShopAnalyticsMapper;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;

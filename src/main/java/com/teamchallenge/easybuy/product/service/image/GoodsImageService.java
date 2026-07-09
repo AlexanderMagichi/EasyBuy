@@ -1,14 +1,14 @@
 package com.teamchallenge.easybuy.product.service.image;
 
+import com.teamchallenge.easybuy.infrastructure.image.CloudinaryImageService;
 import com.teamchallenge.easybuy.product.dto.GoodsImageDTO;
-import com.teamchallenge.easybuy.product.exception.GoodsImageException;
-import com.teamchallenge.easybuy.product.mapper.GoodsImageMapper;
 import com.teamchallenge.easybuy.product.entity.Goods;
 import com.teamchallenge.easybuy.product.entity.GoodsImage;
+import com.teamchallenge.easybuy.product.exception.GoodsImageException;
+import com.teamchallenge.easybuy.product.mapper.GoodsImageMapper;
 import com.teamchallenge.easybuy.product.repository.GoodsImageRepository;
 import com.teamchallenge.easybuy.product.repository.GoodsImageSpecifications;
 import com.teamchallenge.easybuy.product.repository.GoodsRepository;
-import com.teamchallenge.easybuy.infrastructure.image.CloudinaryImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

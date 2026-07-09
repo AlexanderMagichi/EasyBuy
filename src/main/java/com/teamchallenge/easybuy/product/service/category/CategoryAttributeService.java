@@ -2,10 +2,10 @@ package com.teamchallenge.easybuy.product.service.category;
 
 
 import com.teamchallenge.easybuy.product.dto.category.CategoryAttributeDTO;
-import com.teamchallenge.easybuy.product.exception.CategoryAttributeException;
-import com.teamchallenge.easybuy.product.mapper.category.CategoryAttributeMapper;
 import com.teamchallenge.easybuy.product.entity.category.AttributeType;
 import com.teamchallenge.easybuy.product.entity.category.CategoryAttribute;
+import com.teamchallenge.easybuy.product.exception.CategoryAttributeException;
+import com.teamchallenge.easybuy.product.mapper.category.CategoryAttributeMapper;
 import com.teamchallenge.easybuy.product.repository.category.CategoryAttributeRepository;
 import com.teamchallenge.easybuy.product.repository.category.CategoryAttributeSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;

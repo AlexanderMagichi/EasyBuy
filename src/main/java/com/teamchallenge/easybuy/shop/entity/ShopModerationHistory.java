@@ -1,6 +1,5 @@
 package com.teamchallenge.easybuy.shop.entity;
 
-import com.teamchallenge.easybuy.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -44,7 +43,7 @@ public class ShopModerationHistory {
     @JoinColumn(name = "moderator_id", nullable = false)
     @NotNull
     @Schema(description = "Admin/moderator who performed the action", requiredMode = Schema.RequiredMode.REQUIRED)
-    private User moderator;
+    private UserEntity moderator;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -106,8 +105,8 @@ public class ShopModerationHistory {
     private Instant reversedAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reversed_by_user_id")
-    @Schema(description = "User who reversed this action")
-    private User reversedByUser;
+    @Schema(description = "UserEntity who reversed this action")
+    private UserEntity reversedByUser;
     @Size(max = 500, message = "Reversal reason must not exceed 500 characters")
     @Column(name = "reversal_reason", length = 500)
     @Schema(description = "Reason for reversing the action", example = "Appeal approved")

@@ -5,8 +5,8 @@ import com.teamchallenge.easybuy.product.entity.Goods;
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.UUID;
 

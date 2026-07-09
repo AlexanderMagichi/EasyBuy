@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.product.mapper.category;
 
-import com.teamchallenge.easybuy.product.entity.category.AttributeType;
 import com.teamchallenge.easybuy.product.dto.category.CategoryAttributeDTO;
+import com.teamchallenge.easybuy.product.entity.category.AttributeType;
 import com.teamchallenge.easybuy.product.entity.category.CategoryAttribute;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

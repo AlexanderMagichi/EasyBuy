@@ -10,11 +10,11 @@ import lombok.Data;
 public class LoginRequestDto {
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Incorrect email format")
-    @Schema(description = "User email", example = "user@example.com", required = true)
+    @Schema(description = "UserEntity email", example = "user@example.com", required = true)
     private String email;
 
     @NotBlank(message = "Password cannot be empty")
     @Size(min = 6, max = 50, message = "Password must contain 6 to 50 characters")
-    @Schema(description = "User password", example = "mySecurePass", required = true)
+    @Schema(description = "UserEntity password", example = "mySecurePass", required = true)
     private String password;
 }

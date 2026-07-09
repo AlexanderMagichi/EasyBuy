@@ -80,7 +80,7 @@ public class ShopModerationHistoryDTO {
     @Schema(description = "When action was reversed", accessMode = Schema.AccessMode.READ_ONLY)
     private Instant reversedAt;
 
-    @Schema(description = "User who reversed action")
+    @Schema(description = "UserEntity who reversed action")
     private UUID reversedByUserId;
 
     @Size(max = 500)

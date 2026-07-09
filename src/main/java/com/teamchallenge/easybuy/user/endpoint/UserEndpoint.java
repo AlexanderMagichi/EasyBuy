@@ -1,11 +1,17 @@
 package com.teamchallenge.easybuy.user.endpoint;
 
-import com.teamchallenge.easybuy.email.api.*;
-import com.teamchallenge.easybuy.filestorage.file.*;
+import com.teamchallenge.easybuy.email.api.EmailTokenConformer;
 import com.teamchallenge.easybuy.openapi.dto.*;
-import com.teamchallenge.easybuy.security.api.*;
-import com.teamchallenge.easybuy.user.api.*;
-import com.teamchallenge.easybuy.user.api.avatar.*;
+import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
+import com.teamchallenge.easybuy.user.api.ChangeUserPasswordOperationPerformer;
+import com.teamchallenge.easybuy.user.api.DeleteUserOperationPerformer;
+import com.teamchallenge.easybuy.user.api.SingleUserProvider;
+import com.teamchallenge.easybuy.user.api.UpdateUserOperationPerformer;
+import com.teamchallenge.easybuy.user.api.avatar.UserAvatarDeleter;
+import com.teamchallenge.easybuy.user.api.avatar.UserAvatarLinkProvider;
+import com.teamchallenge.easybuy.user.api.avatar.UserAvatarUploader;
+
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +37,8 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
     private final DeleteUserOperationPerformer deleteUserOperationPerformer;
     private final SecurityPrincipalProvider securityPrincipalProvider;
     private final UserAvatarUploader userAvatarUploader;
-    private final FileDeleter fileDeleter;
     private final UserAvatarLinkProvider userAvatarLinkProvider;
+    private final UserAvatarDeleter userAvatarDeleter; // Добавлен сервис для удаления аватаров
     private final EmailTokenConformer emailTokenConformer;
 
     @Override
@@ -90,7 +96,7 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
     public ResponseEntity<Void> deleteUserAvatar() {
         var userId = securityPrincipalProvider.getUserId();
         log.info("user.avatar.delete: userId={}", userId);
-        fileDeleter.delete(userId);
+        userAvatarDeleter.delete(userId); // Исправлен вызов на новый сервис
         return ResponseEntity.ok().build();
     }
 

@@ -28,6 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         String normalizedEmail = email.toLowerCase(Locale.ROOT).trim();
         return userRepository.findByEmail(normalizedEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("UserEntity not found"));
     }
 }

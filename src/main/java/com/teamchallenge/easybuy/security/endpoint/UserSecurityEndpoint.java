@@ -3,7 +3,6 @@ package com.teamchallenge.easybuy.security.endpoint;
 import com.teamchallenge.easybuy.email.api.EmailTokenConformer;
 import com.teamchallenge.easybuy.email.api.EmailTokenSender;
 import com.teamchallenge.easybuy.openapi.dto.*;
-import com.teamchallenge.easybuy.openapi.security.api.SecurityApi;
 import com.teamchallenge.easybuy.security.api.UserAuthenticationService;
 import com.teamchallenge.easybuy.security.exception.AbsentBearerHeaderException;
 import com.teamchallenge.easybuy.security.jwt.JwtBlacklistValidator;
@@ -31,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = UserSecurityEndpoint.USER_SECURITY_API_URL)
 @RequiredArgsConstructor
-public class UserSecurityEndpoint implements SecurityApi {
+public class UserSecurityEndpoint {
 
     public static final String USER_SECURITY_API_URL = "/api/v1/auth/";
 

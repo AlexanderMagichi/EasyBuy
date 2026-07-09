@@ -2,9 +2,6 @@ package com.teamchallenge.easybuy.shop.entity;
 
 import com.teamchallenge.easybuy.infrastructure.persistence.BaseEntity;
 import com.teamchallenge.easybuy.product.entity.Goods;
-import com.teamchallenge.easybuy.user.entity.Manager;
-import com.teamchallenge.easybuy.user.entity.Seller;
-import com.teamchallenge.easybuy.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -25,7 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @AllArgsConstructor
-@ToString(exclude = {"goods", "shopContactInfo", "shopBillingInfo", "shopTaxInfo", "shopAnalytics", "moderationHistory", "shopManagers", "seoSettings", "seller", "moderatedByUser"})
+@ToString(exclude = {"goods", "shopContactInfo", "shopBillingInfo", "shopTaxInfo", "shopAnalytics", "moderationHistory", "seoSettings", "seller", "moderatedByUser"})
 @Schema(description = "Base information for a shop.")
 @Table(name = "shops", indexes = {
         @Index(name = "idx_shops_slug", columnList = "slug"),
@@ -76,9 +73,9 @@ public class Shop extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
     @NotNull
-    @Schema(description = "Owner of the shop (creator). Links to Seller entity.",
+    @Schema(description = "Owner of the shop (creator). Links to UserEntity.",
             example = "123e4567-e89b-12d3-a456-426614174000", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Seller seller;
+    private UserEntity seller;
 
     @OneToOne(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private ShopBillingInfo shopBillingInfo;
@@ -101,85 +98,57 @@ public class Shop extends BaseEntity {
     private BigDecimal commissionRate;
 
     @Column(name = "last_activity_at")
-    @Schema(description = "Last activity timestamp for the shop (for example, remaining delivery of goods, processing orders)",
-            example = "2025-06-27T10:00:00Z", accessMode = Schema.AccessMode.READ_ONLY)
     private Instant lastActivityAt;
 
     @Column(name = "is_verified", nullable = false)
     @Builder.Default
-    @Schema(description = "Whether the store is verified by the marketplace (Like ID, TAX, Billing)", example = "false")
     private boolean isVerified = false;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "shop_type")
-    @Schema(description = "Type of store, e.g. Sale, Manufacturer, Reseller", example = "Producer")
     private ShopType shopType;
 
     @Column(name = "slug", unique = true)
     private String slug;
 
     @Column(name = "rejection_reason", columnDefinition = "TEXT")
-    @Schema(description = "Reason for rejection of the store", example = "Store is not suitable for selling goods")
     private String rejectionReason;
 
     @Lob
     @Column(name = "moderator_notes")
-    @Schema(description = "Internal notes from admins/moderators regarding the store. Not visible to customers.",
-            example = "Re-verification required in 3 months.")
     private String moderatorNotes;
 
     @Column(name = "last_moderated_at")
-    @Schema(description = "Last time the store was moderated by an admin. Read only.", example = "2025-06-27T10:00:00Z",
-            accessMode = Schema.AccessMode.READ_ONLY)
     private Instant lastModeratedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "moderated_by_user_id")
-    @Schema(description = "Admin user who moderated the store. Read only.",
-            example = "123e4567-e89b-12d3-a456-426614174000",
-            accessMode = Schema.AccessMode.READ_ONLY)
-    private User moderatedByUser;
+    private UserEntity moderatedByUser;
 
     @NotBlank
     @Column(name = "currency", nullable = false, length = 5)
     @Builder.Default
-    @Size(max = 5, message = "Currency code must not exceed 5 characters")
-    @Schema(description = "Store currency code ISO 4217", example = "UAH", requiredMode = Schema.RequiredMode.REQUIRED)
     private String currency = "UAH";
 
     @NotBlank
     @Column(name = "language", nullable = false, length = 5)
     @Builder.Default
-    @Size(max = 5, message = "Language code must not exceed 5 characters")
-    @Schema(description = "Primary language of the shop (ISO 639-1)", example = "uk",
-            requiredMode = Schema.RequiredMode.REQUIRED)
     private String language = "uk";
 
     @NotBlank
     @Column(name = "timezone", nullable = false, length = 50)
     @Builder.Default
-    @Size(max = 50, message = "Timezone must not exceed 50 characters")
-    @Schema(description = "Timezone of the shop (IANA Time Zone Database)", example = "Europe/Kyiv",
-            requiredMode = Schema.RequiredMode.REQUIRED)
     private String timezone = "Europe/Kyiv";
 
     @OneToOne(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Schema(description = "Shop contact information record")
     private ShopContactInfo shopContactInfo;
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
-    @Schema(description = "History of moderation actions for this shop")
     private List<ShopModerationHistory> moderationHistory = new ArrayList<>();
 
     @OneToOne(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Schema(description = "SEO settings for the shop")
     private ShopSeoSettings seoSettings;
-
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Builder.Default
-    @Schema(description = "List of manager link records for this shop")
-    private List<Manager> shopManagers = new ArrayList<>();
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
@@ -187,7 +156,7 @@ public class Shop extends BaseEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
-    // Lifecycle callbacks
+    // --- Lifecycle callbacks ---
 
     public void addGood(Goods good) {
         if (good == null) return;
@@ -201,8 +170,6 @@ public class Shop extends BaseEntity {
         good.setShop(null);
     }
 
-
-
     public void addModerationRecord(ShopModerationHistory record) {
         if (record == null) return;
         this.moderationHistory.add(record);
@@ -215,20 +182,8 @@ public class Shop extends BaseEntity {
         record.setShop(null);
     }
 
-    public void addManager(Manager manager) {
-        if (manager == null) return;
-        this.shopManagers.add(manager);
-        manager.setShop(this);
-    }
-
-    public void removeManager(Manager manager) {
-        if (manager == null) return;
-        this.shopManagers.remove(manager);
-        manager.setShop(null);
-    }
 
     public void setSeoSettings(ShopSeoSettings seoSettings) {
-        // detach previous
         if (this.seoSettings != null) {
             this.seoSettings.setShop(null);
         }
@@ -279,26 +234,9 @@ public class Shop extends BaseEntity {
     }
 
     public enum ShopStatus {
-        @Schema(description = "Store is active and available for buyers")
-        ACTIVE,
-        @Schema(description = "Store is inactive and temporarily unavailable")
-        INACTIVE,
-        @Schema(description = "Store is awaiting administrator review before activation")
-        PENDING,
-        @Schema(description = "Store is blocked due to policy violations")
-        BANNED,
-        @Schema(description = "Store is rejected due to policy violations")
-        REJECTED
+        ACTIVE, INACTIVE, PENDING, BANNED, REJECTED
     }
 
     public enum ShopType {
-        @Schema(description = "A store that sells goods to other users")
-        RETAILER,
-        @Schema(description = "A store that manufactures goods itself")
-        PRODUCER,
-        @Schema(description = "A store that resells goods from other manufacturers")
-        RESELLER,
-        @Schema(description = "Another, unclassified type of store")
-        OTHER
-    }
-}
+        RETAILER, PRODUCER, RESELLER, OTHER
+    }}

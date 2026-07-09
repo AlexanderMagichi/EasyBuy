@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.shop.mapper;
 
-import com.teamchallenge.easybuy.shop.entity.ShopBillingInfo;
 import com.teamchallenge.easybuy.shop.dto.shopbillinginfo.ShopBillingInfoDTO;
+import com.teamchallenge.easybuy.shop.entity.ShopBillingInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

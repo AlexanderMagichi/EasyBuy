@@ -15,6 +15,6 @@ public class InvalidOldPasswordException extends RuntimeException {
      * @param userEmail the email address of the user providing the incorrect password
      */
     public InvalidOldPasswordException(String userEmail) {
-        super(String.format("User with userEmail = '%s' provided incorrect password.", userEmail));
+        super(String.format("UserEntity with userEmail = '%s' provided incorrect password.", userEmail));
     }
 }

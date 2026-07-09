@@ -1,0 +1,306 @@
+#openapi: "3.0.3"
+#
+#info:
+#  title: "Iced Latte Shopping Cart API"
+#  description: "API allows users to manage their shopping cart items, including adding, updating, and deleting shopping cart items. It includes detailed error responses, supports authentication, and provides examples for better understanding."
+#  version: "1.0.0"
+#  contact:
+#    name: "Iced Latte Support"
+#    email: "zufar.sunagatov@gmail.com"
+#    url: "https://github.com/Sunagatov/Iced-Latte"
+#  license:
+#    name: "MIT"
+#    url: "https://github.com/Sunagatov/Iced-Latte/blob/main/LICENSE"
+#
+#servers:
+#  - url: "http://localhost:8083"
+#    description: "Local development server"
+#  - url: "https://iced-latte.uk/backend"
+#    description: "Production server"
+#
+#security:
+#  - bearerAuth: []
+#
+#tags:
+#  - name: "Shopping Cart"
+#    description: "Operations related to shopping cart items"
+#
+#paths:
+#  /api/v1/cart/items:
+#    post:
+#      tags:
+#        - "Shopping Cart"
+#      summary: "Add items to the shopping cart"
+#      operationId: "addNewItemToShoppingCart"
+#      requestBody:
+#        description: "Payload containing a list of items to be added to the shopping cart."
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/AddNewItemsToShoppingCartRequest"
+#            examples:
+#              add-multiple:
+#                summary: "Add Multiple Items"
+#                value:
+#                  items:
+#                    - productId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+#                      productQuantity: 2
+#      responses:
+#        "200":
+#          description: "Items added successfully."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/ShoppingCartDto"
+#        "400":
+#          description: "Invalid input, object invalid."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "401":
+#          description: "Unauthorized access."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "500":
+#          description: "Internal server error."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#    patch:
+#      tags:
+#        - "Shopping Cart"
+#      summary: "Update shopping cart item quantity"
+#      operationId: "updateProductQuantityInShoppingCartItem"
+#      requestBody:
+#        description: "Payload containing the shopping cart item ID and the quantity change."
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/UpdateProductQuantityInShoppingCartItemRequest"
+#            examples:
+#              increment-quantity:
+#                summary: "Increment Quantity"
+#                value:
+#                  shoppingCartItemId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+#                  productQuantityChange: 1
+#      responses:
+#        "200":
+#          description: "Shopping cart item quantity was updated successfully."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/ShoppingCartDto"
+#        "400":
+#          description: "Invalid input, object invalid."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "401":
+#          description: "Unauthorized access."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "404":
+#          description: "Shopping cart item not found."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "500":
+#          description: "Internal server error."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#    delete:
+#      tags:
+#        - "Shopping Cart"
+#      summary: "Remove items from the shopping cart"
+#      operationId: "deleteItemsFromShoppingCart"
+#      requestBody:
+#        description: "Payload containing an array of shopping cart item IDs to be removed."
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/DeleteItemsFromShoppingCartRequest"
+#      responses:
+#        "200":
+#          description: "Items removed successfully."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/ShoppingCartDto"
+#        "400":
+#          description: "Invalid input, object invalid."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "401":
+#          description: "Unauthorized access."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "404":
+#          description: "One or more shopping cart items not found."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "500":
+#          description: "Internal server error."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#  /api/v1/cart:
+#    get:
+#      tags:
+#        - "Shopping Cart"
+#      summary: "Get the shopping cart of authorized user"
+#      description: "Retrieves the full shopping cart including all items for the currently authenticated user."
+#      operationId: "getShoppingCart"
+#      responses:
+#        "200":
+#          description: "Shopping cart retrieved successfully."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/ShoppingCartDto"
+#        "401":
+#          description: "Unauthorized access."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "404":
+#          description: "Shopping cart not found."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#        "500":
+#          description: "Internal server error."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#
+#components:
+#  securitySchemes:
+#    bearerAuth:
+#      type: http
+#      scheme: bearer
+#      bearerFormat: JWT
+#      description: "JWT token for authenticated requests"
+#
+#  schemas:
+#    NewShoppingCartItemDto:
+#      type: "object"
+#      properties:
+#        productId:
+#          type: "string"
+#          format: "uuid"
+#        productQuantity:
+#          type: "integer"
+#          format: "int32"
+#          minimum: 1
+#      required:
+#        - productId
+#        - productQuantity
+#    AddNewItemsToShoppingCartRequest:
+#      type: "object"
+#      properties:
+#        items:
+#          type: "array"
+#          uniqueItems: true
+#          items:
+#            $ref: "#/components/schemas/NewShoppingCartItemDto"
+#      required:
+#        - items
+#    ShoppingCartDto:
+#      type: "object"
+#      properties:
+#        id:
+#          type: "string"
+#          format: "uuid"
+#        userId:
+#          type: "string"
+#          format: "uuid"
+#        items:
+#          type: "array"
+#          items:
+#            $ref: "#/components/schemas/ShoppingCartItemDto"
+#        itemsQuantity:
+#          type: "integer"
+#          format: "int32"
+#        itemsTotalPrice:
+#          type: "number"
+#          description: "Total price of all items in the cart."
+#        productsQuantity:
+#          type: "integer"
+#          format: "int32"
+#        createdAt:
+#          type: "string"
+#          format: "date-time"
+#        closedAt:
+#          type: "string"
+#          format: "date-time"
+#      required:
+#        - id
+#        - userId
+#        - items
+#        - itemsQuantity
+#        - itemsTotalPrice
+#        - productsQuantity
+#        - createdAt
+#    ShoppingCartItemDto:
+#      type: "object"
+#      properties:
+#        id:
+#          type: "string"
+#          format: "uuid"
+#        productInfo:
+#          $ref: "product-openapi.yaml#/components/schemas/ProductInfoDto"
+#        productQuantity:
+#          type: "integer"
+#          format: "int32"
+#          minimum: 1
+#      required:
+#        - id
+#        - productInfo
+#        - productQuantity
+#    UpdateProductQuantityInShoppingCartItemRequest:
+#      type: "object"
+#      properties:
+#        shoppingCartItemId:
+#          type: "string"
+#          format: "uuid"
+#        productQuantityChange:
+#          type: "integer"
+#          format: "int32"
+#          minimum: -100
+#          maximum: 100
+#      required:
+#        - shoppingCartItemId
+#        - productQuantityChange
+#    DeleteItemsFromShoppingCartRequest:
+#      type: "object"
+#      properties:
+#        shoppingCartItemIds:
+#          type: "array"
+#          items:
+#            type: "string"
+#            format: "uuid"
+#      required:
+#        - shoppingCartItemIds

@@ -2,6 +2,7 @@ package com.teamchallenge.easybuy.user.endpoint;
 
 import com.teamchallenge.easybuy.openapi.dto.DeliveryAddressDto;
 import com.teamchallenge.easybuy.openapi.dto.DeliveryAddressRequest;
+
 import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
 import com.teamchallenge.easybuy.user.api.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,10 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Controller for managing user delivery addresses.
- * Provides endpoints for retrieving, creating, updating, deleting, and setting default delivery addresses.
- */
 @Slf4j
 @RestController
 @RequiredArgsConstructor

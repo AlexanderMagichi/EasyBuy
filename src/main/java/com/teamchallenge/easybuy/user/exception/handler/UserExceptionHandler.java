@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.user.exception.handler;
 
-import com.teamchallenge.easybuy.common.exception.dto.ApiErrorResponse;
-import com.teamchallenge.easybuy.common.exception.handler.ApiErrorResponseCreator;
+import com.teamchallenge.easybuy.infrastructure.exception.dto.ApiErrorResponse;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 import com.teamchallenge.easybuy.user.exception.DeliveryAddressNotFoundException;
 import com.teamchallenge.easybuy.user.exception.InvalidOldPasswordException;
 import com.teamchallenge.easybuy.user.exception.PutUsersBadRequestException;

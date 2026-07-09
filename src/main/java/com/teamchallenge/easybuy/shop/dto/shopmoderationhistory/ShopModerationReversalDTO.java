@@ -18,7 +18,7 @@ import java.util.UUID;
 public class ShopModerationReversalDTO {
 
     @NotNull
-    @Schema(description = "User ID who performs reversal", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "UserEntity ID who performs reversal", requiredMode = Schema.RequiredMode.REQUIRED)
     private UUID reversedByUserId;
 
     @Size(max = 500)

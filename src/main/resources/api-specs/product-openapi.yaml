@@ -1,0 +1,433 @@
+#openapi: "3.0.3"
+#
+#info:
+#  title: "Iced-Latte Product API"
+#  description: "API for interacting with Iced Latte's product catalog, including retrieving and listing products. Supports filtering, sorting, and pagination of product data."
+#  version: "1.0.0"
+#  contact:
+#    name: "Iced Latte Support"
+#    email: "zufar.sunagatov@gmail.com"
+#    url: "https://github.com/Sunagatov/Iced-Latte"
+#  license:
+#    name: "MIT"
+#    url: "https://github.com/Sunagatov/Iced-Latte/blob/main/LICENSE"
+#
+#servers:
+#  - url: "http://localhost:8083"
+#    description: "Local development server"
+#  - url: "https://iced-latte.uk/backend"
+#    description: "Production server"
+#
+#tags:
+#  - name: "Product"
+#    description: "API endpoints related to product management and retrieval."
+#
+#paths:
+#  /api/v1/products/{productId}:
+#    get:
+#      tags:
+#        - "Product"
+#      summary: "Retrieve a product by its unique ID"
+#      description: "Fetch detailed information of a product using its unique identifier."
+#      operationId: "getProductById"
+#      parameters:
+#        - name: "productId"
+#          in: "path"
+#          required: true
+#          description: "Unique identifier of the product."
+#          schema:
+#            type: "string"
+#            format: "uuid"
+#      responses:
+#        "200":
+#          description: "Product details successfully retrieved."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/ProductInfoDto"
+#        "400":
+#          $ref: "#/components/responses/BadRequest"
+#        "404":
+#          $ref: "#/components/responses/NotFound"
+#        "401":
+#          $ref: "#/components/responses/Unauthorized"
+#        "500":
+#          $ref: "#/components/responses/InternalServerError"
+#
+#  /api/v1/products/sellers:
+#    get:
+#      tags:
+#        - "Product"
+#      summary: "List all product sellers"
+#      description: "Retrieve a list of all distinct sellers from the database."
+#      operationId: "getAllSellers"
+#      responses:
+#        "200":
+#          description: "List of all product sellers retrieved successfully."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/SellersDto"
+#        "400":
+#          $ref: "#/components/responses/BadRequest"
+#        "401":
+#          $ref: "#/components/responses/Unauthorized"
+#        "500":
+#          $ref: "#/components/responses/InternalServerError"
+#
+#  /api/v1/products/brands:
+#    get:
+#      tags:
+#        - "Product"
+#      summary: "List all product brands"
+#      description: "Retrieve a list of all distinct brands from the database."
+#      operationId: "getAllBrands"
+#      responses:
+#        "200":
+#          description: "List of all product brands retrieved successfully."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/BrandsDto"
+#        "400":
+#          $ref: "#/components/responses/BadRequest"
+#        "401":
+#          $ref: "#/components/responses/Unauthorized"
+#        "500":
+#          $ref: "#/components/responses/InternalServerError"
+#
+#  /api/v1/products:
+#    get:
+#      tags:
+#        - "Product"
+#      summary: "List products with pagination, sorting, and filtering"
+#      description: "Retrieve a paginated list of products with optional sorting and filtering parameters."
+#      operationId: "getProducts"
+#      parameters:
+#        - name: "page"
+#          description: "Zero-based page number."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "integer"
+#            format: "int32"
+#            default: 0
+#            minimum: 0
+#        - name: "size"
+#          description: "Number of products per page."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "integer"
+#            format: "int32"
+#            default: 50
+#            minimum: 1
+#        - name: "sortAttribute"
+#          description: "Field to sort results by."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "string"
+#            enum: ["name", "price", "quantity", "averageRating", "reviewsCount"]
+#            default: "name"
+#        - name: "sortDirection"
+#          description: "Sort direction."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "string"
+#            enum: ["asc", "desc"]
+#            default: "asc"
+#        - name: "minPrice"
+#          description: "Minimum product price filter."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "number"
+#            minimum: 0
+#        - name: "maxPrice"
+#          description: "Maximum product price filter."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "number"
+#            minimum: 0
+#        - name: "minimumAverageRating"
+#          description: "Minimum average rating filter (1–4)."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "integer"
+#            format: "int32"
+#            minimum: 1
+#            maximum: 4
+#        - name: "brandNames"
+#          description: "Filter by brand names."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "array"
+#            items:
+#              type: "string"
+#        - name: "sellerNames"
+#          description: "Filter by seller names."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "array"
+#            items:
+#              type: "string"
+#        - name: "keyword"
+#          description: "Search keyword to filter products by name (case-insensitive)."
+#          in: "query"
+#          required: false
+#          schema:
+#            type: "string"
+#            maxLength: 200
+#      responses:
+#        "200":
+#          description: "Paginated list of products retrieved successfully."
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/ProductListWithPaginationInfoDto"
+#        "400":
+#          $ref: "#/components/responses/BadRequest"
+#        "401":
+#          $ref: "#/components/responses/Unauthorized"
+#        "500":
+#          $ref: "#/components/responses/InternalServerError"
+#
+#  /api/v1/products/ids:
+#    post:
+#      tags:
+#        - "Product"
+#      summary: "Retrieve products by their IDs"
+#      description: "Fetch a list of products based on a list of unique identifiers."
+#      operationId: "getProductsByIds"
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/ProductIdsDto"
+#      responses:
+#        "200":
+#          description: "List of products retrieved successfully."
+#          content:
+#            application/json:
+#              schema:
+#                type: "array"
+#                items:
+#                  $ref: "#/components/schemas/ProductInfoDto"
+#        "400":
+#          $ref: "#/components/responses/BadRequest"
+#        "401":
+#          $ref: "#/components/responses/Unauthorized"
+#        "404":
+#          $ref: "#/components/responses/NotFound"
+#        "500":
+#          $ref: "#/components/responses/InternalServerError"
+#
+#components:
+#  responses:
+#    BadRequest:
+#      description: "Invalid parameters provided."
+#      content:
+#        application/json:
+#          schema:
+#            $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#    NotFound:
+#      description: "Resource not found."
+#      content:
+#        application/json:
+#          schema:
+#            $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#    Unauthorized:
+#      description: "Authentication is required to access this resource."
+#      content:
+#        application/json:
+#          schema:
+#            $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#    InternalServerError:
+#      description: "Internal server error."
+#      content:
+#        application/json:
+#          schema:
+#            $ref: "common-schemas.yaml#/components/schemas/ErrorResponse"
+#
+#  schemas:
+#    ProductInfoDto:
+#      type: "object"
+#      description: "Detailed information about a product in the Iced Latte catalog."
+#      required:
+#        - id
+#        - name
+#        - description
+#        - price
+#        - quantity
+#        - active
+#        - averageRating
+#        - reviewsCount
+#        - brandName
+#        - sellerName
+#        - originCountry
+#        - weight
+#        - length
+#        - width
+#        - height
+#        - soldProductsCount
+#        - discount
+#        - dateAdded
+#        - popularityScore
+#      properties:
+#        id:
+#          type: "string"
+#          format: "uuid"
+#          description: "Unique identifier for the product."
+#        name:
+#          type: "string"
+#          description: "Name of the product."
+#        description:
+#          type: "string"
+#          description: "Description of the product."
+#        price:
+#          type: "number"
+#          description: "Price of the product."
+#        quantity:
+#          type: "integer"
+#          format: "int32"
+#          description: "Available quantity of the product."
+#        active:
+#          type: "boolean"
+#          description: "Indicates if the product is active."
+#        productFileUrl:
+#          type: "string"
+#          description: "URL of the product's primary image or file."
+#        productImageUrls:
+#          type: "array"
+#          description: "URLs of all product images (max 10)."
+#          maxItems: 10
+#          items:
+#            type: "string"
+#        averageRating:
+#          type: "number"
+#          description: "Average rating of the product."
+#        reviewsCount:
+#          type: "integer"
+#          format: "int32"
+#          description: "Number of reviews for the product."
+#        aiSummary:
+#          type: "string"
+#          description: "AI-generated summary of customer reviews. Null until generated."
+#        brandName:
+#          type: "string"
+#          description: "Brand of the product."
+#        sellerName:
+#          type: "string"
+#          description: "Seller of the product."
+#        originCountry:
+#          type: "string"
+#          description: "Country where the product is manufactured."
+#        weight:
+#          type: "integer"
+#          format: "int32"
+#          description: "Weight of the product in grams."
+#        length:
+#          type: "integer"
+#          format: "int32"
+#          description: "Length of the product in millimetres."
+#        width:
+#          type: "integer"
+#          format: "int32"
+#          description: "Width of the product in millimetres."
+#        height:
+#          type: "integer"
+#          format: "int32"
+#          description: "Height of the product in millimetres."
+#        soldProductsCount:
+#          type: "integer"
+#          format: "int32"
+#          description: "Total number of units of this product sold across all orders."
+#        discount:
+#          type: "integer"
+#          format: "int32"
+#          minimum: 0
+#          maximum: 100
+#          description: "Discount applied to the product as a percentage (0–100)."
+#        dateAdded:
+#          type: "string"
+#          format: "date-time"
+#          description: "Date and time when the product was added."
+#        popularityScore:
+#          type: "integer"
+#          format: "int32"
+#          description: "Computed popularity score based on sales volume and average rating."
+#
+#    ProductListWithPaginationInfoDto:
+#      type: "object"
+#      description: "Paginated list of products with pagination metadata."
+#      required:
+#        - products
+#        - page
+#        - size
+#        - totalElements
+#        - totalPages
+#      properties:
+#        products:
+#          type: "array"
+#          description: "List of products."
+#          items:
+#            $ref: "#/components/schemas/ProductInfoDto"
+#        page:
+#          type: "integer"
+#          format: "int32"
+#          description: "Current page number."
+#        size:
+#          type: "integer"
+#          format: "int32"
+#          description: "Number of products per page."
+#        totalElements:
+#          type: "integer"
+#          format: "int64"
+#          description: "Total number of products."
+#        totalPages:
+#          type: "integer"
+#          format: "int32"
+#          description: "Total number of pages."
+#
+#    ProductIdsDto:
+#      type: "object"
+#      required:
+#        - productIds
+#      properties:
+#        productIds:
+#          type: "array"
+#          items:
+#            type: "string"
+#            format: "uuid"
+#          description: "List of product IDs."
+#
+#    SellersDto:
+#      type: "object"
+#      description: "List of distinct product sellers."
+#      required:
+#        - sellers
+#      properties:
+#        sellers:
+#          type: "array"
+#          description: "List of product sellers."
+#          items:
+#            type: "string"
+#
+#    BrandsDto:
+#      type: "object"
+#      description: "List of distinct product brands."
+#      required:
+#        - brands
+#      properties:
+#        brands:
+#          type: "array"
+#          description: "List of product brands."
+#          items:
+#            type: "string"

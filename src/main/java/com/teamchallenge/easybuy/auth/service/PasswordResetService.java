@@ -1,8 +1,8 @@
 package com.teamchallenge.easybuy.auth.service;
 
 import com.teamchallenge.easybuy.auth.entity.PasswordResetToken;
-import com.teamchallenge.easybuy.user.entity.User;
 import com.teamchallenge.easybuy.auth.repository.PasswordResetTokenRepository;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ public class PasswordResetService {
     private String frontendUrl;
 
     public void sendResetLink(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "UserEntity not found"));
 
         LocalDateTime now = LocalDateTime.now();
         passwordResetTokenRepository.deleteAllByExpiresAtBefore(now);
@@ -35,14 +35,14 @@ public class PasswordResetService {
         String token = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setToken(token);
-        passwordResetToken.setUser(user);
+        passwordResetToken.setUser(userEntity);
         passwordResetToken.setCreatedAt(now);
         passwordResetToken.setExpiresAt(now.plusHours(24));
 
         passwordResetTokenRepository.save(passwordResetToken);
 
         String link = frontendUrl + "/reset-password?token=" + token;
-        emailConfirmationService.send(user.getEmail(), "Password reset",
+        emailConfirmationService.send(userEntity.getEmail(), "Password reset",
                 "Click on the link to set a new password: " + link);
     }
 
@@ -54,16 +54,16 @@ public class PasswordResetService {
             throw new IllegalStateException("The token has expired or has already been used.");
         }
 
-        User user = passwordResetToken.getUser();
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        UserEntity userEntity = passwordResetToken.getUser();
+        userEntity.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(userEntity);
 
         passwordResetToken.setConfirmed(true);
         passwordResetTokenRepository.save(passwordResetToken);
     }
 
     @Transactional
-    public void deleteAllByUser(User user) {
-        passwordResetTokenRepository.deleteAllByUser(user);
+    public void deleteAllByUser(UserEntity userEntity) {
+        passwordResetTokenRepository.deleteAllByUser(userEntity);
     }
 }

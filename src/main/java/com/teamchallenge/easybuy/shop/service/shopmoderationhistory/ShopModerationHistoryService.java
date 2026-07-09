@@ -1,16 +1,16 @@
 package com.teamchallenge.easybuy.shop.service.shopmoderationhistory;
 
-import com.teamchallenge.easybuy.shop.entity.Shop;
-import com.teamchallenge.easybuy.shop.entity.ShopModerationHistory;
-import com.teamchallenge.easybuy.user.entity.User;
 import com.teamchallenge.easybuy.shop.dto.shopmoderationhistory.ShopModerationHistoryDTO;
 import com.teamchallenge.easybuy.shop.dto.shopmoderationhistory.ShopModerationReversalDTO;
+import com.teamchallenge.easybuy.shop.entity.Shop;
+import com.teamchallenge.easybuy.shop.entity.ShopModerationHistory;
 import com.teamchallenge.easybuy.shop.exception.ShopNotFoundException;
 import com.teamchallenge.easybuy.shop.mapper.ShopModerationHistoryMapper;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;
 import com.teamchallenge.easybuy.shop.repository.shopmoderationhistory.ShopModerationHistoryRepository;
-import com.teamchallenge.easybuy.user.repository.UserRepository;
 import com.teamchallenge.easybuy.shop.service.security.ShopAccessGuard;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
+import com.teamchallenge.easybuy.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +65,7 @@ public class ShopModerationHistoryService {
         log.info("Creating moderation history record for shop: {}", shopId);
 
         Shop shop = findShopOrThrow(shopId);
-        User moderator = findUserOrThrow(dto.getModeratorId(), "Moderator not found: ");
+        UserEntity moderator = findUserOrThrow(dto.getModeratorId(), "Moderator not found: ");
 
         ShopModerationHistory entity = mapper.toEntity(dto);
         entity.setShop(shop);
@@ -99,7 +99,8 @@ public class ShopModerationHistoryService {
             throw new IllegalStateException("Moderation action already reversed: " + moderationHistoryId);
         }
 
-        User reversedBy = findUserOrThrow(dto.getReversedByUserId(), "User for reversal not found: ");
+        // Заменено на UserEntity
+        UserEntity reversedBy = findUserOrThrow(dto.getReversedByUserId(), "UserEntity for reversal not found: ");
         historyRecord.setReversedByUser(reversedBy);
         historyRecord.setReversalReason(dto.getReversalReason());
         historyRecord.setReversedAt(Instant.now());
@@ -115,7 +116,7 @@ public class ShopModerationHistoryService {
                 .orElseThrow(() -> new ShopNotFoundException("Shop not found: " + shopId));
     }
 
-    private User findUserOrThrow(UUID userId, String messagePrefix) {
+    private UserEntity findUserOrThrow(UUID userId, String messagePrefix) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(messagePrefix + userId));
     }
@@ -127,4 +128,3 @@ public class ShopModerationHistoryService {
                 ));
     }
 }
-

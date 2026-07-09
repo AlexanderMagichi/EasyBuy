@@ -1,6 +1,8 @@
 package com.teamchallenge.easybuy.user.repository;
 
 import com.teamchallenge.easybuy.user.entity.UserEntity;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -51,8 +53,8 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
      * @return the number of rows affected by the update query
      */
     @Modifying
-    @Query("UPDATE UserEntity u SET u.accountNonLocked = :accountNonLocked WHERE u.email = :email")
-    int setAccountLockedStatus(@Param("email") String email, @Param("accountNonLocked") boolean accountNonLocked);
+    @Query("UPDATE UserEntity u SET u.password = :newPassword WHERE u.id = :userId")
+    void changeUserPassword(@Param("newPassword") String newPassword, @Param("userId") UUID userId);
 
     /**
      * Unlocks all user accounts that are eligible for unlocking.
@@ -63,4 +65,7 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @Modifying
     @Query(value = "UPDATE UserEntity u SET u.accountNonLocked = true WHERE u.email IN (SELECT la.userEmail FROM LoginAttemptEntity la WHERE la.isUserLocked = false AND la.expirationDatetime IS NOT NULL)")
     void unlockUsers();
+
+    boolean existsByEmail(@NotBlank(message = "Email cannot be empty")
+                          @Email(message = "Incorrect email format") String email);
 }

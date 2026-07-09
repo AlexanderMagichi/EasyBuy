@@ -1,14 +1,8 @@
 package com.teamchallenge.easybuy.shop.mapper;
 
-import com.teamchallenge.easybuy.shop.entity.ShopSeoSettings;
 import com.teamchallenge.easybuy.shop.dto.ShopSeoSettingsDTO;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import com.teamchallenge.easybuy.shop.entity.ShopSeoSettings;
+import org.mapstruct.*;
 
 @Mapper(
         componentModel = "spring",

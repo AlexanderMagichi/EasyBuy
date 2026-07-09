@@ -1,5 +1,6 @@
 package com.teamchallenge.easybuy.shop.entity;
 
+import com.teamchallenge.easybuy.infrastructure.enums.ContactMethod;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -7,8 +8,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
-
-import com.teamchallenge.easybuy.infrastructure.enums.ContactMethod;
 
 import java.time.Instant;
 import java.util.UUID;

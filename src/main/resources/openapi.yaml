@@ -1,0 +1,224 @@
+openapi: 3.0.1
+info:
+  title: EasyBuy API
+  description: EasyBuy API documentation
+  version: 1.0.0
+servers:
+  - url: https
+paths:
+  /health:
+    get:
+      operationId: healthGET
+      responses:
+        '200':
+          description: OK
+
+  # Эндпоинты авторизации
+  /auth/register:
+    post:
+      tags: [Security]
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationRequest'
+      responses:
+        '200': {description: OK}
+
+  /auth/login:
+    post:
+      tags: [Security]
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuthenticationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAuthenticationResponse'
+
+  # Эндпоинты адресов
+  /customers/addresses:
+    get:
+      tags: [DeliveryAddress]
+      operationId: getAllAddresses
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeliveryAddressDto'
+    post:
+      tags: [DeliveryAddress]
+      operationId: createAddress
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryAddressRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryAddressDto'
+
+components:
+  schemas:
+    AddressDto:
+      type: object
+      properties:
+        city:
+          type: string
+        street:
+          type: string
+
+    DeliveryAddressDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        label:
+          type: string
+        line:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+        isDefault:
+          type: boolean
+
+    DeliveryAddressRequest:
+      type: object
+      properties:
+        label:
+          type: string
+        line:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        phoneNumber:
+          type: string
+        email:
+          type: string
+          format: email
+        address:
+          $ref: '#/components/schemas/AddressDto'
+        avatarLink:
+          type: string
+
+    UserRegistrationRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    UserAuthenticationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    UserAuthenticationResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        refreshToken:
+          type: string
+
+    UpdateUserAccountRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        phoneNumber:
+          type: string
+        email:
+          type: string
+          format: email
+        address:
+          $ref: '#/components/schemas/AddressDto'
+
+    ChangeUserPasswordRequest:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+
+    ConfirmEmailRequest:
+      type: object
+      properties:
+        token:
+          type: string
+        code:
+          type: string
+
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+
+    ConfirmPasswordResetRequest:
+      type: object
+      properties:
+        token:
+          type: string
+
+    InitiatePasswordResetRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email

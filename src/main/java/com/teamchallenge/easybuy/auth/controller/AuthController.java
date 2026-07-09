@@ -1,11 +1,11 @@
 package com.teamchallenge.easybuy.auth.controller;
 
 import com.teamchallenge.easybuy.auth.dto.*;
-import com.teamchallenge.easybuy.user.entity.UserEntity;
-import com.teamchallenge.easybuy.infrastructure.image.CloudinaryImageService;
 import com.teamchallenge.easybuy.auth.service.AuthenticationService;
 import com.teamchallenge.easybuy.auth.service.EmailConfirmationService;
 import com.teamchallenge.easybuy.auth.service.PasswordResetService;
+import com.teamchallenge.easybuy.infrastructure.image.CloudinaryImageService;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -34,7 +34,7 @@ public class AuthController {
     private final PasswordResetService passwordResetService;
     private final CloudinaryImageService cloudinaryImageService;
 
-    @Operation(summary = "User registration", description = "Receives registration data and sends a link to the email address to confirm it. The link looks like this: \".../confirm?token=...\"")
+    @Operation(summary = "UserEntity registration", description = "Receives registration data and sends a link to the email address to confirm it. The link looks like this: \".../confirm?token=...\"")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
@@ -109,7 +109,7 @@ public class AuthController {
         return ResponseEntity.ok("The new token has been sent to the email");
     }
 
-    @Operation(summary = "User authorization", description = "Returns JWT tokens")
+    @Operation(summary = "UserEntity authorization", description = "Returns JWT tokens")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

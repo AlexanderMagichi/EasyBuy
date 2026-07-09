@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.email.exception;
 
-import com.teamchallenge.easybuy.common.exception.dto.ApiErrorResponse;
-import com.teamchallenge.easybuy.common.exception.handler.ApiErrorResponseCreator;
+import com.teamchallenge.easybuy.infrastructure.exception.dto.ApiErrorResponse;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;

@@ -1,14 +1,9 @@
 package com.teamchallenge.easybuy.shop.mapper;
 
-import com.teamchallenge.easybuy.shop.entity.ShopModerationHistory;
+
 import com.teamchallenge.easybuy.shop.dto.shopmoderationhistory.ShopModerationHistoryDTO;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import com.teamchallenge.easybuy.shop.entity.ShopModerationHistory;
+import org.mapstruct.*;
 
 @Mapper(
         componentModel = "spring",
@@ -45,4 +40,3 @@ public interface ShopModerationHistoryMapper {
     @Mapping(target = "createdAt", ignore = true)
     void updateEntityFromDto(ShopModerationHistoryDTO dto, @MappingTarget ShopModerationHistory entity);
 }
-

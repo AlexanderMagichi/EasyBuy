@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.security.exception.handler;
 
-import com.teamchallenge.easybuy.common.exception.dto.ApiErrorResponse;
-import com.teamchallenge.easybuy.common.exception.handler.ApiErrorResponseCreator;
+import com.teamchallenge.easybuy.infrastructure.exception.dto.ApiErrorResponse;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 import com.teamchallenge.easybuy.security.exception.JwtTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -3,8 +3,14 @@ package com.teamchallenge.easybuy.shop.dto.shopcontact;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teamchallenge.easybuy.infrastructure.enums.ContactMethod;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 
 import java.time.Instant;

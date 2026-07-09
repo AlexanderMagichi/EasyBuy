@@ -1,9 +1,9 @@
 package com.teamchallenge.easybuy.product.service.category;
 
 import com.teamchallenge.easybuy.product.dto.category.GoodsAttributeValueDTO;
+import com.teamchallenge.easybuy.product.entity.category.GoodsAttributeValue;
 import com.teamchallenge.easybuy.product.exception.GoodsAttributeValueException;
 import com.teamchallenge.easybuy.product.mapper.category.GoodsAttributeValueMapper;
-import com.teamchallenge.easybuy.product.entity.category.GoodsAttributeValue;
 import com.teamchallenge.easybuy.product.repository.GoodsAttributeValueRepository;
 import com.teamchallenge.easybuy.product.repository.category.GoodsAttributeValueSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;

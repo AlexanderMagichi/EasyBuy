@@ -17,7 +17,7 @@ public class UserNotFoundException extends RuntimeException {
      * @param userId the unique identifier of the missing user
      */
     public UserNotFoundException(UUID userId) {
-        super(String.format("User with id = %s is not found.", userId));
+        super(String.format("UserEntity with id = %s is not found.", userId));
     }
 
     /**
@@ -27,6 +27,6 @@ public class UserNotFoundException extends RuntimeException {
      * @param email the email address of the missing user
      */
     public UserNotFoundException(String email) {
-        super(String.format("User with email = %s is not found.", email));
+        super(String.format("UserEntity with email = %s is not found.", email));
     }
 }

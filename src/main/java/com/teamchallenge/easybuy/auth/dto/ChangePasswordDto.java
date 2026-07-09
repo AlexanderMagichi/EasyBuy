@@ -9,7 +9,7 @@ import lombok.Data;
 public class ChangePasswordDto {
     @NotBlank(message = "Password cannot be empty")
     @Size(min = 6, max = 50, message = "Password must contain 6 to 50 characters")
-    @Schema(description = "User password", example = "MySecurePassword1", required = true)
+    @Schema(description = "UserEntity password", example = "MySecurePassword1", required = true)
     private String password;
 
     @NotBlank(message = "Password confirmation cannot be empty")

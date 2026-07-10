@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.entity;
+﻿package com.teamchallenge.easybuy.shop.entity;
 
 import com.teamchallenge.easybuy.infrastructure.persistence.BaseEntity;
 import com.teamchallenge.easybuy.product.entity.Goods;

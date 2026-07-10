@@ -19,9 +19,9 @@ import java.time.Duration;
  * This ensures that registration tokens are shared across multiple service instances.
  */
 @Slf4j
-@Component
+//@Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "spring.data.redis.host")
+//@ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis")
 public class RedisTokenCache implements TokenCache {
 
     private static final String KEY_PREFIX = "email:token:";

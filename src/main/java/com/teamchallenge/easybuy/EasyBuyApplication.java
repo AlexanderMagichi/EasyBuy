@@ -11,8 +11,6 @@ import org.springframework.retry.annotation.EnableRetry;
 import java.util.TimeZone;
 
 @EnableRetry
-@EnableCaching
-@EnableJpaAuditing
 @EnableJpaRepositories(basePackages = {
         "com.teamchallenge.easybuy.shop.repository",
         "com.teamchallenge.easybuy.product.repository",

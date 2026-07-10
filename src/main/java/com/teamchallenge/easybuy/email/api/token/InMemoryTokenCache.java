@@ -16,8 +16,7 @@ import java.util.concurrent.TimeUnit;
  * Provides a bounded cache with expiration policy.
  */
 @Slf4j
-@Component
-@ConditionalOnMissingBean(TokenCache.class)
+//@Component
 public class InMemoryTokenCache implements TokenCache {
 
     private final Cache<String, UserRegistrationRequest> cache;

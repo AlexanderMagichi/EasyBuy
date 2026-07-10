@@ -16,7 +16,7 @@ import java.util.Properties;
  * Configuration class for email service integration.
  * Configures the {@link JavaMailSender} and {@link MessageSource} for email templates.
  */
-@Configuration
+//@Configuration
 public class EmailConfig {
 
     @Value("${spring.mail.host}")

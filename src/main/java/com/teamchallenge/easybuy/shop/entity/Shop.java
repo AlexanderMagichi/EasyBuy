@@ -2,9 +2,7 @@ package com.teamchallenge.easybuy.shop.entity;
 
 import com.teamchallenge.easybuy.infrastructure.persistence.BaseEntity;
 import com.teamchallenge.easybuy.product.entity.Goods;
-import com.teamchallenge.easybuy.user.entity.Manager;
-import com.teamchallenge.easybuy.user.entity.Seller;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -78,7 +76,7 @@ public class Shop extends BaseEntity {
     @NotNull
     @Schema(description = "Owner of the shop (creator). Links to Seller entity.",
             example = "123e4567-e89b-12d3-a456-426614174000", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Seller seller;
+    private UserEntity seller;
 
     @OneToOne(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private ShopBillingInfo shopBillingInfo;
@@ -138,7 +136,7 @@ public class Shop extends BaseEntity {
     @Schema(description = "Admin user who moderated the store. Read only.",
             example = "123e4567-e89b-12d3-a456-426614174000",
             accessMode = Schema.AccessMode.READ_ONLY)
-    private User moderatedByUser;
+    private UserEntity moderatedByUser;
 
     @NotBlank
     @Column(name = "currency", nullable = false, length = 5)
@@ -176,10 +174,15 @@ public class Shop extends BaseEntity {
     @Schema(description = "SEO settings for the shop")
     private ShopSeoSettings seoSettings;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "shop_managers",
+            joinColumns = @JoinColumn(name = "shop_id"),
+            inverseJoinColumns = @JoinColumn(name = "manager_user_id")
+    )
     @Builder.Default
     @Schema(description = "List of manager link records for this shop")
-    private List<Manager> shopManagers = new ArrayList<>();
+    private List<UserEntity> shopManagers = new ArrayList<>();
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
@@ -215,16 +218,14 @@ public class Shop extends BaseEntity {
         record.setShop(null);
     }
 
-    public void addManager(Manager manager) {
+    public void addManager(UserEntity manager) {
         if (manager == null) return;
         this.shopManagers.add(manager);
-        manager.setShop(this);
     }
 
-    public void removeManager(Manager manager) {
+    public void removeManager(UserEntity manager) {
         if (manager == null) return;
         this.shopManagers.remove(manager);
-        manager.setShop(null);
     }
 
     public void setSeoSettings(ShopSeoSettings seoSettings) {

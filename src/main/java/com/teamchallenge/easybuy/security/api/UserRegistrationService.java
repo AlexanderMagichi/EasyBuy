@@ -1,9 +1,14 @@
 package com.teamchallenge.easybuy.security.api;
 
 
+import com.teamchallenge.easybuy.openapi.dto.UserAuthenticationResponse;
+import com.teamchallenge.easybuy.openapi.dto.UserRegistrationRequest;
 import com.teamchallenge.easybuy.security.converter.RegistrationDtoConverter;
 import com.teamchallenge.easybuy.security.exception.UserRegistrationException;
 import com.teamchallenge.easybuy.security.jwt.JwtTokenProvider;
+import com.teamchallenge.easybuy.user.entity.Authority;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
+import com.teamchallenge.easybuy.user.entity.UserGrantedAuthority;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

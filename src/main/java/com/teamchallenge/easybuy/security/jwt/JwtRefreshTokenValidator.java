@@ -15,14 +15,14 @@ public class JwtRefreshTokenValidator {
 
     public JwtRefreshTokenValidator(JwtSignKeyProvider keyProvider,
                                     JwtTokenFromAuthHeaderExtractor tokenExtractor) {
-        this.refreshParser = Jwts.parser().verifyWith(keyProvider.getRefresh()).build();
+        this.refreshParser = Jwts.parserBuilder().setSigningKey(keyProvider.getRefresh()).build();
         this.tokenExtractor = tokenExtractor;
     }
 
     public String extractEmail(HttpServletRequest request) {
         String token = tokenExtractor.extract(request);
         try {
-            String subject = refreshParser.parseSignedClaims(token).getPayload().getSubject();
+            String subject = refreshParser.parseClaimsJws(token).getBody().getSubject();
             if (!StringUtils.hasText(subject)) {
                 throw new JwtTokenHasNoUserEmailException("Refresh token has no subject");
             }

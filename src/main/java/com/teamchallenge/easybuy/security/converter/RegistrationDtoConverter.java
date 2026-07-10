@@ -18,5 +18,11 @@ public interface RegistrationDtoConverter {
     @Mapping(target = "accountNonLocked", ignore = true)
     @Mapping(target = "credentialsNonExpired", ignore = true)
     @Mapping(target = "enabled", ignore = true)
+    @Mapping(target = "birthDate", ignore = true)
+    @Mapping(target = "phoneNumber", ignore = true)
+    @Mapping(target = "emailVerified", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    @Mapping(target = "deletedBy", ignore = true)
+    @Mapping(target = "avatarUrl", ignore = true)
     UserEntity toEntity(final UserRegistrationRequest userRegistrationRequest);
 }

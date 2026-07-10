@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.auth.service;
 
 import com.teamchallenge.easybuy.auth.entity.Token;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.auth.repository.TokenRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class TokenService {
     @Value("${jwt.refreshTokenExpiration}")
     private long refreshTokenDurationMs;
 
-    public void createToken(User user, String refreshToken) {
+    public void createToken(UserEntity user, String refreshToken) {
         tokenRepository.save(
                 Token.builder()
                         .user(user)
@@ -40,7 +40,7 @@ public class TokenService {
     }
 
     @Transactional
-    public void deleteAllTokensForUser(User user) {
+    public void deleteAllTokensForUser(UserEntity user) {
         tokenRepository.deleteAllByUser(user);
     }
 
@@ -49,7 +49,7 @@ public class TokenService {
     }
 
     @Transactional
-    public void revokedAllTokensByUser(User user) {
+    public void revokedAllTokensByUser(UserEntity user) {
         List<Token> tokens = tokenRepository.findAllByUserAndRevokedFalse(user);
         for (Token token : tokens) {
             token.setRevoked(true);

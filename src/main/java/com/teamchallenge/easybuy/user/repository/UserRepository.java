@@ -17,6 +17,8 @@ import java.util.UUID;
  */
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
+    boolean existsByEmail(String email);
+
     /**
      * Retrieves a user entity by their unique email address.
      * <p>

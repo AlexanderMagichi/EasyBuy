@@ -14,7 +14,6 @@ import com.teamchallenge.easybuy.shop.mapper.ShopMapper;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;
 import com.teamchallenge.easybuy.shop.repository.ShopSearchBuilder;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
-import com.teamchallenge.easybuy.user.repository.SellerRepository;
 import com.teamchallenge.easybuy.shop.service.security.ShopAccessGuard;
 import com.teamchallenge.easybuy.shop.service.shopcontactinfo.ShopContactInfoService;
 import com.teamchallenge.easybuy.shop.service.shopseosettings.ShopSeoSettingsService;
@@ -59,7 +58,6 @@ public class ShopService {
 
     private final ShopRepository shopRepository;
     private final ShopMapper shopMapper;
-    private final SellerRepository sellerRepository;
     private final UserRepository userRepository;
     private final ShopValidationService validationService;
     private final ApplicationEventPublisher eventPublisher;
@@ -229,7 +227,7 @@ public class ShopService {
         if (accessGuard.isCurrentUserSeller() && !accessGuard.isCurrentUserAdmin()) {
             shop.setSeller(accessGuard.getCurrentSellerOrThrow());
         } else if (dto.getSellerId() != null && accessGuard.isCurrentUserAdmin()) {
-            shop.setSeller(sellerRepository.findById(dto.getSellerId())
+            shop.setSeller(userRepository.findById(dto.getSellerId())
                     .orElseThrow(() -> new IllegalArgumentException("Seller not found: " + dto.getSellerId())));
         }
 

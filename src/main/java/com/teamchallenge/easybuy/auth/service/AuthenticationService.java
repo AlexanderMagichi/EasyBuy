@@ -14,12 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Service for handling user registration and authentication.
@@ -37,7 +40,7 @@ public class AuthenticationService {
     private final CloudinaryImageService cloudinaryImageService;
     private final PhoneValidationService phoneValidationService;
 
-    public User register(RegisterRequestDto registerRequestDto) {
+    public UserEntity register(RegisterRequestDto registerRequestDto) {
         if (userRepository.existsByEmail(registerRequestDto.getEmail()))
             throw new IllegalStateException("The user with this email is already registered");
 
@@ -45,42 +48,24 @@ public class AuthenticationService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
 
-        User user;
-        switch (Role.valueOf(registerRequestDto.getRole())) {
-            case CUSTOMER:
-                user = Customer.builder()
-                        .email(registerRequestDto.getEmail())
-                        .password(passwordEncoder.encode(registerRequestDto.getPassword()))
-                        .role(Role.CUSTOMER)
-                        .avatarUrl(cloudinaryImageService.generateAvatarUrl(registerRequestDto.getEmail()))
-                        .agreement(registerRequestDto.isAgreement())
-                        .privacy(registerRequestDto.isPrivacy())
-                        .build();
-                break;
-            case SELLER:
-                // todo add the creation of a store and assign a name to it
-                user = Seller.builder()
-                        .email(registerRequestDto.getEmail())
-                        .password(passwordEncoder.encode(registerRequestDto.getPassword()))
-                        .role(Role.SELLER)
-                        .avatarUrl(cloudinaryImageService.generateAvatarUrl(registerRequestDto.getStoreName()))
-                        .agreement(registerRequestDto.isAgreement())
-                        .privacy(registerRequestDto.isPrivacy())
-                        .build();
-                break;
-            case MANAGER:
-                // todo add a search by store name and link the manager to the store
-                user = Manager.builder()
-                        .email(registerRequestDto.getEmail())
-                        .password(passwordEncoder.encode(registerRequestDto.getPassword()))
-                        .role(Role.MANAGER)
-                        .agreement(registerRequestDto.isAgreement())
-                        .privacy(registerRequestDto.isPrivacy())
-                        .build();
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid role");
-        }
+        String email = registerRequestDto.getEmail();
+        String localPart = email != null && email.contains("@") ? email.substring(0, email.indexOf('@')) : "user";
+        String avatarSeed = registerRequestDto.getStoreName() != null && !registerRequestDto.getStoreName().isBlank()
+                ? registerRequestDto.getStoreName()
+                : email;
+
+        UserEntity user = UserEntity.builder()
+                .email(email)
+                .password(passwordEncoder.encode(registerRequestDto.getPassword()))
+                .firstName(localPart)
+                .lastName(localPart)
+                .avatarUrl(cloudinaryImageService.generateAvatarUrl(avatarSeed))
+                .build();
+
+        user.addAuthority(UserGrantedAuthority.builder()
+                .authority(resolveAuthority(registerRequestDto.getRole()))
+                .build());
+
         return userRepository.save(user);
     }
 
@@ -91,7 +76,7 @@ public class AuthenticationService {
                             request.getEmail(), request.getPassword()
                     )
             );
-            User user = userRepository.findByEmail(request.getEmail())
+            UserEntity user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email : " + request.getEmail()));
             if (!user.isEmailVerified()) {
                 throw new IllegalStateException("Email not confirmed");
@@ -108,9 +93,10 @@ public class AuthenticationService {
         }
     }
 
-    public AuthResponseDto generateToken(User user) {
-        String accessToken = jwtService.generateAccessToken(user.getEmail(), user.getRole().name());
-        String refreshToken = jwtService.generateRefreshToken(user.getEmail(), user.getRole().name());
+    public AuthResponseDto generateToken(UserEntity user) {
+        String role = getPrimaryAuthority(user).name();
+        String accessToken = jwtService.generateAccessToken(user.getEmail(), role);
+        String refreshToken = jwtService.generateRefreshToken(user.getEmail(), role);
         tokenService.createToken(user, refreshToken);
         return new AuthResponseDto(accessToken, refreshToken);
     }
@@ -120,8 +106,8 @@ public class AuthenticationService {
         if (token == null || !tokenService.isValid(token))
             throw new IllegalStateException("Invalid token");
 
-        User user = token.getUser();
-        String accessToken = jwtService.generateAccessToken(user.getEmail(), user.getRole().name());
+        UserEntity user = token.getUser();
+        String accessToken = jwtService.generateAccessToken(user.getEmail(), getPrimaryAuthority(user).name());
         return new AuthResponseDto(accessToken, refreshToken);
     }
 
@@ -129,7 +115,7 @@ public class AuthenticationService {
         tokenService.revokedAllTokensByUser(getUser());
     }
 
-    private User getUser() {
+    private UserEntity getUser() {
         String username = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -141,7 +127,7 @@ public class AuthenticationService {
     }
 
     public void changePassword(ChangePasswordDto request) {
-        User user = getUser();
+        UserEntity user = getUser();
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
@@ -150,24 +136,49 @@ public class AuthenticationService {
     }
 
     public void updateAvatarUrl(String avatarUrl) {
-        User user = getUser();
+        UserEntity user = getUser();
         user.setAvatarUrl(avatarUrl);
         userRepository.save(user);
     }
 
     public void deleteAvatarUrl() throws IOException {
-        User user = getUser();
+        UserEntity user = getUser();
         String avatarUrl = user.getAvatarUrl();
         String publicId = cloudinaryImageService.extractPublicIdFromUrl(avatarUrl);
         if (publicId != null) {
             cloudinaryImageService.deleteImage(publicId);
         }
         // todo make it so that depending on how the role is, the avatar is generated from the corresponding name
-        if (user.getRole().equals(Role.CUSTOMER)) {
+        if (getPrimaryAuthority(user) == Authority.CUSTOMER) {
             user.setAvatarUrl(cloudinaryImageService.generateAvatarUrl(user.getEmail()));
         } else {
             user.setAvatarUrl(null);
         }
         userRepository.save(user);
+    }
+
+    private Authority resolveAuthority(String role) {
+        if (role == null || role.isBlank()) {
+            return Authority.CUSTOMER;
+        }
+
+        String normalized = role.trim().toUpperCase(Locale.ROOT);
+        if ("ADMIN".equals(normalized)) {
+            return Authority.SUPER_ADMIN;
+        }
+
+        return Authority.valueOf(normalized);
+    }
+
+    private Authority getPrimaryAuthority(UserEntity user) {
+        return Optional.ofNullable(user.getAuthorities())
+                .stream()
+                .flatMap(java.util.Collection::stream)
+                .map(GrantedAuthority::getAuthority)
+                .map(value -> value.startsWith("ROLE_") ? value.substring("ROLE_".length()) : value)
+                .map(Authority::valueOf)
+                .filter(authority -> authority != Authority.USER)
+                .findFirst()
+                .orElse(Authority.USER);
     }
 }

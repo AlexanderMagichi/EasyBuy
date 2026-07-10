@@ -1,6 +1,6 @@
 package com.teamchallenge.easybuy.security.config;
 
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +17,7 @@ import java.util.Collections;
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
-    private final User user;
+    private final UserEntity user;
 
     @Override
     public boolean isAccountNonExpired() {
@@ -41,7 +41,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(() -> "ROLE_" + user.getRole().name());
+        return user.getAuthorities() == null ? Collections.emptySet() : user.getAuthorities();
     }
 
     @Override

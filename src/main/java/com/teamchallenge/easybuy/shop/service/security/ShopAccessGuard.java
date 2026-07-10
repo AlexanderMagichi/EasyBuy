@@ -1,11 +1,9 @@
 package com.teamchallenge.easybuy.shop.service.security;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
-import com.teamchallenge.easybuy.user.entity.Seller;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
-import com.teamchallenge.easybuy.user.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -31,7 +29,6 @@ public class ShopAccessGuard {
 
     private final ShopRepository shopRepository;
     private final UserRepository userRepository;
-    private final SellerRepository sellerRepository;
 
     public void requireCanManageShop(UUID shopId) {
         Shop shop = shopRepository.findById(shopId)
@@ -45,7 +42,7 @@ public class ShopAccessGuard {
             return;
         }
 
-        if (hasAuthority(authentication, "ROLE_ADMIN")) {
+        if (hasAuthority(authentication, "ROLE_SUPER_ADMIN") || hasAuthority(authentication, "ROLE_ADMIN")) {
             return;
         }
 
@@ -53,7 +50,7 @@ public class ShopAccessGuard {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only seller or admin can manage shop resources");
         }
 
-        User currentUser = userRepository.findByEmail(authentication.getName())
+        UserEntity currentUser = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current user is not found"));
 
         UUID sellerId = shop.getSeller() != null ? shop.getSeller().getId() : null;
@@ -75,7 +72,9 @@ public class ShopAccessGuard {
 
     public boolean isCurrentUserAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && authentication.isAuthenticated() && hasAuthority(authentication, "ROLE_ADMIN");
+        return authentication != null
+                && authentication.isAuthenticated()
+                && (hasAuthority(authentication, "ROLE_SUPER_ADMIN") || hasAuthority(authentication, "ROLE_ADMIN"));
     }
 
     public boolean isCurrentUserSeller() {
@@ -83,17 +82,14 @@ public class ShopAccessGuard {
         return authentication != null && authentication.isAuthenticated() && hasAuthority(authentication, "ROLE_SELLER");
     }
 
-    public Seller getCurrentSellerOrThrow() {
+    public UserEntity getCurrentSellerOrThrow() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User must be authenticated");
         }
 
-        User currentUser = userRepository.findByEmail(authentication.getName())
+        return userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current user is not found"));
-
-        return sellerRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Authenticated user is not a seller"));
     }
 
     private boolean hasAuthority(Authentication authentication, String authority) {
@@ -102,4 +98,3 @@ public class ShopAccessGuard {
                 .anyMatch(grantedAuthority -> authority.equals(grantedAuthority.getAuthority()));
     }
 }
-

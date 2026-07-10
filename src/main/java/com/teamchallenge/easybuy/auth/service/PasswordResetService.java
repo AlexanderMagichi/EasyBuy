@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.auth.service;
 
 import com.teamchallenge.easybuy.auth.entity.PasswordResetToken;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.auth.repository.PasswordResetTokenRepository;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class PasswordResetService {
     private String frontendUrl;
 
     public void sendResetLink(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         LocalDateTime now = LocalDateTime.now();
         passwordResetTokenRepository.deleteAllByExpiresAtBefore(now);
@@ -54,7 +54,7 @@ public class PasswordResetService {
             throw new IllegalStateException("The token has expired or has already been used.");
         }
 
-        User user = passwordResetToken.getUser();
+        UserEntity user = passwordResetToken.getUser();
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
@@ -63,7 +63,7 @@ public class PasswordResetService {
     }
 
     @Transactional
-    public void deleteAllByUser(User user) {
+    public void deleteAllByUser(UserEntity user) {
         passwordResetTokenRepository.deleteAllByUser(user);
     }
 }

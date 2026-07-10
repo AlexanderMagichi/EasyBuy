@@ -2,7 +2,7 @@ package com.teamchallenge.easybuy.auth.service;
 
 import com.teamchallenge.easybuy.auth.dto.AuthResponseDto;
 import com.teamchallenge.easybuy.auth.entity.EmailConfirmationToken;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.auth.repository.EmailConfirmationTokenRepository;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -43,7 +43,7 @@ public class EmailConfirmationService {
         javaMailSender.send(simpleMailMessage);
     }
 
-    public void sendConfirmationEmail(User user) {
+    public void sendConfirmationEmail(UserEntity user) {
         String token = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
 
@@ -63,7 +63,7 @@ public class EmailConfirmationService {
 
     @Transactional
     public void resendConfirmationEmail(String email) {
-        User user = userRepository.findByEmail(email)
+        UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         deleteAllByUser(user);
         sendConfirmationEmail(user);
@@ -80,7 +80,7 @@ public class EmailConfirmationService {
         emailConfirmationToken.setConfirmed(true);
         emailConfirmationTokenRepository.save(emailConfirmationToken);
 
-        User user = emailConfirmationToken.getUser();
+        UserEntity user = emailConfirmationToken.getUser();
         user.setEmailVerified(true);
         userRepository.save(user);
 
@@ -88,7 +88,7 @@ public class EmailConfirmationService {
     }
 
     @Transactional
-    public void deleteAllByUser(User user) {
+    public void deleteAllByUser(UserEntity user) {
         emailConfirmationTokenRepository.deleteAllByUser(user);
     }
 }

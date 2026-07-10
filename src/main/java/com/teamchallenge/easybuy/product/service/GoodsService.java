@@ -1,9 +1,8 @@
 package com.teamchallenge.easybuy.product.service;
 
 import com.teamchallenge.easybuy.product.dto.GoodsDTO;
-import com.teamchallenge.easybuy.user.entity.Manager;
-import com.teamchallenge.easybuy.user.entity.Role;
-import com.teamchallenge.easybuy.user.entity.User;
+import com.teamchallenge.easybuy.user.entity.Authority;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.product.exception.GoodsNotFoundException;
 import com.teamchallenge.easybuy.product.mapper.GoodsMapper;
 import com.teamchallenge.easybuy.product.entity.Goods;
@@ -25,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -87,8 +87,8 @@ public class GoodsService {
 
         // Non-admin users cannot move goods between shops.
         if (goodsDTO.getShopId() != null && !goodsDTO.getShopId().equals(existingShopId)) {
-            User currentUser = getCurrentUserOrThrow();
-            if (currentUser.getRole() != Role.ADMIN) {
+            UserEntity currentUser = getCurrentUserOrThrow();
+            if (!hasAuthority(currentUser, Authority.SUPER_ADMIN)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot move goods to another shop");
             }
         }
@@ -118,14 +118,14 @@ public class GoodsService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Shop ID is required");
         }
 
-        User currentUser = getCurrentUserOrThrow();
-        Role role = currentUser.getRole();
+        UserEntity currentUser = getCurrentUserOrThrow();
+        Set<Authority> authorities = extractAuthorities(currentUser);
 
-        if (role == Role.ADMIN) {
+        if (authorities.contains(Authority.SUPER_ADMIN)) {
             return;
         }
 
-        if (role == Role.SELLER) {
+        if (authorities.contains(Authority.SELLER)) {
             boolean ownsShop = shopRepository.existsByShopIdAndSeller_Id(shopId, currentUser.getId());
             if (!ownsShop) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Seller can manage only own shop goods");
@@ -133,21 +133,10 @@ public class GoodsService {
             return;
         }
 
-        if (role == Role.MANAGER) {
-            if (!(currentUser instanceof Manager manager) || manager.getShop() == null || manager.getShop().getShopId() == null) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Manager is not assigned to a shop");
-            }
-
-            if (!shopId.equals(manager.getShop().getShopId())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Manager can manage goods only in assigned shop");
-            }
-            return;
-        }
-
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions to manage goods");
     }
 
-    private User getCurrentUserOrThrow() {
+    private UserEntity getCurrentUserOrThrow() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication is required");
@@ -155,6 +144,17 @@ public class GoodsService {
 
         return userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current user is not found"));
+    }
+
+    private boolean hasAuthority(UserEntity user, Authority authority) {
+        return extractAuthorities(user).contains(authority);
+    }
+
+    private Set<Authority> extractAuthorities(UserEntity user) {
+        return user.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority().replace("ROLE_", ""))
+                .map(Authority::valueOf)
+                .collect(java.util.stream.Collectors.toSet());
     }
 
     @Transactional(readOnly = true)

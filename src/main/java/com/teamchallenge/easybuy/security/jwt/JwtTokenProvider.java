@@ -40,12 +40,12 @@ public class JwtTokenProvider {
         try {
             Instant now = Instant.now();
             return Jwts.builder()
-                    .claims(extraClaims)
-                    .subject(userDetails.getUsername())
-                    .issuer(jwtProperties.issuer())
-                    .audience().add(jwtProperties.audience()).and()
-                    .issuedAt(Date.from(now))
-                    .expiration(Date.from(now.plus(expiration)))
+                    .setClaims(extraClaims)
+                    .setSubject(userDetails.getUsername())
+                    .setIssuer(jwtProperties.issuer())
+                    .setAudience(jwtProperties.audience())
+                    .setIssuedAt(Date.from(now))
+                    .setExpiration(Date.from(now.plus(expiration)))
                     .signWith(key)
                     .compact();
         } catch (JwtException exception) {

@@ -2,6 +2,7 @@ package com.teamchallenge.easybuy.user.api.avatar;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.user.exception.UserNotFoundException;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

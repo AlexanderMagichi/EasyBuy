@@ -1,4 +1,5 @@
 package com.teamchallenge.easybuy.shop.service.shopseosettings;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopSeoSettings;
@@ -99,5 +100,4 @@ class ShopSeoSettingsServiceTest {
         assertThrows(IllegalArgumentException.class, () -> service.delete(shopId));
     }
 }
-
 

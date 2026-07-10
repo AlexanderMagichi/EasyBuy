@@ -1,4 +1,5 @@
 package com.teamchallenge.easybuy.shop.controller;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamchallenge.easybuy.IntegrationTest;
@@ -7,14 +8,14 @@ import com.teamchallenge.easybuy.shop.entity.ShopBillingInfo;
 import com.teamchallenge.easybuy.shop.entity.ShopContactInfo;
 import com.teamchallenge.easybuy.shop.entity.ShopSeoSettings;
 import com.teamchallenge.easybuy.shop.entity.ShopTaxInfo;
-import com.teamchallenge.easybuy.user.entity.Role;
-import com.teamchallenge.easybuy.user.entity.Seller;
+import com.teamchallenge.easybuy.user.entity.Authority;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;
 import com.teamchallenge.easybuy.shop.repository.shopbillinginfo.ShopBillingRepository;
 import com.teamchallenge.easybuy.shop.repository.shopcontact.ShopContactInfoRepository;
 import com.teamchallenge.easybuy.shop.repository.shopseosettings.ShopSeoSettingsRepository;
 import com.teamchallenge.easybuy.shop.repository.shoptaxrepository.ShopTaxRepository;
-import com.teamchallenge.easybuy.user.repository.SellerRepository;
+import com.teamchallenge.easybuy.user.repository.UserRepository;
 import com.teamchallenge.easybuy.shop.service.analytics.AnalyticsService;
 import com.teamchallenge.easybuy.shop.service.audit.AuditService;
 import com.teamchallenge.easybuy.shop.service.notification.NotificationService;
@@ -55,7 +56,7 @@ class ShopOwnershipIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private SellerRepository sellerRepository;
+    private UserRepository sellerRepository;
 
     @Autowired
     private ShopRepository shopRepository;
@@ -94,7 +95,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-owner@example.com", roles = {"SELLER"})
     void sellerOwnShop_update_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-owner@example.com", "Owner Seller");
+        UserEntity owner = createSeller("seller-owner@example.com", "Owner UserEntity");
         Shop ownShop = createShop(owner, "Owner Shop");
 
         mockMvc.perform(put("/api/v1/shops/{id}", ownShop.getShopId())
@@ -106,8 +107,8 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-a@example.com", roles = {"SELLER"})
     void sellerForeignShop_update_shouldReturn403() throws Exception {
-        Seller sellerA = createSeller("seller-a@example.com", "Seller A");
-        Seller sellerB = createSeller("seller-b@example.com", "Seller B");
+        UserEntity sellerA = createSeller("seller-a@example.com", "UserEntity A");
+        UserEntity sellerB = createSeller("seller-b@example.com", "UserEntity B");
         Shop foreignShop = createShop(sellerB, "Foreign Shop");
 
         mockMvc.perform(put("/api/v1/shops/{id}", foreignShop.getShopId())
@@ -119,7 +120,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-profile@example.com", roles = {"SELLER"})
     void sellerOwnShop_profileUpdate_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-profile@example.com", "Profile Seller");
+        UserEntity owner = createSeller("seller-profile@example.com", "Profile UserEntity");
         Shop ownShop = createShop(owner, "Profile Shop");
 
         mockMvc.perform(put("/api/v1/shops/{id}/profile", ownShop.getShopId())
@@ -131,8 +132,8 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-profile-a@example.com", roles = {"SELLER"})
     void sellerForeignShop_profileUpdate_shouldReturn403() throws Exception {
-        Seller sellerA = createSeller("seller-profile-a@example.com", "Seller Profile A");
-        Seller sellerB = createSeller("seller-profile-b@example.com", "Seller Profile B");
+        UserEntity sellerA = createSeller("seller-profile-a@example.com", "UserEntity Profile A");
+        UserEntity sellerB = createSeller("seller-profile-b@example.com", "UserEntity Profile B");
         Shop foreignShop = createShop(sellerB, "Profile Foreign Shop");
 
         mockMvc.perform(put("/api/v1/shops/{id}/profile", foreignShop.getShopId())
@@ -144,7 +145,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-contact-owner@example.com", roles = {"SELLER"})
     void sellerOwnShop_contactUpdate_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-contact-owner@example.com", "Contact Owner");
+        UserEntity owner = createSeller("seller-contact-owner@example.com", "Contact Owner");
         Shop ownShop = createShop(owner, "Contact Shop");
         createContactInfo(ownShop);
 
@@ -157,8 +158,8 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-contact-a@example.com", roles = {"SELLER"})
     void sellerForeignShop_contactUpdate_shouldReturn403() throws Exception {
-        createSeller("seller-contact-a@example.com", "Seller Contact A");
-        Seller sellerB = createSeller("seller-contact-b@example.com", "Seller Contact B");
+        createSeller("seller-contact-a@example.com", "UserEntity Contact A");
+        UserEntity sellerB = createSeller("seller-contact-b@example.com", "UserEntity Contact B");
         Shop foreignShop = createShop(sellerB, "Foreign Contact Shop");
         createContactInfo(foreignShop);
 
@@ -171,7 +172,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-tax-owner@example.com", roles = {"SELLER"})
     void sellerOwnShop_taxUpdate_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-tax-owner@example.com", "Tax Owner");
+        UserEntity owner = createSeller("seller-tax-owner@example.com", "Tax Owner");
         Shop ownShop = createShop(owner, "Tax Shop");
         createTaxInfo(ownShop);
 
@@ -184,8 +185,8 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-tax-a@example.com", roles = {"SELLER"})
     void sellerForeignShop_taxUpdate_shouldReturn403() throws Exception {
-        createSeller("seller-tax-a@example.com", "Seller Tax A");
-        Seller sellerB = createSeller("seller-tax-b@example.com", "Seller Tax B");
+        createSeller("seller-tax-a@example.com", "UserEntity Tax A");
+        UserEntity sellerB = createSeller("seller-tax-b@example.com", "UserEntity Tax B");
         Shop foreignShop = createShop(sellerB, "Foreign Tax Shop");
         createTaxInfo(foreignShop);
 
@@ -198,7 +199,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-seo-owner@example.com", roles = {"SELLER"})
     void sellerOwnShop_seoUpdate_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-seo-owner@example.com", "Seo Owner");
+        UserEntity owner = createSeller("seller-seo-owner@example.com", "Seo Owner");
         Shop ownShop = createShop(owner, "Seo Shop");
         createSeoSettings(ownShop);
 
@@ -211,8 +212,8 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-seo-a@example.com", roles = {"SELLER"})
     void sellerForeignShop_seoUpdate_shouldReturn403() throws Exception {
-        createSeller("seller-seo-a@example.com", "Seller Seo A");
-        Seller sellerB = createSeller("seller-seo-b@example.com", "Seller Seo B");
+        createSeller("seller-seo-a@example.com", "UserEntity Seo A");
+        UserEntity sellerB = createSeller("seller-seo-b@example.com", "UserEntity Seo B");
         Shop foreignShop = createShop(sellerB, "Foreign Seo Shop");
         createSeoSettings(foreignShop);
 
@@ -225,7 +226,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-billing-owner@example.com", roles = {"SELLER"})
     void sellerOwnShop_getBilling_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-billing-owner@example.com", "Billing Owner");
+        UserEntity owner = createSeller("seller-billing-owner@example.com", "Billing Owner");
         Shop ownShop = createShop(owner, "Billing Shop");
         createBillingInfo(ownShop, owner.getEmail());
 
@@ -237,7 +238,7 @@ class ShopOwnershipIntegrationTest {
     @WithMockUser(username = "seller-billing-a@example.com", roles = {"SELLER"})
     void sellerForeignShop_getBilling_shouldReturn403() throws Exception {
         createSeller("seller-billing-a@example.com", "Billing A");
-        Seller sellerB = createSeller("seller-billing-b@example.com", "Billing B");
+        UserEntity sellerB = createSeller("seller-billing-b@example.com", "Billing B");
         Shop foreignShop = createShop(sellerB, "Foreign Billing Shop");
         createBillingInfo(foreignShop, sellerB.getEmail());
 
@@ -248,7 +249,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "seller-billing-owner2@example.com", roles = {"SELLER"})
     void sellerOwnShop_billingOnboarding_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-billing-owner2@example.com", "Billing Owner2");
+        UserEntity owner = createSeller("seller-billing-owner2@example.com", "Billing Owner2");
         Shop ownShop = createShop(owner, "Billing Onboarding Shop");
         // Keep billing absent: onboarding flow should initialize it for owner shop.
         when(stripeService.createOnboardingLink(anyString())).thenReturn("https://connect.stripe.com/test");
@@ -261,7 +262,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "admin-billing@example.com", roles = {"ADMIN"})
     void adminAnyShop_getBilling_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-admin-billing-owned@example.com", "Owner Billing");
+        UserEntity owner = createSeller("seller-admin-billing-owned@example.com", "Owner Billing");
         Shop shop = createShop(owner, "Admin Billing Target Shop");
         createBillingInfo(shop, owner.getEmail());
 
@@ -272,7 +273,7 @@ class ShopOwnershipIntegrationTest {
     @Test
     @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
     void adminAnyShop_update_shouldReturn200() throws Exception {
-        Seller owner = createSeller("seller-admin-owned@example.com", "Owner");
+        UserEntity owner = createSeller("seller-admin-owned@example.com", "Owner");
         Shop shop = createShop(owner, "Admin Target Shop");
 
         mockMvc.perform(put("/api/v1/shops/{id}", shop.getShopId())
@@ -281,16 +282,17 @@ class ShopOwnershipIntegrationTest {
                 .andExpect(status().isOk());
     }
 
-    private Seller createSeller(String email, String name) {
-        Seller seller = new Seller();
+    private UserEntity createSeller(String email, String name) {
+        UserEntity seller = new UserEntity();
         seller.setEmail(email);
         seller.setPassword("encoded-password");
-        seller.setName(name);
-        seller.setRole(Role.SELLER);
+        seller.setFirstName(name);
+        seller.setLastName("Seller");
+        seller.addAuthority(com.teamchallenge.easybuy.user.entity.UserGrantedAuthority.builder().authority(Authority.SELLER).build());
         return sellerRepository.save(seller);
     }
 
-    private Shop createShop(Seller seller, String shopName) {
+    private Shop createShop(UserEntity seller, String shopName) {
         Shop shop = new Shop();
         shop.setShopName(shopName + "-" + UUID.randomUUID());
         shop.setShopDescription("Initial description");
@@ -302,7 +304,7 @@ class ShopOwnershipIntegrationTest {
         return shopRepository.save(shop);
     }
 
-    private Map<String, Object> validShopUpdateBody(Shop shop, Seller seller, String description) {
+    private Map<String, Object> validShopUpdateBody(Shop shop, UserEntity seller, String description) {
         Map<String, Object> body = new HashMap<>();
         body.put("shopName", shop.getShopName());
         body.put("shopDescription", description);

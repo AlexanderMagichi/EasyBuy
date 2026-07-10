@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.service.shopmoderationhistory;
+package com.teamchallenge.easybuy.shop.service.shopmoderationhistory;
 
 import com.teamchallenge.easybuy.shop.dto.shopmoderationhistory.ShopModerationHistoryDTO;
 import com.teamchallenge.easybuy.shop.dto.shopmoderationhistory.ShopModerationReversalDTO;

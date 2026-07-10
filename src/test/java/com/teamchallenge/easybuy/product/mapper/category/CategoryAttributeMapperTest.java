@@ -1,4 +1,5 @@
 package com.teamchallenge.easybuy.product.mapper.category;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.teamchallenge.easybuy.product.entity.category.AttributeType;
 import org.junit.jupiter.api.Test;

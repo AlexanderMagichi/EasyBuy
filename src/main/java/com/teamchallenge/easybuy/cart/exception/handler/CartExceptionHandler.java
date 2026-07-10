@@ -4,6 +4,8 @@ import com.teamchallenge.easybuy.cart.exception.InvalidItemProductQuantityExcept
 import com.teamchallenge.easybuy.cart.exception.InvalidShoppingCartIdException;
 import com.teamchallenge.easybuy.cart.exception.ShoppingCartItemNotFoundException;
 import com.teamchallenge.easybuy.cart.exception.ShoppingCartNotFoundException;
+import com.teamchallenge.easybuy.infrastructure.exception.dto.ApiErrorResponse;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

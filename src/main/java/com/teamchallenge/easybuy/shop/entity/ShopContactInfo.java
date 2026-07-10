@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.entity;
+package com.teamchallenge.easybuy.shop.entity;
 
 import com.teamchallenge.easybuy.infrastructure.enums.ContactMethod;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,8 +1,9 @@
 package com.teamchallenge.easybuy.shop.controller.shopseosettings;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamchallenge.easybuy.shop.dto.ShopSeoSettingsDTO;
-import com.teamchallenge.easybuy.common.exception.GlobalExceptionHandler;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.teamchallenge.easybuy.shop.service.shopseosettings.ShopSeoSettingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +44,7 @@ class ShopSeoSettingsControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(new ApiErrorResponseCreator()))
                 .build();
     }
 

@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.controller.shopanalytics;
+package com.teamchallenge.easybuy.shop.controller.shopanalytics;
 
 import com.teamchallenge.easybuy.shop.dto.shopanalytics.ShopAnalyticsDTO;
 import com.teamchallenge.easybuy.shop.service.shopanalytics.ShopAnalyticsService;

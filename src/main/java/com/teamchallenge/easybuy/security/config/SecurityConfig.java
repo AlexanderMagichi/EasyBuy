@@ -1,6 +1,6 @@
 package com.teamchallenge.easybuy.security.config;
 
-import com.teamchallenge.easybuy.user.service.UserDetailsServiceImpl;
+import com.teamchallenge.easybuy.security.api.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -49,7 +49,7 @@ public class SecurityConfig {
             "/api/goods-images/**"
     };
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean

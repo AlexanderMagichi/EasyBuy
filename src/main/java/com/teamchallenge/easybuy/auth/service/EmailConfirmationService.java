@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.auth.service;
+package com.teamchallenge.easybuy.auth.service;
 
 import com.teamchallenge.easybuy.auth.dto.AuthResponseDto;
 import com.teamchallenge.easybuy.auth.entity.EmailConfirmationToken;

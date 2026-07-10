@@ -1,4 +1,5 @@
 package com.teamchallenge.easybuy.shop.service.shopcontactinfo;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopContactInfo;
@@ -106,5 +107,4 @@ class ShopContactInfoServiceTest {
         verify(contactInfoRepository).save(entity);
     }
 }
-
 

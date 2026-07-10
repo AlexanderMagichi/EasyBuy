@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.auth.controller;
+package com.teamchallenge.easybuy.auth.controller;
 
 import com.teamchallenge.easybuy.auth.dto.*;
 import com.teamchallenge.easybuy.auth.service.AuthenticationService;

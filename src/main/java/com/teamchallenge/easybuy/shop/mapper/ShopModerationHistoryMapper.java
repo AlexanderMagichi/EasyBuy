@@ -3,6 +3,7 @@ package com.teamchallenge.easybuy.shop.mapper;
 
 import com.teamchallenge.easybuy.shop.dto.shopmoderationhistory.ShopModerationHistoryDTO;
 import com.teamchallenge.easybuy.shop.entity.ShopModerationHistory;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import org.mapstruct.*;
 
 @Mapper(

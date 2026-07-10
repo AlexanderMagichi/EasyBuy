@@ -1,5 +1,6 @@
 package com.teamchallenge.easybuy.user.service;
 
+import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
 import com.teamchallenge.easybuy.user.entity.Authority;
 import com.teamchallenge.easybuy.user.entity.MembershipStatus;
 import com.teamchallenge.easybuy.user.entity.StoreMembership;
@@ -41,6 +42,7 @@ import java.util.UUID;
 public class RBACGuardService {
 
     private final StoreMembershipRepository membershipRepository;
+    private final SecurityPrincipalProvider securityPrincipalProvider;
 
     // ---------------------------------------------------------------------
     // Store-scoped capability checks (explicit user)
@@ -153,7 +155,52 @@ public class RBACGuardService {
         UUID userId = currentUserId();
         if (isGlobalSuperAdmin() || canManageProducts(userId, storeId)) {
             return;
-
         }
+        denyStore(userId, storeId, "MANAGER");
+    }
+
+    /**
+     * Asserts that the currently authenticated user has moderation rights.
+     */
+    public void requireCanModerate() {
+        if (isGlobalSuperAdmin() || isGlobalModerator()) {
+            return;
+        }
+        throw new AccessDeniedException("Insufficient rights: MODERATOR required");
+    }
+
+    /**
+     * Asserts that the currently authenticated user can delegate roles in the store.
+     *
+     * @param storeId the target store ID
+     * @throws AccessDeniedException if the user lacks delegation rights
+     */
+    public void requireCanDelegateRoles(UUID storeId) {
+        UUID userId = currentUserId();
+        if (isGlobalSuperAdmin() || canDelegateRoles(userId, storeId)) {
+            return;
+        }
+        denyStore(userId, storeId, "OWNER");
+    }
+
+    public UUID currentUserId() {
+        return securityPrincipalProvider.getUserId();
+    }
+
+    private boolean isGlobalSuperAdmin() {
+        var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_SUPER_ADMIN"));
+    }
+
+    private boolean isGlobalModerator() {
+        var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_MODERATOR"));
+    }
+
+    private void denyStore(UUID userId, UUID storeId, String requiredRole) {
+        log.warn("auth.store.denied: userId={}, storeId={}, required={}", userId, storeId, requiredRole);
+        throw new AccessDeniedException("Insufficient store-scoped rights: " + requiredRole);
     }
 }

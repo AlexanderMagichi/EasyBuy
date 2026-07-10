@@ -3,6 +3,7 @@ package com.teamchallenge.easybuy.user.service;
 import com.teamchallenge.easybuy.user.dto.CreateStoreMembershipRequest;
 import com.teamchallenge.easybuy.user.entity.MembershipStatus;
 import com.teamchallenge.easybuy.user.entity.StoreMembership;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.user.repository.StoreMembershipRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

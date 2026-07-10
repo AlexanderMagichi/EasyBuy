@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.entity;
+package com.teamchallenge.easybuy.shop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

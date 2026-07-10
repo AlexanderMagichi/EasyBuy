@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.product.entity.category;
+package com.teamchallenge.easybuy.product.entity.category;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;

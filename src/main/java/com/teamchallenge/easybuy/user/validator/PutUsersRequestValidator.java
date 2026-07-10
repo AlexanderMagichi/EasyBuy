@@ -111,10 +111,8 @@ public class PutUsersRequestValidator {
     private StringBuilder validateAddressParameter(AddressDto addressDto) {
         StringBuilder errorMessages = new StringBuilder();
         if (addressDto != null) {
-            validateAddressField(errorMessages, addressDto.getCountry(), "country");
             validateAddressField(errorMessages, addressDto.getCity(), "city");
-            validateAddressField(errorMessages, addressDto.getLine(), "line");
-            validateAddressField(errorMessages, addressDto.getPostcode(), "postcode");
+            validateAddressField(errorMessages, addressDto.getStreet(), "street");
         }
         return errorMessages;
     }

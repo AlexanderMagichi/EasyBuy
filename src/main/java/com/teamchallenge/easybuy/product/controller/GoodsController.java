@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.product.controller;
+package com.teamchallenge.easybuy.product.controller;
 
 import com.teamchallenge.easybuy.product.dto.GoodsDTO;
 import com.teamchallenge.easybuy.product.entity.Goods;

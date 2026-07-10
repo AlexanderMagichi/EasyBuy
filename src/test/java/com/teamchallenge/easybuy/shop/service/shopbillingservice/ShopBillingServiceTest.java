@@ -1,9 +1,10 @@
 package com.teamchallenge.easybuy.shop.service.shopbillingservice;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.stripe.exception.StripeException;
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.entity.ShopBillingInfo;
-import com.teamchallenge.easybuy.user.entity.Seller;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.shop.dto.shopbillinginfo.ShopBillingInfoDTO;
 import com.teamchallenge.easybuy.shop.exception.ShopBillingIntegrationException;
 import com.teamchallenge.easybuy.shop.mapper.ShopBillingMapper;
@@ -63,7 +64,7 @@ class ShopBillingServiceTest {
     void setupOnboarding_withoutBilling_shouldCreateAndReturnDto() throws Exception {
         UUID shopId = UUID.randomUUID();
 
-        Seller seller = new Seller();
+        UserEntity seller = new UserEntity();
         seller.setEmail("seller@example.com");
 
         Shop shop = new Shop();
@@ -95,7 +96,7 @@ class ShopBillingServiceTest {
     void setupOnboarding_existingStripe_shouldNotCreateAccountAgain() throws Exception {
         UUID shopId = UUID.randomUUID();
 
-        Seller seller = new Seller();
+        UserEntity seller = new UserEntity();
         seller.setEmail("seller@example.com");
 
         ShopBillingInfo billing = ShopBillingInfo.builder()
@@ -138,7 +139,7 @@ class ShopBillingServiceTest {
     void setupOnboarding_createAccountStripeFailure_shouldThrowIntegrationException() throws Exception {
         UUID shopId = UUID.randomUUID();
 
-        Seller seller = new Seller();
+        UserEntity seller = new UserEntity();
         seller.setEmail("seller@example.com");
 
         Shop shop = new Shop();
@@ -164,7 +165,7 @@ class ShopBillingServiceTest {
     void setupOnboarding_createLinkStripeFailure_shouldThrowIntegrationException() throws Exception {
         UUID shopId = UUID.randomUUID();
 
-        Seller seller = new Seller();
+        UserEntity seller = new UserEntity();
         seller.setEmail("seller@example.com");
 
         ShopBillingInfo billing = ShopBillingInfo.builder()

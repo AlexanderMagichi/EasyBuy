@@ -43,7 +43,7 @@ public class AppCorsConfiguration {
         configuration.setAllowedOriginPatterns(allowedOrigins);
         configuration.setAllowedMethods(allowedMethods);
 
-        if (allowedHeaders.size() == 1 && "*".equals(allowedHeaders.getFirst())) {
+        if (allowedHeaders.size() == 1 && "*".equals(allowedHeaders.get(0))) {
             configuration.addAllowedHeader("*");
         } else {
             configuration.setAllowedHeaders(allowedHeaders);

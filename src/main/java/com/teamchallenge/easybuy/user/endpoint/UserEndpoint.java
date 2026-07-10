@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Validated
 @RequestMapping(value = UserEndpoint.API_CUSTOMERS)
-public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.UserApi {
+public class UserEndpoint {
 
     public static final String API_CUSTOMERS = "/api/v1/users";
 
@@ -41,7 +41,6 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
     private final UserAvatarDeleter userAvatarDeleter; // Добавлен сервис для удаления аватаров
     private final EmailTokenConformer emailTokenConformer;
 
-    @Override
     @GetMapping
     public ResponseEntity<UserDto> getUserProfile() {
         var userId = securityPrincipalProvider.getUserId();
@@ -49,7 +48,6 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
         return ResponseEntity.ok(singleUserProvider.getUserById(userId));
     }
 
-    @Override
     @PutMapping
     public ResponseEntity<UserDto> editUserProfile(@Valid @RequestBody UpdateUserAccountRequest updateUserAccountRequest) {
         var userId = securityPrincipalProvider.getUserId();
@@ -57,7 +55,6 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
         return ResponseEntity.ok(updateUserOperationPerformer.updateUser(updateUserAccountRequest));
     }
 
-    @Override
     @PatchMapping
     public ResponseEntity<Void> changeUserPassword(@Valid @RequestBody ChangeUserPasswordRequest changeUserPasswordRequest) {
         log.info("user.password.change: userId={}", securityPrincipalProvider.getUserId());
@@ -65,7 +62,6 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
         return ResponseEntity.ok().build();
     }
 
-    @Override
     @DeleteMapping
     public ResponseEntity<Void> deleteUserProfile() {
         var userId = securityPrincipalProvider.getUserId();
@@ -74,7 +70,6 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
         return ResponseEntity.ok().build();
     }
 
-    @Override
     @PostMapping(path = "/avatar", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> uploadUserAvatar(@Validated @RequestPart("file") MultipartFile file) {
         var userId = securityPrincipalProvider.getUserId();
@@ -83,7 +78,6 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
         return ResponseEntity.ok().build();
     }
 
-    @Override
     @GetMapping(path = "/avatar")
     public ResponseEntity<String> getUserAvatarLink() {
         var userId = securityPrincipalProvider.getUserId();
@@ -91,7 +85,6 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
         return ResponseEntity.ok(userAvatarLinkProvider.getLink(userId));
     }
 
-    @Override
     @DeleteMapping(path = "/avatar")
     public ResponseEntity<Void> deleteUserAvatar() {
         var userId = securityPrincipalProvider.getUserId();
@@ -100,7 +93,6 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
         return ResponseEntity.ok().build();
     }
 
-    @Override
     @PostMapping(path = "/password/reset")
     public ResponseEntity<Void> resetUserPassword(@Valid @RequestBody InitiatePasswordResetRequest initiatePasswordResetRequest) {
         var user = singleUserProvider.getUserByEmail(initiatePasswordResetRequest.getEmail());
@@ -108,11 +100,12 @@ public class UserEndpoint implements com.teamchallenge.easybuy.openapi.user.api.
         return ResponseEntity.ok().build();
     }
 
-    @Override
     @PostMapping(path = "/password/reset/confirm")
     public ResponseEntity<Void> confirmResetUserPassword(@RequestBody final ConfirmPasswordResetRequest confirmEmailRequest) {
         log.info("user.password.reset.confirm");
-        emailTokenConformer.confirmResetPasswordEmailByCode(new ConfirmEmailRequest(confirmEmailRequest.getToken()));
+        var confirmEmailReq = new ConfirmEmailRequest();
+        confirmEmailReq.setToken(confirmEmailRequest.getToken());
+        emailTokenConformer.confirmResetPasswordEmailByCode(confirmEmailReq);
         return ResponseEntity.ok().build();
     }
 

@@ -7,6 +7,7 @@ import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
 import com.teamchallenge.easybuy.user.converter.AddressDtoConverter;
 import com.teamchallenge.easybuy.user.converter.UserDtoConverter;
 import com.teamchallenge.easybuy.user.entity.Address;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
 import com.teamchallenge.easybuy.user.validator.PutUsersRequestValidator;
 import lombok.RequiredArgsConstructor;

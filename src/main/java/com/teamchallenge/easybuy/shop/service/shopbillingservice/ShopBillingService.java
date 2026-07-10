@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.service.shopbillingservice;
+package com.teamchallenge.easybuy.shop.service.shopbillingservice;
 
 import com.stripe.exception.StripeException;
 import com.teamchallenge.easybuy.payment.service.StripeService;

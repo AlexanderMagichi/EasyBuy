@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.auth.service;
+package com.teamchallenge.easybuy.auth.service;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;

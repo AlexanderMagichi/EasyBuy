@@ -32,7 +32,7 @@ public class ShoppingCartCreator {
         ShoppingCart shoppingCart = ShoppingCart.builder()
                 .userId(userId)
                 .itemsQuantity(DEFAULT_ITEMS_QUANTITY)
-                .productsQuantity(ShoppingCart.DEFAULT_PRODUCTS_QUANTITY)
+                .goodsQuantity(ShoppingCart.DEFAULT_PRODUCTS_QUANTITY)
                 .items(new HashSet<>())
                 .build();
 

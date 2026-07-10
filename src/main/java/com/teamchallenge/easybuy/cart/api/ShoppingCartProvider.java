@@ -1,6 +1,7 @@
 package com.teamchallenge.easybuy.cart.api;
 
 import com.teamchallenge.easybuy.cart.converter.ShoppingCartDtoConverter;
+import com.teamchallenge.easybuy.cart.dto.ShoppingCartDto;
 import com.teamchallenge.easybuy.cart.entity.ShoppingCart;
 import com.teamchallenge.easybuy.cart.exception.ShoppingCartNotFoundException;
 import com.teamchallenge.easybuy.cart.repository.ShoppingCartRepository;

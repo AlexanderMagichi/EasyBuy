@@ -4,6 +4,7 @@ import com.teamchallenge.easybuy.email.api.EmailTokenConformer;
 import com.teamchallenge.easybuy.email.api.EmailTokenSender;
 import com.teamchallenge.easybuy.openapi.dto.*;
 import com.teamchallenge.easybuy.security.api.UserAuthenticationService;
+import com.teamchallenge.easybuy.security.dto.ChangePasswordRequest;
 import com.teamchallenge.easybuy.security.exception.AbsentBearerHeaderException;
 import com.teamchallenge.easybuy.security.jwt.JwtBlacklistValidator;
 import com.teamchallenge.easybuy.security.jwt.JwtRefreshTokenValidator;
@@ -54,8 +55,7 @@ public class UserSecurityEndpoint {
         return ResponseEntity.ok("Email verification token sent");
     }
 
-    @Override
-    @PostMapping(value = "/confirm")
+    @PostMapping("/confirm")
     public ResponseEntity<UserAuthenticationResponse> confirmEmail(@Validated @Valid @RequestBody final ConfirmEmailRequest confirmEmailRequest) {
         log.info("auth.email.confirming");
         var response = emailTokenConformer.confirmEmailByCode(confirmEmailRequest);
@@ -63,14 +63,12 @@ public class UserSecurityEndpoint {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Override
     @PostMapping("/authenticate")
     public ResponseEntity<UserAuthenticationResponse> authenticate(@Valid @RequestBody final UserAuthenticationRequest request) {
         var response = userAuthenticationService.authenticate(request);
         return ResponseEntity.ok(response);
     }
 
-    @Override
     @PostMapping("/refresh")
     public ResponseEntity<UserAuthenticationResponse> refreshToken() {
         log.info("auth.token.refreshing");
@@ -81,7 +79,6 @@ public class UserSecurityEndpoint {
         return ResponseEntity.ok(response);
     }
 
-    @Override
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         log.info("auth.logout.processing");
@@ -103,13 +100,16 @@ public class UserSecurityEndpoint {
         return ResponseEntity.ok().build();
     }
 
-    @Override
     @PostMapping("/password/forgot")
     public ResponseEntity<Void> forgotPassword(@Valid @RequestBody final ForgotPasswordRequest request) {
         log.info("auth.password.forgot.processing");
         try {
             var user = singleUserProvider.getUserByEmail(request.getEmail());
-            var verificationRequest = new UserRegistrationRequest(user.getFirstName(), user.getLastName(), user.getEmail(), "");
+            var verificationRequest = new UserRegistrationRequest();
+            verificationRequest.setFirstName(user.getFirstName());
+            verificationRequest.setLastName(user.getLastName());
+            verificationRequest.setEmail(user.getEmail());
+            verificationRequest.setPassword("");
             emailTokenSender.sendEmailVerificationCode(verificationRequest);
         } catch (UserNotFoundException e) {
             log.warn("auth.password.forgot.unknown_email");
@@ -117,12 +117,13 @@ public class UserSecurityEndpoint {
         return ResponseEntity.ok().build();
     }
 
-    @Override
     // amazonq-ignore-next-line
     @PostMapping("/password/change")
     public ResponseEntity<Void> changePassword(@Valid @RequestBody final ChangePasswordRequest request) {
         var user = singleUserProvider.getUserByEmail(request.getEmail());
-        emailTokenConformer.confirmResetPasswordEmailByCode(new ConfirmEmailRequest(request.getCode()));
+        var confirmEmailRequest = new ConfirmEmailRequest();
+        confirmEmailRequest.setCode(request.getCode());
+        emailTokenConformer.confirmResetPasswordEmailByCode(confirmEmailRequest);
         changeUserPasswordOperationPerformer.changeUserPassword(user.getId(), request.getPassword());
         log.info("auth.password.changed");
         return ResponseEntity.ok().build();

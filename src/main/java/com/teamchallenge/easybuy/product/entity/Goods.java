@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.product.entity;
+package com.teamchallenge.easybuy.product.entity;
 
 import com.teamchallenge.easybuy.product.entity.category.Category;
 import com.teamchallenge.easybuy.shop.entity.Shop;

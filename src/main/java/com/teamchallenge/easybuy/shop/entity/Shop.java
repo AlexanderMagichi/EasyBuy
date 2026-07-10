@@ -1,7 +1,8 @@
-﻿package com.teamchallenge.easybuy.shop.entity;
+package com.teamchallenge.easybuy.shop.entity;
 
 import com.teamchallenge.easybuy.infrastructure.persistence.BaseEntity;
 import com.teamchallenge.easybuy.product.entity.Goods;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;

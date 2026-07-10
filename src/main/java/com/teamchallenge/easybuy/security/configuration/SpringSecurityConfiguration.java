@@ -90,7 +90,8 @@ public class SpringSecurityConfiguration {
     @Bean
     public AuthenticationProvider authenticationProvider(final UserDetailsService userDetailsService,
                                                          final PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
         // amazonq-ignore-next-line
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         authenticationProvider.setHideUserNotFoundExceptions(false);

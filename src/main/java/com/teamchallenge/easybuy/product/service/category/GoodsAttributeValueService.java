@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.product.service.category;
+package com.teamchallenge.easybuy.product.service.category;
 
 import com.teamchallenge.easybuy.product.dto.category.GoodsAttributeValueDTO;
 import com.teamchallenge.easybuy.product.entity.category.GoodsAttributeValue;

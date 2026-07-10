@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.product.service;
+package com.teamchallenge.easybuy.product.service;
 
 import com.teamchallenge.easybuy.product.dto.GoodsDTO;
 import com.teamchallenge.easybuy.product.entity.Goods;

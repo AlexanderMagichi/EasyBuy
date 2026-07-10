@@ -1,7 +1,7 @@
 package com.teamchallenge.easybuy.security.config;
 
 import com.teamchallenge.easybuy.auth.service.JwtService;
-import com.teamchallenge.easybuy.user.service.UserDetailsServiceImpl;
+import com.teamchallenge.easybuy.security.api.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

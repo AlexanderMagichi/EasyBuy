@@ -1,6 +1,9 @@
 package com.teamchallenge.easybuy.cart.api;
 
+import com.teamchallenge.easybuy.cart.dto.DeleteItemsFromShoppingCartRequest;
+import com.teamchallenge.easybuy.cart.dto.ShoppingCartDto;
 import com.teamchallenge.easybuy.cart.repository.ShoppingCartItemRepository;
+import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

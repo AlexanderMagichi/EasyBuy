@@ -1,12 +1,13 @@
 package com.teamchallenge.easybuy.cart.api;
 
-rt java.util.UUID;
+import com.teamchallenge.easybuy.cart.dto.ShoppingCartDto;
 import com.teamchallenge.easybuy.cart.entity.ShoppingCartItem;
 import com.teamchallenge.easybuy.cart.exception.InvalidItemProductQuantityException;
 import com.teamchallenge.easybuy.cart.exception.InvalidShoppingCartIdException;
 import com.teamchallenge.easybuy.cart.exception.ShoppingCartItemNotFoundException;
 import com.teamchallenge.easybuy.cart.exception.ShoppingCartNotFoundException;
 import com.teamchallenge.easybuy.cart.repository.ShoppingCartItemRepository;
+import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -53,7 +54,7 @@ public class ProductQuantityItemUpdater {
     private ShoppingCartItem updateItemProductQuantity(final UUID shoppingCartItemId,
                                                        int productQuantityChange,
                                                        ShoppingCartItem item) {
-        int newQuantity = item.getProductQuantity() + productQuantityChange;
+        int newQuantity = item.getGoodsQuantity() + productQuantityChange;
         if (newQuantity < 0) {
             log.warn("cart.item.quantity.negative: itemId={}, quantity={}", shoppingCartItemId, newQuantity);
             throw new InvalidItemProductQuantityException(newQuantity);
@@ -62,7 +63,7 @@ public class ProductQuantityItemUpdater {
             log.warn("cart.item.quantity.zero_change: itemId={}", shoppingCartItemId);
             throw new InvalidItemProductQuantityException(newQuantity);
         }
-        item.setProductQuantity(newQuantity);
+        item.setGoodsQuantity(newQuantity);
 
         return shoppingCartItemRepository.save(item);
     }

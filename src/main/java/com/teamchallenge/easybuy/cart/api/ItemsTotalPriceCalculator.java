@@ -12,7 +12,7 @@ public class ItemsTotalPriceCalculator {
     @Named("toItemsTotalPrice")
     public BigDecimal calculate(Set<ShoppingCartItem> items) {
         return items.stream()
-                .map(item -> item.getProductInfo().getPrice().multiply(BigDecimal.valueOf(item.getProductQuantity())))
+                .map(item -> item.getGoods().getPrice().multiply(BigDecimal.valueOf(item.getGoodsQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

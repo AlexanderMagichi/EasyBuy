@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.controller.shopseosettings;
+package com.teamchallenge.easybuy.shop.controller.shopseosettings;
 
 import com.teamchallenge.easybuy.shop.dto.ShopSeoSettingsDTO;
 import com.teamchallenge.easybuy.shop.service.shopseosettings.ShopSeoSettingsService;

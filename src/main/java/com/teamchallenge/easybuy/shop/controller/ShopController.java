@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.controller;
+package com.teamchallenge.easybuy.shop.controller;
 
 import com.teamchallenge.easybuy.shop.dto.ShopDTO;
 import com.teamchallenge.easybuy.shop.dto.ShopSearchParams;

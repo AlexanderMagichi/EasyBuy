@@ -1,4 +1,5 @@
 package com.teamchallenge.easybuy.product.service;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.teamchallenge.easybuy.product.dto.GoodsDTO;
 import com.teamchallenge.easybuy.product.exception.GoodsNotFoundException;
@@ -9,8 +10,9 @@ import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.product.repository.GoodsRepository;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
-import com.teamchallenge.easybuy.user.entity.Role;
-import com.teamchallenge.easybuy.user.entity.Seller;
+import com.teamchallenge.easybuy.user.entity.Authority;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
+import com.teamchallenge.easybuy.user.entity.UserGrantedAuthority;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +59,7 @@ class GoodsServiceTest {
     private UUID goodsId;
     private UUID currentUserId;
     private String currentUserEmail;
-    private Seller currentSeller;
+    private UserEntity currentSeller;
 
     @BeforeEach
     void setUp() {
@@ -118,10 +120,10 @@ class GoodsServiceTest {
         goodsDTO.setUpdatedAt(goods.getUpdatedAt());
         goodsDTO.setAdditionalImages(new ArrayList<>());
 
-        currentSeller = new Seller();
+        currentSeller = new UserEntity();
         currentSeller.setId(currentUserId);
         currentSeller.setEmail(currentUserEmail);
-        currentSeller.setRole(Role.SELLER);
+        currentSeller.addAuthority(UserGrantedAuthority.builder().authority(Authority.SELLER).build());
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(currentUserEmail, "password", Collections.emptyList())
         );

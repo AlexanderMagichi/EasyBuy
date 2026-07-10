@@ -1,7 +1,8 @@
 package com.teamchallenge.easybuy.shop.controller.shopbillinginfo;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.teamchallenge.easybuy.shop.dto.shopbillinginfo.ShopBillingInfoDTO;
-import com.teamchallenge.easybuy.common.exception.GlobalExceptionHandler;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.teamchallenge.easybuy.shop.exception.ShopBillingIntegrationException;
 import com.teamchallenge.easybuy.shop.service.shopbillingservice.ShopBillingService;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,7 +38,7 @@ class ShopBillingControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(new ApiErrorResponseCreator()))
                 .build();
     }
 

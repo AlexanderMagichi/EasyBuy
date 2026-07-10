@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.product.controller.category;
+package com.teamchallenge.easybuy.product.controller.category;
 
 import com.teamchallenge.easybuy.product.dto.category.CategoryAttributeDTO;
 import com.teamchallenge.easybuy.product.entity.category.AttributeType;

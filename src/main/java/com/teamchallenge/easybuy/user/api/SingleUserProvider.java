@@ -21,26 +21,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SingleUserProvider {
-
     private final UserRepository userCrudRepository;
     private final UserDtoConverter userDtoConverter;
-    private final UserAvatarLinkUpdater userAvatarLinkUpdater;
 
-    /**
-     * Retrieves a {@link UserDto} by the user's unique identifier.
-     * <p>
-     * <b>Enrichment:</b> The retrieved DTO is automatically enriched with a
-     * dynamically generated avatar link via {@link UserAvatarLinkUpdater}.
-     *
-     * @param userId the unique identifier of the user
-     * @return the enriched {@link UserDto}
-     * @throws UserNotFoundException if no user is found with the given ID
-     */
     @Transactional(readOnly = true)
     public UserDto getUserById(final UUID userId) throws UserNotFoundException {
         return userCrudRepository.findById(userId)
                 .map(userDtoConverter::toDto)
-                .map(userAvatarLinkUpdater::update)
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 

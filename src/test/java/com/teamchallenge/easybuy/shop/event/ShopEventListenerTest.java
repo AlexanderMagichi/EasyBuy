@@ -1,4 +1,5 @@
 package com.teamchallenge.easybuy.shop.event;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.service.analytics.AnalyticsService;

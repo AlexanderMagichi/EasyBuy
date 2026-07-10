@@ -26,7 +26,7 @@ public class AuditConfig {
             }
             
             Object principal = authentication.getPrincipal();
-            if (principal instanceof com.teamchallenge.easybuy.user.entity.UserEntityEntity user) {
+            if (principal instanceof com.teamchallenge.easybuy.user.entity.UserEntity user) {
                 return Optional.of(user.getId());
             }
             

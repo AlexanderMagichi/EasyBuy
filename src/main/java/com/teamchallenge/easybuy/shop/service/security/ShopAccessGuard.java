@@ -50,6 +50,12 @@ public class ShopAccessGuard {
         return auth != null && auth.isAuthenticated() && hasAuthority(auth, "ROLE_ADMIN");
     }
 
+    public void requireAdmin() {
+        if (!isCurrentUserAdmin()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Admin rights required");
+        }
+    }
+
     public UUID getCurrentUserIdOrThrow() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {

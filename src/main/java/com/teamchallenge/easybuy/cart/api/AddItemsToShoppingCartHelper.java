@@ -1,9 +1,14 @@
 package com.teamchallenge.easybuy.cart.api;
 
 import com.teamchallenge.easybuy.cart.converter.ShoppingCartDtoConverter;
+import com.teamchallenge.easybuy.cart.dto.NewShoppingCartItemDto;
+import com.teamchallenge.easybuy.cart.dto.ShoppingCartDto;
 import com.teamchallenge.easybuy.cart.entity.ShoppingCart;
 import com.teamchallenge.easybuy.cart.entity.ShoppingCartItem;
 import com.teamchallenge.easybuy.cart.repository.ShoppingCartRepository;
+import com.teamchallenge.easybuy.product.entity.Goods;
+import com.teamchallenge.easybuy.product.repository.GoodsRepository;
+import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +29,7 @@ public class AddItemsToShoppingCartHelper {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final SecurityPrincipalProvider securityPrincipalProvider;
-    private final ProductInfoRepository productInfoRepository;
+    private final GoodsRepository goodsRepository;
     private final ShoppingCartDtoConverter shoppingCartDtoConverter;
     private final ShoppingCartCreator shoppingCartCreator;
 
@@ -47,20 +52,20 @@ public class AddItemsToShoppingCartHelper {
                 .collect(Collectors.toMap(NewShoppingCartItemDto::getProductId, NewShoppingCartItemDto::getProductQuantity));
 
         Set<UUID> existingProductIds = shoppingCart.getItems().stream()
-                .map(ShoppingCartItem::getProductInfo)
-                .map(ProductInfo::getId)
+                .map(ShoppingCartItem::getGoods)
+                .map(Goods::getId)
                 .collect(Collectors.toSet());
 
         Set<UUID> newProductIds = productsWithQuantity.keySet().stream()
                 .filter(productId -> !existingProductIds.contains(productId))
                 .collect(Collectors.toSet());
 
-        return productInfoRepository.findAllById(newProductIds).stream()
-                .map(productInfo ->
+        return goodsRepository.findAllById(newProductIds).stream()
+                .map(goods ->
                         ShoppingCartItem.builder()
                                 .shoppingCart(shoppingCart)
-                                .productQuantity(productsWithQuantity.get(productInfo.getId()))
-                                .productInfo(productInfo)
+                                .goodsQuantity(productsWithQuantity.get(goods.getId()))
+                                .goods(goods)
                                 .build()
                 )
                 .toList();
@@ -69,11 +74,11 @@ public class AddItemsToShoppingCartHelper {
     private static ShoppingCart updateExistingShoppingCart(ShoppingCart existingShoppingCart,
                                                            List<ShoppingCartItem> shoppingCartItems) {
         int productsQuantity = shoppingCartItems.stream()
-                .mapToInt(ShoppingCartItem::getProductQuantity)
+                .mapToInt(ShoppingCartItem::getGoodsQuantity)
                 .sum();
 
         existingShoppingCart.setItemsQuantity(existingShoppingCart.getItemsQuantity() + shoppingCartItems.size());
-        existingShoppingCart.setProductsQuantity(existingShoppingCart.getProductsQuantity() + productsQuantity);
+        existingShoppingCart.setGoodsQuantity(existingShoppingCart.getGoodsQuantity() + productsQuantity);
         existingShoppingCart.getItems().addAll(shoppingCartItems);
         return existingShoppingCart;
     }

@@ -1,8 +1,9 @@
 package com.teamchallenge.easybuy.product.controller.category;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamchallenge.easybuy.product.dto.category.CategoryAttributeDTO;
-import com.teamchallenge.easybuy.common.exception.GlobalExceptionHandler;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.teamchallenge.easybuy.product.exception.CategoryAttributeException;
 import com.teamchallenge.easybuy.product.entity.category.AttributeType;
 import com.teamchallenge.easybuy.product.service.category.CategoryAttributeService;
@@ -46,7 +47,7 @@ class CategoryAttributeControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(categoryAttributeController)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(new ApiErrorResponseCreator()))
                 .build();
     }
 

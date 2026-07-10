@@ -3,6 +3,7 @@ package com.teamchallenge.easybuy.security.api;
 
 import com.teamchallenge.easybuy.openapi.dto.UserDto;
 import com.teamchallenge.easybuy.user.converter.UserDtoConverter;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

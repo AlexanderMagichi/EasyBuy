@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.service.notification;
+package com.teamchallenge.easybuy.shop.service.notification;
 
 
 import com.teamchallenge.easybuy.shop.entity.Shop;

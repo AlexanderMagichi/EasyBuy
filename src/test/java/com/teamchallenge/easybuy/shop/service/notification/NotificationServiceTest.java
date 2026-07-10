@@ -1,7 +1,8 @@
 package com.teamchallenge.easybuy.shop.service.notification;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
-import com.teamchallenge.easybuy.user.entity.Seller;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.junit.jupiter.api.BeforeEach;
@@ -132,7 +133,7 @@ class NotificationServiceTest {
     }
 
     private Shop validShop() {
-        Seller seller = new Seller();
+        UserEntity seller = new UserEntity();
         seller.setEmail("seller@easybuy.local");
 
         Shop shop = new Shop();
@@ -143,6 +144,4 @@ class NotificationServiceTest {
         return shop;
     }
 }
-
-
 

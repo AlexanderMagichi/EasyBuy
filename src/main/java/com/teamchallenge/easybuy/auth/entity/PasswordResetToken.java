@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.auth.entity;
+package com.teamchallenge.easybuy.auth.entity;
 
 import com.teamchallenge.easybuy.user.entity.UserEntity;
 import jakarta.persistence.*;

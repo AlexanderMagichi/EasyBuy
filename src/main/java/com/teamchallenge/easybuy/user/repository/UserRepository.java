@@ -43,18 +43,15 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     void changeUserPassword(@Param("newPassword") String newPassword, @Param("userId") UUID userId);
 
     /**
-     * Updates the lock status of a user's account based on their email address.
-     * <p>
-     * Typically invoked by authentication failure listeners (to lock the account after
-     * too many failed attempts) or administrators.
+     * Updates the account lock status for the user with the given email.
      *
-     * @param email            the email address of the target user
-     * @param accountNonLocked the new lock status ({@code true} = unlocked, {@code false} = locked)
+     * @param email the email address of the user
+     * @param accountNonLocked the new account lock status
      * @return the number of rows affected by the update query
      */
     @Modifying
-    @Query("UPDATE UserEntity u SET u.password = :newPassword WHERE u.id = :userId")
-    void changeUserPassword(@Param("newPassword") String newPassword, @Param("userId") UUID userId);
+    @Query("UPDATE UserEntity u SET u.accountNonLocked = :accountNonLocked WHERE u.email = :email")
+    int setAccountLockedStatus(@Param("email") String email, @Param("accountNonLocked") boolean accountNonLocked);
 
     /**
      * Unlocks all user accounts that are eligible for unlocking.

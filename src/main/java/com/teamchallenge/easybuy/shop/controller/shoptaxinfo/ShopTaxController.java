@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.controller.shoptaxinfo;
+package com.teamchallenge.easybuy.shop.controller.shoptaxinfo;
 
 import com.teamchallenge.easybuy.shop.dto.shoptaxinfo.ShopTaxInfoDTO;
 import com.teamchallenge.easybuy.shop.service.shoptaxinfo.ShopTaxService;

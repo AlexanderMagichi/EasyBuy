@@ -1,8 +1,9 @@
 package com.teamchallenge.easybuy.shop.controller.shoptaxinfo;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamchallenge.easybuy.shop.dto.shoptaxinfo.ShopTaxInfoDTO;
-import com.teamchallenge.easybuy.common.exception.GlobalExceptionHandler;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.teamchallenge.easybuy.shop.service.shoptaxinfo.ShopTaxService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +44,7 @@ class ShopTaxControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(new ApiErrorResponseCreator()))
                 .build();
     }
 

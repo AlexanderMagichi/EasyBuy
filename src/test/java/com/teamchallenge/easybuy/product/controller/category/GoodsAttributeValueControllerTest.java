@@ -1,8 +1,9 @@
 package com.teamchallenge.easybuy.product.controller.category;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamchallenge.easybuy.product.dto.category.GoodsAttributeValueDTO;
-import com.teamchallenge.easybuy.common.exception.GlobalExceptionHandler;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.teamchallenge.easybuy.product.exception.GoodsAttributeValueException;
 import com.teamchallenge.easybuy.product.service.category.GoodsAttributeValueService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +47,7 @@ class GoodsAttributeValueControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(goodsAttributeValueController)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(new ApiErrorResponseCreator()))
                 .build();
     }
 

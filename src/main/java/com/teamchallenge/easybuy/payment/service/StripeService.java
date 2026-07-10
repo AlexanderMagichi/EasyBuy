@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.payment.service;
+package com.teamchallenge.easybuy.payment.service;
 
 import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;

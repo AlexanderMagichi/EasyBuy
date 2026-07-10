@@ -1,8 +1,9 @@
 package com.teamchallenge.easybuy.product.controller;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamchallenge.easybuy.product.dto.GoodsDTO;
-import com.teamchallenge.easybuy.common.exception.GlobalExceptionHandler;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.teamchallenge.easybuy.product.exception.GoodsNotFoundException;
 import com.teamchallenge.easybuy.product.entity.Goods;
 import com.teamchallenge.easybuy.product.service.GoodsService;
@@ -52,7 +53,7 @@ class GoodsControllerTest {
         // Initialize ObjectMapper and MockMvc before each test
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(goodsController)
-                .setControllerAdvice(new GlobalExceptionHandler()) // Apply global exception handler
+                .setControllerAdvice(new GlobalExceptionHandler(new ApiErrorResponseCreator())) // Apply global exception handler
                 .build();
 
         // Initialize UUIDs for consistent testing
@@ -148,7 +149,6 @@ class GoodsControllerTest {
         responseDto.setCategoryId(requestDto.getCategoryId());
         responseDto.setGoodsStatus(requestDto.getGoodsStatus());
         responseDto.setDiscountStatus(requestDto.getDiscountStatus());
-
 
         // Mock the goodsService.createGoods to return our prepared response DTO
         when(goodsService.createGoods(any(GoodsDTO.class))).thenReturn(responseDto);

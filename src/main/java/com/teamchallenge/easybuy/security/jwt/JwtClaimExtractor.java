@@ -15,7 +15,9 @@ public class JwtClaimExtractor {
     private final JwtParser jwtParser;
 
     public JwtClaimExtractor(JwtSignKeyProvider jwtSignKeyProvider) {
-        this.jwtParser = Jwts.parser().verifyWith(jwtSignKeyProvider.get()).build();
+        this.jwtParser = Jwts.parserBuilder()
+                .setSigningKey(jwtSignKeyProvider.get())
+                .build();
     }
 
     public String extractEmail(final String jwtToken) {
@@ -31,6 +33,6 @@ public class JwtClaimExtractor {
     }
 
     private Claims extractAllClaims(final String jwtToken) {
-        return jwtParser.parseSignedClaims(jwtToken).getPayload();
+        return jwtParser.parseClaimsJws(jwtToken).getBody();
     }
 }

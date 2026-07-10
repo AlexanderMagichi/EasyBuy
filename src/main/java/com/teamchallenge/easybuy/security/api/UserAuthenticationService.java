@@ -1,6 +1,8 @@
 package com.teamchallenge.easybuy.security.api;
 
 
+import com.teamchallenge.easybuy.openapi.dto.UserAuthenticationRequest;
+import com.teamchallenge.easybuy.openapi.dto.UserAuthenticationResponse;
 import com.teamchallenge.easybuy.security.exception.InvalidCredentialsException;
 import com.teamchallenge.easybuy.security.exception.UserAccountLockedException;
 import com.teamchallenge.easybuy.security.jwt.JwtTokenProvider;

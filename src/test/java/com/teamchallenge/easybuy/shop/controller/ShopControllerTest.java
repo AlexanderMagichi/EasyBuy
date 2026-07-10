@@ -1,4 +1,5 @@
 package com.teamchallenge.easybuy.shop.controller;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamchallenge.easybuy.shop.entity.Shop;
@@ -6,7 +7,7 @@ import com.teamchallenge.easybuy.shop.dto.ShopDTO;
 import com.teamchallenge.easybuy.shop.dto.request.ShopCreateRequestDTO;
 import com.teamchallenge.easybuy.shop.dto.request.ShopPatchRequestDTO;
 import com.teamchallenge.easybuy.shop.dto.request.ShopUpdateRequestDTO;
-import com.teamchallenge.easybuy.common.exception.GlobalExceptionHandler;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.teamchallenge.easybuy.shop.service.ShopService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +49,7 @@ class ShopControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(shopController)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(new ApiErrorResponseCreator()))
                 .build();
     }
 

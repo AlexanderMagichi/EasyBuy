@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.shop.service.validation;
+package com.teamchallenge.easybuy.shop.service.validation;
 
 import com.teamchallenge.easybuy.shop.dto.ShopDTO;
 import com.teamchallenge.easybuy.shop.entity.Shop;

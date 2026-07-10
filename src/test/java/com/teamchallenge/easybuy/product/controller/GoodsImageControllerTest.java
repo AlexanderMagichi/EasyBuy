@@ -1,8 +1,9 @@
 package com.teamchallenge.easybuy.product.controller;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamchallenge.easybuy.product.dto.GoodsImageDTO;
-import com.teamchallenge.easybuy.common.exception.GlobalExceptionHandler;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.teamchallenge.easybuy.product.exception.GoodsImageException;
 import com.teamchallenge.easybuy.product.service.image.GoodsImageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +47,7 @@ class GoodsImageControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(goodsImageController)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(new ApiErrorResponseCreator()))
                 .build();
         id = UUID.randomUUID();
         goodsId = UUID.randomUUID();
@@ -155,7 +156,6 @@ class GoodsImageControllerTest {
                 .andExpect(jsonPath("$.imageUrl").value("https://example.com/updated-image.jpg"))
                 .andExpect(jsonPath("$.goodsId").value(goodsId.toString()));
     }
-
 
     @Test
     void deleteImage_shouldReturn200() throws Exception {

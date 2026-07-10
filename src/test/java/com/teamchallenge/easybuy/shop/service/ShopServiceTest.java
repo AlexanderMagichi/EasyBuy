@@ -1,13 +1,13 @@
 package com.teamchallenge.easybuy.shop.service;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
 import com.teamchallenge.easybuy.shop.event.ShopCreatedEvent;
-import com.teamchallenge.easybuy.user.entity.Seller;
+import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.shop.dto.ShopDTO;
 import com.teamchallenge.easybuy.shop.mapper.ShopMapper;
 import com.teamchallenge.easybuy.shop.repository.ShopRepository;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
-import com.teamchallenge.easybuy.user.repository.SellerRepository;
 import com.teamchallenge.easybuy.shop.service.security.ShopAccessGuard;
 import com.teamchallenge.easybuy.shop.service.shopcontactinfo.ShopContactInfoService;
 import com.teamchallenge.easybuy.shop.service.shopseosettings.ShopSeoSettingsService;
@@ -48,7 +48,7 @@ class ShopServiceTest {
     @Mock
     private ShopMapper shopMapper;
     @Mock
-    private SellerRepository sellerRepository;
+    private UserRepository sellerRepository;
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -73,7 +73,7 @@ class ShopServiceTest {
         UUID shopId = UUID.randomUUID();
         UUID sellerId = UUID.randomUUID();
 
-        Seller seller = new Seller();
+        UserEntity seller = new UserEntity();
         seller.setId(sellerId);
         seller.setEmail("seller@example.com");
 
@@ -122,7 +122,7 @@ class ShopServiceTest {
         UUID shopId = UUID.randomUUID();
         UUID ownerId = UUID.randomUUID();
 
-        Seller owner = new Seller();
+        UserEntity owner = new UserEntity();
         owner.setId(ownerId);
 
         Shop existing = new Shop();
@@ -187,7 +187,7 @@ class ShopServiceTest {
         UUID requestedSellerId = UUID.randomUUID();
         UUID currentSellerId = UUID.randomUUID();
 
-        Seller currentSeller = new Seller();
+        UserEntity currentSeller = new UserEntity();
         currentSeller.setId(currentSellerId);
 
         when(accessGuard.isCurrentUserSeller()).thenReturn(true);
@@ -203,7 +203,7 @@ class ShopServiceTest {
     @DisplayName("getShopsBySeller should return page for owner seller")
     void getShopsBySeller_ownerSeller_returnsPage() {
         UUID sellerId = UUID.randomUUID();
-        Seller currentSeller = new Seller();
+        UserEntity currentSeller = new UserEntity();
         currentSeller.setId(sellerId);
 
         Shop shop = new Shop();
@@ -221,5 +221,4 @@ class ShopServiceTest {
         assertEquals(1, result.getTotalElements());
     }
 }
-
 

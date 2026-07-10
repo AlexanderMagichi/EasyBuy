@@ -1,4 +1,5 @@
 package com.teamchallenge.easybuy;
+import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ class EasyBuyApplicationTests {
 
     @Autowired
     private ApplicationContext applicationContext;
-
 
     @Test
     void contextLoads() {

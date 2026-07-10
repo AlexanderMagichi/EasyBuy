@@ -1,4 +1,4 @@
-﻿package com.teamchallenge.easybuy.auth.service;
+package com.teamchallenge.easybuy.auth.service;
 
 import com.teamchallenge.easybuy.auth.entity.Token;
 import com.teamchallenge.easybuy.auth.repository.TokenRepository;

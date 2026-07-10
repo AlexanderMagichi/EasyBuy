@@ -28,11 +28,11 @@ public class JwtTokenProvider {
 
     public String generateToken(final Map<String, Object> extraClaims,
                                final UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtProperties.expiration(), jwtSignKeyProvider.get());
+        return buildToken(extraClaims, userDetails, jwtProperties.getExpiration(), jwtSignKeyProvider.get());
     }
 
     public String generateRefreshToken(final UserDetails userDetails) {
-        return buildToken(Map.of(), userDetails, jwtProperties.refreshExpiration(), jwtSignKeyProvider.getRefresh());
+        return buildToken(Map.of(), userDetails, jwtProperties.getRefreshExpiration(), jwtSignKeyProvider.getRefresh());
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails,
@@ -42,8 +42,8 @@ public class JwtTokenProvider {
             return Jwts.builder()
                     .setClaims(extraClaims)
                     .setSubject(userDetails.getUsername())
-                    .setIssuer(jwtProperties.issuer())
-                    .setAudience(jwtProperties.audience())
+                    .setIssuer(jwtProperties.getIssuer())
+                    .setAudience(jwtProperties.getAudience())
                     .setIssuedAt(Date.from(now))
                     .setExpiration(Date.from(now.plus(expiration)))
                     .signWith(key)

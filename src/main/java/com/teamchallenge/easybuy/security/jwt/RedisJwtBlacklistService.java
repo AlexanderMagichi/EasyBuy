@@ -31,8 +31,8 @@ public class RedisJwtBlacklistService implements JwtBlacklistService {
             return;
         }
         String key = buildBlacklistKey(token);
-        redisTemplate.opsForValue().set(key, BLACKLIST_VALUE, jwtProperties.expiration());
-        log.debug("jwt.blacklist.added: ttlSeconds={}", jwtProperties.expiration().toSeconds());
+        redisTemplate.opsForValue().set(key, BLACKLIST_VALUE, jwtProperties.getExpiration());
+        log.debug("jwt.blacklist.added: ttlSeconds={}", jwtProperties.getExpiration().toSeconds());
     }
 
     public boolean isBlacklisted(String token) {

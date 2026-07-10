@@ -37,7 +37,7 @@ public class InMemoryJwtBlacklistService implements JwtBlacklistService {
             cleanupExpiredTokens();
         }
 
-        Instant expiryTime = Instant.now().plus(jwtProperties.expiration());
+        Instant expiryTime = Instant.now().plus(jwtProperties.getExpiration());
         blacklistedTokens.put(sha256(token), new TokenEntry(expiryTime));
         log.debug("jwt.blacklist.added: expiresAt={}", expiryTime);
     }

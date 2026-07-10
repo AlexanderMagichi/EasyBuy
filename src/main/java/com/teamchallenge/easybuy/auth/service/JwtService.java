@@ -1,11 +1,11 @@
 package com.teamchallenge.easybuy.auth.service;
 
+import com.teamchallenge.easybuy.security.configuration.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -19,28 +19,22 @@ import java.util.function.Function;
  */
 @Service
 public class JwtService {
-    private final String secretKey;
-    private final long accessTokenExpiration;
-    private final long refreshTokenExpiration;
+    private final JwtProperties jwtProperties;
 
-    public JwtService(@Value("${jwt.secret}") String secretKey,
-                      @Value("${jwt.accessTokenExpiration}") long accessTokenExpiration,
-                      @Value("${jwt.refreshTokenExpiration}") long refreshTokenExpiration) {
-        this.secretKey = secretKey;
-        this.accessTokenExpiration = accessTokenExpiration;
-        this.refreshTokenExpiration = refreshTokenExpiration;
+    public JwtService(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
     }
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(secretKey.getBytes());
+        return Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
     }
 
     public String generateAccessToken(String email, String role) {
-        return generateToken(email, role, accessTokenExpiration);
+        return generateToken(email, role, jwtProperties.getExpiration().toMillis());
     }
 
     public String generateRefreshToken(String email, String role) {
-        return generateToken(email, role, refreshTokenExpiration);
+        return generateToken(email, role, jwtProperties.getRefreshExpiration().toMillis());
     }
 
     private String generateToken(String subject, String role, long expiration) {

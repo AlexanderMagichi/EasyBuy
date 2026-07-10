@@ -16,7 +16,7 @@ import java.util.List;
  * when 'email.enabled' is set to false.
  */
 @Slf4j
-//@Configuration
+@Configuration
 @ConditionalOnProperty(name = "email.enabled", havingValue = "false", matchIfMissing = true)
 public class EmailDisabledConfig {
 

@@ -1,11 +1,11 @@
 package com.teamchallenge.easybuy.auth.service;
 
+import com.teamchallenge.easybuy.security.configuration.JwtProperties;
 import com.teamchallenge.easybuy.auth.entity.Token;
 import com.teamchallenge.easybuy.auth.repository.TokenRepository;
 import com.teamchallenge.easybuy.user.entity.UserEntity;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,16 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TokenService {
     private final TokenRepository tokenRepository;
-
-    @Value("${jwt.refreshTokenExpiration}")
-    private long refreshTokenDurationMs;
+    private final JwtProperties jwtProperties;
 
     public void createToken(UserEntity user, String refreshToken) {
         tokenRepository.save(
                 Token.builder()
                         .user(user)
                         .token(refreshToken)
-                        .expiryDate(Instant.now().plusMillis(refreshTokenDurationMs))
+                        .expiryDate(Instant.now().plus(jwtProperties.getRefreshExpiration()))
                         .revoked(false)
                         .build()
         );

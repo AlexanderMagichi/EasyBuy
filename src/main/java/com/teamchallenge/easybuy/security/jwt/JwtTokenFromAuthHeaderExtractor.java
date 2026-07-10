@@ -22,7 +22,7 @@ public class JwtTokenFromAuthHeaderExtractor {
     private final JwtProperties jwtProperties;
 
     public String extract(final HttpServletRequest request) {
-        String header = request.getHeader(jwtProperties.header());
+        String header = request.getHeader(jwtProperties.getHeader());
         return extract(header);
     }
 

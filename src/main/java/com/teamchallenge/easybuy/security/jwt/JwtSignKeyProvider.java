@@ -14,8 +14,8 @@ public class JwtSignKeyProvider {
     private final SecretKey refreshKey;
 
     public JwtSignKeyProvider(JwtProperties jwtProperties) {
-        this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.secret()));
-        this.refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.refreshSecret()));
+        this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getSecret()));
+        this.refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getRefreshSecret()));
     }
 
     public SecretKey get() { return signingKey; }

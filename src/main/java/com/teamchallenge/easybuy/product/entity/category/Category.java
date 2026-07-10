@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.entity.category;
+﻿package com.teamchallenge.easybuy.product.entity.category;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -17,6 +17,9 @@ import java.util.UUID;
 @Table(name = "categories", indexes = {
         @Index(name = "idx_category_name", columnList = "name", unique = true)
 })
+/**
+ * Represents the Category persistence entity.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

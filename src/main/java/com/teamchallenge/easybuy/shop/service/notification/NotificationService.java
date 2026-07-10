@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.service.notification;
+﻿package com.teamchallenge.easybuy.shop.service.notification;
 
 
 import com.teamchallenge.easybuy.shop.entity.Shop;
@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Provides business operations for NotificationService.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

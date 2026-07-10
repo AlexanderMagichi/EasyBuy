@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.entity;
+﻿package com.teamchallenge.easybuy.shop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +12,9 @@ import java.util.UUID;
 @Table(name = "shop_billing_info", indexes = {
         @Index(name = "idx_stripe_account", columnList = "stripe_account_id")
 })
+/**
+ * Represents the ShopBillingInfo persistence entity.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

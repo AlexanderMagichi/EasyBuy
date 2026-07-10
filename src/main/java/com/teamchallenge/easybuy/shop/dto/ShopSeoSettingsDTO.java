@@ -42,6 +42,22 @@ public class ShopSeoSettingsDTO {
     private String canonicalUrl;
 
     @Size(max = 255)
+    @Schema(description = "Open Graph URL for social media sharing")
+    private String ogUrl;
+
+    @Size(max = 50)
+    @Schema(description = "Open Graph type, usually website")
+    private String ogType;
+
+    @Size(max = 255)
+    @Schema(description = "Open Graph site name")
+    private String ogSiteName;
+
+    @Size(max = 20)
+    @Schema(description = "Open Graph locale, for example uk_UA")
+    private String ogLocale;
+
+    @Size(max = 255)
     @Schema(description = "Open Graph title for social media sharing")
     private String ogTitle;
 
@@ -52,6 +68,14 @@ public class ShopSeoSettingsDTO {
     @Size(max = 255)
     @Schema(description = "Open Graph image URL for social media sharing")
     private String ogImageUrl;
+
+    @Size(max = 255)
+    @Schema(description = "Secure Open Graph image URL for HTTPS sharing")
+    private String ogImageSecureUrl;
+
+    @Size(max = 255)
+    @Schema(description = "Alternative text for the Open Graph image")
+    private String ogImageAlt;
 
     @Schema(description = "JSON-LD structured data")
     private String structuredDataJson;

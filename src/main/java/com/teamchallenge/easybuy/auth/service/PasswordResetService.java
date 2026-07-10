@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.auth.service;
+﻿package com.teamchallenge.easybuy.auth.service;
 
 import com.teamchallenge.easybuy.auth.entity.PasswordResetToken;
 import com.teamchallenge.easybuy.auth.repository.PasswordResetTokenRepository;
@@ -15,6 +15,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Provides business operations for PasswordResetService.
+ */
 @Service
 @RequiredArgsConstructor
 public class PasswordResetService {

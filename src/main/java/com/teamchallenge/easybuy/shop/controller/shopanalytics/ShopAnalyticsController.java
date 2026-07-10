@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.controller.shopanalytics;
+﻿package com.teamchallenge.easybuy.shop.controller.shopanalytics;
 
 import com.teamchallenge.easybuy.shop.dto.shopanalytics.ShopAnalyticsDTO;
 import com.teamchallenge.easybuy.shop.service.shopanalytics.ShopAnalyticsService;
@@ -17,6 +17,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in ShopAnalyticsController.
+ */
 @RestController
 @RequestMapping("/api/v1/shops")
 @RequiredArgsConstructor

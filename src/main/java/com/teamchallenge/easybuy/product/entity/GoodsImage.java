@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.entity;
+﻿package com.teamchallenge.easybuy.product.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -19,6 +19,9 @@ import java.util.UUID;
 @Table(name = "goods_images", indexes = {
         @Index(name = "idx_goods_images_goods_id", columnList = "goods_id")
 })
+/**
+ * Represents the GoodsImage persistence entity.
+ */
 @Schema(description = "Represents an additional image associated with a product.")
 @ToString(exclude = "goods")
 public class GoodsImage {

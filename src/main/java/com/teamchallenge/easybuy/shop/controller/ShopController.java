@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.controller;
+﻿package com.teamchallenge.easybuy.shop.controller;
 
 import com.teamchallenge.easybuy.shop.dto.ShopDTO;
 import com.teamchallenge.easybuy.shop.dto.ShopSearchParams;
@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.UUID;
 
+/**
+ * Exposes API endpoints in ShopController.
+ */
 @RestController
 @RequestMapping("/api/v1/shops")
 @RequiredArgsConstructor
@@ -144,6 +147,7 @@ public class ShopController {
         ShopDTO dto = new ShopDTO();
         dto.setShopName(request.getShopName());
         dto.setShopDescription(request.getShopDescription());
+        dto.setSlug(request.getSlug());
         dto.setSellerId(request.getSellerId());
         dto.setCurrency(request.getCurrency());
         dto.setLanguage(request.getLanguage());
@@ -156,6 +160,7 @@ public class ShopController {
         dto.setShopName(request.getShopName());
         dto.setShopDescription(request.getShopDescription());
         dto.setShopStatus(request.getShopStatus());
+        dto.setSlug(request.getSlug());
         dto.setSellerId(request.getSellerId());
         dto.setCurrency(request.getCurrency());
         dto.setLanguage(request.getLanguage());
@@ -168,6 +173,7 @@ public class ShopController {
         dto.setShopName(request.getShopName());
         dto.setShopDescription(request.getShopDescription());
         dto.setShopStatus(request.getShopStatus());
+        dto.setSlug(request.getSlug());
         dto.setSellerId(request.getSellerId());
         dto.setCurrency(request.getCurrency());
         dto.setLanguage(request.getLanguage());

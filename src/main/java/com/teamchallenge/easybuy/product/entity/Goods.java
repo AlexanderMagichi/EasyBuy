@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.entity;
+﻿package com.teamchallenge.easybuy.product.entity;
 
 import com.teamchallenge.easybuy.product.entity.category.Category;
 import com.teamchallenge.easybuy.shop.entity.Shop;
@@ -25,6 +25,9 @@ import java.util.UUID;
         @Index(name = "idx_goods_art", columnList = "art"),
         @Index(name = "idx_goods_shopId", columnList = "shop_id")
 })
+/**
+ * Represents the Goods persistence entity.
+ */
 @Schema(description = "Goods entity used to display goods in the catalog.")
 @SQLRestriction("deleted_at IS NULL")
 public class Goods {

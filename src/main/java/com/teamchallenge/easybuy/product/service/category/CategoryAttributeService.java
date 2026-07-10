@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.service.category;
+﻿package com.teamchallenge.easybuy.product.service.category;
 
 
 import com.teamchallenge.easybuy.product.dto.category.CategoryAttributeDTO;
@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Provides business operations for CategoryAttributeService.
+ */
 @Service
 public class CategoryAttributeService {
 

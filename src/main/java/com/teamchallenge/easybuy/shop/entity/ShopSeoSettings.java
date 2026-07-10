@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.shop.entity;
+﻿package com.teamchallenge.easybuy.shop.entity;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +15,9 @@ import java.util.UUID;
         @Index(name = "idx_shop_seo_meta_title", columnList = "meta_title"),
         @Index(name = "idx_shop_seo_meta_keywords", columnList = "meta_keywords")
 })
+/**
+ * Represents the ShopSeoSettings persistence entity.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -61,18 +64,42 @@ public class ShopSeoSettings {
             example = "https://example.com/shop/mystore", maxLength = 255)
     private String canonicalUrl;
 
+    @Size(max = 255, message = "Open Graph URL must not exceed 255 characters")
+    @Column(name = "og_url", length = 255)
+    @Schema(description = "Open Graph URL for the shop page",
+            example = "https://example.com/shops/mystore", maxLength = 255)
+    private String ogUrl;
+
+    @Size(max = 50, message = "Open Graph type must not exceed 50 characters")
+    @Column(name = "og_type", length = 50)
+    @Schema(description = "Open Graph content type",
+            example = "website", maxLength = 50)
+    private String ogType;
+
+    @Size(max = 255, message = "Open Graph site name must not exceed 255 characters")
+    @Column(name = "og_site_name", length = 255)
+    @Schema(description = "Open Graph site name",
+            example = "MyStore", maxLength = 255)
+    private String ogSiteName;
+
+    @Size(max = 20, message = "Open Graph locale must not exceed 20 characters")
+    @Column(name = "og_locale", length = 20)
+    @Schema(description = "Open Graph locale for the shop page",
+            example = "uk_UA", maxLength = 20)
+    private String ogLocale;
+
     // Heading for sharing on Facebook, Telegram ...
     @Size(max = 255, message = "Open Graph title must not exceed 255 characters. Heading for sharing like Facebook, Telegram, ets. Open Graph protocol https://ogp.me/")
     @Column(name = "og_title", length = 255)
     @Schema(description = "Open Graph title for social media sharing",
-            example = "MyStore - Your Trusted Partner", maxLength = 255)
+            example = "MyStore - Your Trusted Partner", maxLength = 95)
     private String ogTitle;
 
     @Size(max = 300, message = "Open Graph description must not exceed 300 characters")
     @Column(name = "og_description", length = 300)
     @Schema(description = "Open Graph description for social media sharing",
             example = "Shop the best clothes at MyStore. Quality products, competitive prices, and exceptional service.",
-            maxLength = 300)
+            maxLength = 200)
     private String ogDescription;
 
     @Size(max = 255, message = "Open Graph image URL must not exceed 255 characters")
@@ -80,6 +107,18 @@ public class ShopSeoSettings {
     @Schema(description = "Open Graph image URL for social media sharing",
             example = "https://example.com/images/mystore-og.jpg", maxLength = 255)
     private String ogImageUrl;
+
+    @Size(max = 255, message = "Open Graph secure image URL must not exceed 255 characters")
+    @Column(name = "og_image_secure_url", length = 255)
+    @Schema(description = "Secure Open Graph image URL for HTTPS sharing",
+            example = "https://example.com/images/mystore-og.jpg", maxLength = 255)
+    private String ogImageSecureUrl;
+
+    @Size(max = 255, message = "Open Graph image alt text must not exceed 255 characters")
+    @Column(name = "og_image_alt", length = 255)
+    @Schema(description = "Alternative text for the Open Graph image",
+            example = "MyStore logo", maxLength = 255)
+    private String ogImageAlt;
 
     @Size(max = 255, message = "Structured data JSON must not exceed 255 characters")
     @Column(name = "structured_data_json", columnDefinition = "TEXT")
@@ -103,13 +142,11 @@ public class ShopSeoSettings {
     @Schema(description = "Whether search engines should follow links on the shop page", example = "true")
     private boolean isFollowable = true;
 
-    @Size(max = 255, message = "Hreflang tags must not exceed 255 characters")
     @Column(name = "hreflang_tags", columnDefinition = "TEXT")
     @Schema(description = "Hreflang tags for internationalization (JSON format)",
             example = "[{\"lang\":\"en\",\"url\":\"https://example.com/en/shop\"},{\"lang\":\"uk\",\"url\":\"https://example.com/uk/shop\"}]")
     private String hreflangTags;
 
-    @Size(max = 255, message = "Alternate languages must not exceed 255 characters")
     @Column(name = "alternate_languages", columnDefinition = "TEXT")
     @Schema(description = "Alternate language versions of the shop page (JSON format)",
             example = "[{\"lang\":\"en\",\"url\":\"https://example.com/en/shop\"},{\"lang\":\"uk\",\"url\":\"https://example.com/uk/shop\"}]")
@@ -165,16 +202,23 @@ public class ShopSeoSettings {
      */
     public void calculateSeoScore() {
         int score = 0;
-        int totalFields = 8; // Number of important SEO fields
+        int totalFields = 15; // Number of important SEO fields
 
         if (metaTitle != null && !metaTitle.trim().isEmpty()) score++;
         if (metaDescription != null && !metaDescription.trim().isEmpty()) score++;
         if (metaKeywords != null && !metaKeywords.trim().isEmpty()) score++;
         if (canonicalUrl != null && !canonicalUrl.trim().isEmpty()) score++;
+        if (ogUrl != null && !ogUrl.trim().isEmpty()) score++;
+        if (ogType != null && !ogType.trim().isEmpty()) score++;
+        if (ogSiteName != null && !ogSiteName.trim().isEmpty()) score++;
+        if (ogLocale != null && !ogLocale.trim().isEmpty()) score++;
         if (ogTitle != null && !ogTitle.trim().isEmpty()) score++;
         if (ogDescription != null && !ogDescription.trim().isEmpty()) score++;
         if (ogImageUrl != null && !ogImageUrl.trim().isEmpty()) score++;
+        if (ogImageSecureUrl != null && !ogImageSecureUrl.trim().isEmpty()) score++;
+        if (ogImageAlt != null && !ogImageAlt.trim().isEmpty()) score++;
         if (structuredDataJson != null && !structuredDataJson.trim().isEmpty()) score++;
+        if (robotsDirective != null && !robotsDirective.trim().isEmpty()) score++;
 
         this.seoScore = (score * 100) / totalFields;
         this.isSeoOptimized = this.seoScore >= 80; // Consider optimized if score >= 80%
@@ -212,7 +256,11 @@ public class ShopSeoSettings {
     public boolean isComplete() {
         return metaTitle != null && !metaTitle.trim().isEmpty() &&
                 metaDescription != null && !metaDescription.trim().isEmpty() &&
-                canonicalUrl != null && !canonicalUrl.trim().isEmpty();
+                canonicalUrl != null && !canonicalUrl.trim().isEmpty() &&
+                ogUrl != null && !ogUrl.trim().isEmpty() &&
+                ogType != null && !ogType.trim().isEmpty() &&
+                ogSiteName != null && !ogSiteName.trim().isEmpty() &&
+                ogLocale != null && !ogLocale.trim().isEmpty();
     }
 
     /**
@@ -233,6 +281,103 @@ public class ShopSeoSettings {
             return metaDescription;
         }
         return shop != null ? shop.getShopDescription() : "Shop description";
+    }
+
+    /**
+     * Get default Open Graph title if not set.
+     */
+    public String getDefaultOgTitle() {
+        if (ogTitle != null && !ogTitle.trim().isEmpty()) {
+            return ogTitle;
+        }
+        return getDefaultMetaTitle();
+    }
+
+    /**
+     * Get default Open Graph description if not set.
+     */
+    public String getDefaultOgDescription() {
+        if (ogDescription != null && !ogDescription.trim().isEmpty()) {
+            return ogDescription;
+        }
+        return getDefaultMetaDescription();
+    }
+
+    /**
+     * Get default Open Graph site name if not set.
+     */
+    public String getDefaultOgSiteName() {
+        if (ogSiteName != null && !ogSiteName.trim().isEmpty()) {
+            return ogSiteName;
+        }
+        return shop != null ? shop.getShopName() : "Shop";
+    }
+
+    /**
+     * Get default Open Graph type if not set.
+     */
+    public String getDefaultOgType() {
+        if (ogType != null && !ogType.trim().isEmpty()) {
+            return ogType;
+        }
+        return "website";
+    }
+
+    /**
+     * Get default Open Graph locale if not set.
+     */
+    public String getDefaultOgLocale() {
+        if (ogLocale != null && !ogLocale.trim().isEmpty()) {
+            return ogLocale;
+        }
+        return shop != null && shop.getLanguage() != null && !shop.getLanguage().trim().isEmpty()
+                ? normalizeLocale(shop.getLanguage())
+                : "en_US";
+    }
+
+    /**
+     * Get default Open Graph URL if not set.
+     */
+    public String getDefaultOgUrl() {
+        if (ogUrl != null && !ogUrl.trim().isEmpty()) {
+            return ogUrl;
+        }
+        return canonicalUrl;
+    }
+
+    /**
+     * Get a secure version of the Open Graph image when available.
+     */
+    public String getDefaultOgImageSecureUrl() {
+        if (ogImageSecureUrl != null && !ogImageSecureUrl.trim().isEmpty()) {
+            return ogImageSecureUrl;
+        }
+        if (ogImageUrl != null && ogImageUrl.startsWith("https://")) {
+            return ogImageUrl;
+        }
+        return null;
+    }
+
+    /**
+     * Get default Open Graph image alt text if not set.
+     */
+    public String getDefaultOgImageAlt() {
+        if (ogImageAlt != null && !ogImageAlt.trim().isEmpty()) {
+            return ogImageAlt;
+        }
+        return shop != null ? shop.getShopName() : "Shop logo";
+    }
+
+    private String normalizeLocale(String language) {
+        String normalized = language.trim().toLowerCase();
+        return switch (normalized) {
+            case "uk" -> "uk_UA";
+            case "en" -> "en_US";
+            case "pl" -> "pl_PL";
+            case "de" -> "de_DE";
+            case "fr" -> "fr_FR";
+            default -> normalized.replace('-', '_');
+        };
     }
 
     // --- Lifecycle methods ---

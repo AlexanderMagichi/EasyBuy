@@ -1,4 +1,4 @@
-package com.teamchallenge.easybuy.product.entity.category;
+﻿package com.teamchallenge.easybuy.product.entity.category;
 
 import com.teamchallenge.easybuy.product.entity.Goods;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +18,9 @@ import java.util.UUID;
         @Index(name = "idx_goods_attributes_goods_id", columnList = "goods_id"),
         @Index(name = "idx_goods_attributes_attribute_id", columnList = "attribute_id")
 })
+/**
+ * Represents the GoodsAttributeValue persistence entity.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

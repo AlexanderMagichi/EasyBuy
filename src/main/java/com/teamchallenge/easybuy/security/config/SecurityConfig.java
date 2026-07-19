@@ -12,25 +12,28 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 /**
  * Core Spring Security configuration.
- * Permits access to /api/auth/** without authentication, secures all other endpoints,
- * registers the JWT filter, sets up password encryption, and configures authentication provider.
+ * Configures JWT filter, password encryption, CORS, and endpoint access control.
  */
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
-    private static final String[] AUTH_WHITELIST = {"/api/auth/login",
+
+    private static final String[] AUTH_WHITELIST = {
+            "/api/auth/login",
             "/api/auth/register",
             "/api/auth/refresh",
             "/api/auth/confirm",
@@ -45,9 +48,9 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui/index.html",
             "/v3/api-docs.yaml",
-            "/webjars/**",
-            "/api/goods-images/**"
+            "/webjars/**"
     };
+
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
@@ -56,6 +59,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
+                // Enables CORS with the configuration defined in the corsConfigurationSource bean
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -72,20 +76,30 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
     }
 
+    /**
+     * Configures CORS to allow requests from both local development and production Vercel frontend.
+     */
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.addAllowedOrigin("http://localhost:3000"); // todo: Insert frontend link here
-        corsConfig.addAllowedMethod("*");
-        corsConfig.addAllowedHeader("*");
+
+        // Allowed origins for development and production
+        corsConfig.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "https://marketplace-easybuy-project-phi.vercel.app"
+        ));
+
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        corsConfig.setAllowedHeaders(List.of("*"));
         corsConfig.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
-        return new CorsFilter(source);
+        return source;
     }
 
     @Bean

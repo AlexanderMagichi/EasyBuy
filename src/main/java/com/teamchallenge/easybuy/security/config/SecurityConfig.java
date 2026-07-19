@@ -12,7 +12,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.http.SessionCreationPolicy;
+import org.springframework.security.config.http.SessionCreationPolicy; // Исправленный импорт
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,6 +31,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    // Выносим роли в константы, чтобы убрать желтые предупреждения дубликатов
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_CUSTOMER = "CUSTOMER";
+    private static final String ROLE_SELLER = "SELLER";
 
     private static final String[] AUTH_WHITELIST = {
             "/api/auth/login",
@@ -56,23 +61,23 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
+    @SuppressWarnings("squid:S4502") // Подавляем паранойю сонара/линтера насчет CSRF (для REST с JWT это ок)
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                // Enables CORS with the configuration defined in the corsConfigurationSource bean
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user/**").hasAnyRole("ADMIN", "CUSTOMER", "SELLER")
-                        .requestMatchers("/api/seller/**").hasAnyRole("ADMIN", "SELLER")
-                        .requestMatchers("/api/customer/**").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers("/api/admin/**").hasRole(ROLE_ADMIN)
+                        .requestMatchers("/api/user/**").hasAnyRole(ROLE_ADMIN, ROLE_CUSTOMER, ROLE_SELLER)
+                        .requestMatchers("/api/seller/**").hasAnyRole(ROLE_ADMIN, ROLE_SELLER)
+                        .requestMatchers("/api/customer/**").hasAnyRole(ROLE_ADMIN, ROLE_CUSTOMER)
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, authEx) ->
-                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -80,21 +85,29 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    /**
-     * Configures CORS to allow requests from both local development and production Vercel frontend.
-     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
-        // Allowed origins for development and production
         corsConfig.setAllowedOrigins(List.of(
                 "http://localhost:3000",
-                "https://marketplace-easybuy-project-phi.vercel.app"
+                "http://localhost:5173",
+                "https://marketplace-easybuy-project-phi.vercel.app",
+                "https://marketplace-easybuy-project-gagaeinsvs-projects.vercel.app"
         ));
 
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        corsConfig.setAllowedHeaders(List.of("*"));
+
+        corsConfig.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"
+        ));
+
         corsConfig.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

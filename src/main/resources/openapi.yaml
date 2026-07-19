@@ -75,6 +75,32 @@ paths:
 
 components:
   schemas:
+    OrderStatus:
+      type: string
+      enum:
+        - CREATED
+        - PROCESSING
+        - SHIPPED
+        - DELIVERED
+        - CANCELLED
+        - RETURNED
+
+    OrderDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        createdAt:
+          type: string
+          format: date-time
+        # Вы можете добавить сюда другие нужные поля, например: totalAmount, items и т.д.
+
     AddressDto:
       type: object
       properties:
@@ -222,3 +248,18 @@ components:
         email:
           type: string
           format: email
+    CreateNewOrderRequestDto:
+      type: object
+      required:
+        - address
+        - recipientName
+        - recipientSurname
+      properties:
+        address:
+          $ref: '#/components/schemas/DeliveryAddressRequest'
+        recipientName:
+          type: string
+        recipientSurname:
+          type: string
+        recipientPhone:
+          type: string

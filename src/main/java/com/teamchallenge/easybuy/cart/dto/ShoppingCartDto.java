@@ -18,4 +18,13 @@ public class ShoppingCartDto {
     private UUID userId;
     private List<ShoppingCartItemDto> items;
     private BigDecimal itemsTotalPrice;
+
+    public int getItemsQuantity() {
+        if (items == null) {
+            return 0;
+        }
+        return items.stream()
+                .mapToInt(item -> item.getProductQuantity() != null ? item.getProductQuantity() : 0)
+                .sum();
+    }
 }

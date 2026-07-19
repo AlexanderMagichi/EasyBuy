@@ -5,6 +5,8 @@ import com.stripe.model.checkout.Session;
 import com.teamchallenge.easybuy.cart.api.ShoppingCartProvider;
 import com.teamchallenge.easybuy.cart.dto.ShoppingCartDto;
 import com.teamchallenge.easybuy.cart.repository.ShoppingCartRepository;
+import com.teamchallenge.easybuy.openapi.dto.CreateNewOrderRequestDto;
+import com.teamchallenge.easybuy.openapi.dto.OrderDto;
 import com.teamchallenge.easybuy.openapi.dto.OrderStatus;
 import com.teamchallenge.easybuy.order.converter.OrderDtoConverter;
 import com.teamchallenge.easybuy.order.entity.Order;
@@ -16,7 +18,6 @@ import com.teamchallenge.easybuy.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,7 +40,7 @@ public class OrderCreator {
     private final SingleUserProvider singleUserProvider;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
-    public SpringDataJaxb.OrderDto create(final UUID userId, final CreateNewOrderRequestDto request) {
+    public OrderDto create(final UUID userId, final CreateNewOrderRequestDto request) {
         ShoppingCartDto cart = shoppingCartProvider.getByUserIdOrThrow(userId);
 
         List<OrderItem> items = cart.getItems().stream()
@@ -48,10 +49,8 @@ public class OrderCreator {
 
         var requestAddress = request.getAddress();
         Address deliveryAddress = Address.builder()
-                .country(requestAddress.getCountry())
                 .city(requestAddress.getCity())
-                .line(requestAddress.getLine())
-                .postcode(requestAddress.getPostcode())
+                .street(requestAddress.getLine())
                 .build();
 
         Order order = Order.builder()

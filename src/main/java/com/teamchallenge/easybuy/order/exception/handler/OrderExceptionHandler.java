@@ -2,6 +2,7 @@ package com.teamchallenge.easybuy.order.exception.handler;
 
 
 import com.teamchallenge.easybuy.infrastructure.exception.dto.ApiErrorResponse;
+import com.teamchallenge.easybuy.openapi.dto.OrderStatus;
 import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

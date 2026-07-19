@@ -1,6 +1,8 @@
 package com.teamchallenge.easybuy.order.endpoint;
 
 
+import com.teamchallenge.easybuy.openapi.dto.CreateNewOrderRequestDto;
+import com.teamchallenge.easybuy.openapi.dto.OrderDto;
 import com.teamchallenge.easybuy.openapi.dto.OrderStatus;
 import com.teamchallenge.easybuy.order.api.OrderCreator;
 import com.teamchallenge.easybuy.order.api.OrdersProvider;
@@ -9,7 +11,6 @@ import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +32,7 @@ public class OrderEndpoint {
     private final OrderCreator orderCreator;
 
     @GetMapping
-    public ResponseEntity<List<SpringDataJaxb.OrderDto>> getOrders(
+    public ResponseEntity<List<OrderDto>> getOrders(
             @RequestParam(required = false) final List<OrderStatus> status) {
         var userId = securityPrincipalProvider.getUserId();
         log.info("orders.get: userId={}", userId);
@@ -41,7 +42,7 @@ public class OrderEndpoint {
     }
 
     @PostMapping
-    public ResponseEntity<SpringDataJaxb.OrderDto> createOrder(@Valid @RequestBody final CreateNewOrderRequestDto request) {
+    public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody final CreateNewOrderRequestDto request) {
         var userId = securityPrincipalProvider.getUserId();
         log.info("orders.create: userId={}", userId);
         var order = orderCreator.create(userId, request);

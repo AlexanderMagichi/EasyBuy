@@ -248,3 +248,18 @@ components:
         email:
           type: string
           format: email
+    CreateNewOrderRequestDto:
+      type: object
+      required:
+        - address
+        - recipientName
+        - recipientSurname
+      properties:
+        address:
+          $ref: '#/components/schemas/DeliveryAddressRequest'
+        recipientName:
+          type: string
+        recipientSurname:
+          type: string
+        recipientPhone:
+          type: string

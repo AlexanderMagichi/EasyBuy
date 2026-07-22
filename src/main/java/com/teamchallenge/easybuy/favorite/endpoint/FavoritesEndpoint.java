@@ -1,0 +1,73 @@
+package com.teamchallenge.easybuy.favorite.endpoint;
+
+import com.zufar.icedlatte.favorite.api.*;
+import com.zufar.icedlatte.favorite.converter.*;
+import com.zufar.icedlatte.openapi.dto.*;
+import com.zufar.icedlatte.openapi.favorite.api.FavoriteProductsApi;
+import com.zufar.icedlatte.product.api.filestorage.ProductPictureLinkUpdater;
+import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@Validated
+@RequestMapping(value = FavoritesEndpoint.FAVORITES_URL)
+public class FavoritesEndpoint implements FavoriteProductsApi {
+
+    public static final String FAVORITES_URL = "/api/v1/favorites";
+
+    private final SecurityPrincipalProvider securityPrincipalProvider;
+    private final ListOfFavoriteProductsDtoConverter listOfFavoriteProductsDtoConverter;
+    private final FavoriteProductAdder favoriteProductAdderHelper;
+    private final FavoriteListProvider favoriteListProvider;
+    private final FavoriteProductDeleter favoriteProductDeleter;
+    private final ProductPictureLinkUpdater productPictureLinkUpdater;
+
+    @Override
+    @PostMapping
+    public ResponseEntity<ListOfFavoriteProductsDto> addListOfFavoriteProducts(@Validated @Valid @RequestBody final ListOfFavoriteProducts request) {
+        log.info("favourites.adding: count={}", request.getProductIds().size());
+        var userId = securityPrincipalProvider.getUserId();
+        var favoriteList = favoriteProductAdderHelper.add(request, userId);
+        var response = listOfFavoriteProductsDtoConverter.toListProductDto(favoriteList);
+        productPictureLinkUpdater.updateBatch(response.getProducts());
+        log.info("favourites.added: count={}, userId={}", request.getProductIds().size(), userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping
+    public ResponseEntity<ListOfFavoriteProductsDto> getListOfFavoriteProducts() {
+        var userId = securityPrincipalProvider.getUserId();
+        log.info("favourites.fetching: userId={}", userId);
+        var favoriteList = favoriteListProvider.getFavoriteListDto(userId);
+        var response = listOfFavoriteProductsDtoConverter.toListProductDto(favoriteList);
+        productPictureLinkUpdater.updateBatch(response.getProducts());
+        log.info("favourites.retrieved: count={}, userId={}", response.getProducts().size(), userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @DeleteMapping(value = "/{productId}")
+    public ResponseEntity<Void> removeProductFromFavorite(@PathVariable final UUID productId) {
+        // Validate UUID input to prevent code injection
+        if (productId == null) {
+            log.warn("favourites.remove.invalid: reason=null_productId");
+            return ResponseEntity.badRequest().build();
+        }
+        
+        log.info("favourites.removing: productId={}", productId);
+        var userId = securityPrincipalProvider.getUserId();
+        favoriteProductDeleter.delete(productId, userId);
+        log.info("favourites.removed: productId={}, userId={}", productId, userId);
+        return ResponseEntity.ok().build();
+    }
+}

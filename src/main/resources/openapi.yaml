@@ -5,6 +5,9 @@ info:
   version: 1.0.0
 servers:
   - url: https
+tags:
+  - name: FavoriteProducts
+    description: Favorite Products API
 paths:
   /health:
     get:
@@ -72,6 +75,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeliveryAddressDto'
+
+  # Эндпоинты избранного
+  /api/v1/favorites:
+    get:
+      tags: [FavoriteProducts]
+      operationId: getListOfFavoriteProducts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfFavoriteProductsDto'
+    post:
+      tags: [FavoriteProducts]
+      operationId: addListOfFavoriteProducts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListOfFavoriteProducts'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfFavoriteProductsDto'
+
+  /api/v1/favorites/{productId}:
+    delete:
+      tags: [FavoriteProducts]
+      operationId: removeProductFromFavorite
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
 
 components:
   schemas:
@@ -263,3 +309,81 @@ components:
           type: string
         recipientPhone:
           type: string
+
+    # --- Favorites ---
+    ListOfFavoriteProducts:
+      type: object
+      required:
+        - goods
+      properties:
+        goods:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    FavoriteListDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        favoriteItems:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              productId:
+                type: string
+                format: uuid
+
+    ListOfFavoriteProductsDto:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoodsDTO'
+
+    GoodsDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        art:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        mainImageUrl:
+          type: string
+        stock:
+          type: integer
+        reviewsCount:
+          type: integer
+        shopId:
+          type: string
+          format: uuid
+        categoryId:
+          type: string
+          format: uuid
+        rating:
+          type: integer
+        slug:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time

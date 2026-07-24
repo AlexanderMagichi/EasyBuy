@@ -1,11 +1,15 @@
 package com.teamchallenge.easybuy.favorite.endpoint;
 
-import com.zufar.icedlatte.favorite.api.*;
-import com.zufar.icedlatte.favorite.converter.*;
-import com.zufar.icedlatte.openapi.dto.*;
-import com.zufar.icedlatte.openapi.favorite.api.FavoriteProductsApi;
-import com.zufar.icedlatte.product.api.filestorage.ProductPictureLinkUpdater;
-import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
+
+import com.teamchallenge.easybuy.favorite.api.FavoriteListProvider;
+import com.teamchallenge.easybuy.favorite.api.FavoriteProductAdder;
+import com.teamchallenge.easybuy.favorite.api.FavoriteProductDeleter;
+import com.teamchallenge.easybuy.favorite.converter.ListOfFavoriteProductsDtoConverter;
+import com.teamchallenge.easybuy.favorite.dto.ListOfFavoriteProducts;
+import com.teamchallenge.easybuy.favorite.dto.ListOfFavoriteProductsDto;
+import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +24,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Validated
 @RequestMapping(value = FavoritesEndpoint.FAVORITES_URL)
-public class FavoritesEndpoint implements FavoriteProductsApi {
+@Tag(name = "Favorite Products", description = "Operations for managing favorite products.")
+public class FavoritesEndpoint {
 
     public static final String FAVORITES_URL = "/api/v1/favorites";
 
@@ -29,34 +34,31 @@ public class FavoritesEndpoint implements FavoriteProductsApi {
     private final FavoriteProductAdder favoriteProductAdderHelper;
     private final FavoriteListProvider favoriteListProvider;
     private final FavoriteProductDeleter favoriteProductDeleter;
-    private final ProductPictureLinkUpdater productPictureLinkUpdater;
 
-    @Override
     @PostMapping
+    @Operation(summary = "Add products to favorites")
     public ResponseEntity<ListOfFavoriteProductsDto> addListOfFavoriteProducts(@Validated @Valid @RequestBody final ListOfFavoriteProducts request) {
-        log.info("favourites.adding: count={}", request.getProductIds().size());
+        log.info("favourites.adding: count={}", request.getGoods().size());
         var userId = securityPrincipalProvider.getUserId();
         var favoriteList = favoriteProductAdderHelper.add(request, userId);
         var response = listOfFavoriteProductsDtoConverter.toListProductDto(favoriteList);
-        productPictureLinkUpdater.updateBatch(response.getProducts());
-        log.info("favourites.added: count={}, userId={}", request.getProductIds().size(), userId);
+        log.info("favourites.added: count={}, userId={}", request.getGoods().size(), userId);
         return ResponseEntity.ok(response);
     }
 
-    @Override
     @GetMapping
+    @Operation(summary = "Retrieve all favorite products")
     public ResponseEntity<ListOfFavoriteProductsDto> getListOfFavoriteProducts() {
         var userId = securityPrincipalProvider.getUserId();
         log.info("favourites.fetching: userId={}", userId);
         var favoriteList = favoriteListProvider.getFavoriteListDto(userId);
         var response = listOfFavoriteProductsDtoConverter.toListProductDto(favoriteList);
-        productPictureLinkUpdater.updateBatch(response.getProducts());
         log.info("favourites.retrieved: count={}, userId={}", response.getProducts().size(), userId);
         return ResponseEntity.ok(response);
     }
 
-    @Override
     @DeleteMapping(value = "/{productId}")
+    @Operation(summary = "Remove a product by ID from favorite product list.")
     public ResponseEntity<Void> removeProductFromFavorite(@PathVariable final UUID productId) {
         // Validate UUID input to prevent code injection
         if (productId == null) {

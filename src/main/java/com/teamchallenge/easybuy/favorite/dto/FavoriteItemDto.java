@@ -1,8 +1,7 @@
 package com.teamchallenge.easybuy.favorite.dto;
-
-import com.zufar.icedlatte.openapi.dto.ProductInfoDto;
+import com.teamchallenge.easybuy.product.dto.GoodsDTO;
 
 import java.util.UUID;
 
 public record FavoriteItemDto(UUID id,
-                              ProductInfoDto productInfo) {}
+                              GoodsDTO productInfo) {}

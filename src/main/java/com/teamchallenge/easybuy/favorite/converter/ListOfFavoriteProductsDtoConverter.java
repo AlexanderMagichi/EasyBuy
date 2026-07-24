@@ -1,9 +1,10 @@
 package com.teamchallenge.easybuy.favorite.converter;
 
-import com.zufar.icedlatte.favorite.dto.FavoriteItemDto;
-import com.zufar.icedlatte.favorite.dto.FavoriteListDto;
-import com.zufar.icedlatte.openapi.dto.ListOfFavoriteProductsDto;
-import com.zufar.icedlatte.openapi.dto.ProductInfoDto;
+
+import com.teamchallenge.easybuy.favorite.dto.FavoriteItemDto;
+import com.teamchallenge.easybuy.favorite.dto.FavoriteListDto;
+import com.teamchallenge.easybuy.favorite.dto.ListOfFavoriteProductsDto;
+import com.teamchallenge.easybuy.product.dto.GoodsDTO;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -18,12 +19,12 @@ public interface ListOfFavoriteProductsDtoConverter {
     ListOfFavoriteProductsDto toListProductDto(FavoriteListDto favoriteList);
 
     @Named("toListProductInfoDto")
-    default List<ProductInfoDto> toProductInfoDto(final Set<FavoriteItemDto> favoriteItems) {
+    default List<GoodsDTO> toProductInfoDto(final Set<FavoriteItemDto> favoriteItems) {
         return favoriteItems.stream()
                 .map(FavoriteItemDto::productInfo)
                 .filter(p -> p.getId() != null)
                 .collect(Collectors.toMap(
-                        ProductInfoDto::getId,
+                        GoodsDTO::getId,
                         p -> p,
                         (a, b) -> a
                 ))

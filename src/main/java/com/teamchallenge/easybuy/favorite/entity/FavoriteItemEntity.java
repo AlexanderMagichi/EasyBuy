@@ -1,6 +1,7 @@
 package com.teamchallenge.easybuy.favorite.entity;
 
-import com.zufar.icedlatte.product.entity.ProductInfo;
+
+import com.teamchallenge.easybuy.product.entity.Goods;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,22 +32,22 @@ public class FavoriteItemEntity {
     private FavoriteListEntity favoriteListEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductInfo productInfo;
+    @JoinColumn(name = "goods_id", nullable = false)
+    private Goods goods;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FavoriteItemEntity that = (FavoriteItemEntity) o;
-        return Objects.equals(favoriteListEntity, that.favoriteListEntity) && Objects.equals(productInfo, that.productInfo);
+        return Objects.equals(favoriteListEntity, that.favoriteListEntity) && Objects.equals(goods, that.goods);
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(favoriteListEntity)
-                .append(productInfo)
+                .append(goods)
                 .toHashCode();
     }
 
@@ -54,7 +55,7 @@ public class FavoriteItemEntity {
     public String toString() {
         return "FavoriteItem{" +
                 "id=" + id +
-                ", productInfo=" + productInfo +
+                ", goods=" + goods +
                 '}';
     }
 }

@@ -6,6 +6,9 @@ import com.teamchallenge.easybuy.favorite.dto.FavoriteListDto;
 import com.teamchallenge.easybuy.favorite.entity.FavoriteItemEntity;
 import com.teamchallenge.easybuy.favorite.entity.FavoriteListEntity;
 import com.teamchallenge.easybuy.favorite.repository.FavoriteRepository;
+import com.teamchallenge.easybuy.product.repository.GoodsRepository;
+import com.teamchallenge.easybuy.favorite.dto.ListOfFavoriteProducts;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -21,8 +24,7 @@ import java.util.stream.Collectors;
 public class FavoriteProductAdder {
 
     private final FavoriteRepository favoriteRepository;
-    //todo: Change this to ProductInfoRepository when it is implemented
-    private final ProductInfoRepository productInfoRepository;
+    private final GoodsRepository goodsRepository;
     private final FavoriteListDtoConverter favoriteListDtoConverter;
     private final FavoriteListProvider favoriteListProvider;
 
@@ -42,21 +44,21 @@ public class FavoriteProductAdder {
 
     private Set<UUID> extractFavoriteProductIds(FavoriteListEntity favoriteListEntity) {
         return favoriteListEntity.getFavoriteItems().stream()
-                .map(item -> item.getProductInfo().getId())
+                .map(item -> item.getGoods().getId())
                 .collect(Collectors.toSet());
     }
 
     private Set<UUID> filterNewFavoriteProductIds(ListOfFavoriteProducts listOfFavoriteProducts, Set<UUID> existingIds) {
-        return listOfFavoriteProducts.getProductIds().stream()
+        return listOfFavoriteProducts.getGoods().stream()
                 .filter(productId -> !existingIds.contains(productId))
                 .collect(Collectors.toSet());
     }
 
     private Set<FavoriteItemEntity> createFavoriteItems(Set<UUID> productIds, FavoriteListEntity favoriteListEntity) {
-        return productInfoRepository.findAllById(productIds).stream()
-                .map(productInfo -> FavoriteItemEntity.builder()
+        return goodsRepository.findAllById(productIds).stream()
+                .map(goods -> FavoriteItemEntity.builder()
                         .favoriteListEntity(favoriteListEntity)
-                        .productInfo(productInfo)
+                        .goods(goods)
                         .build())
                 .collect(Collectors.toSet());
     }

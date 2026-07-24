@@ -17,7 +17,8 @@ import java.util.TimeZone;
         "com.teamchallenge.easybuy.auth.repository",
         "com.teamchallenge.easybuy.cart.repository",
         "com.teamchallenge.easybuy.security.repository",
-        "com.teamchallenge.easybuy.order.repository"
+        "com.teamchallenge.easybuy.order.repository",
+        "com.teamchallenge.easybuy.favorite.repository"
 })
 
 @ConfigurationPropertiesScan("com.teamchallenge.easybuy")

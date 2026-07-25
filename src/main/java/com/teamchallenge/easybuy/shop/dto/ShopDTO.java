@@ -50,6 +50,7 @@ public class ShopDTO {
             requiredMode = Schema.RequiredMode.REQUIRED)
     private Shop.ShopStatus shopStatus;
 
+    @Builder.Default
     @Schema(description = "Flag indicating if the shop is featured or recommended.",
             example = "false")
     private boolean featured = false;
@@ -71,6 +72,7 @@ public class ShopDTO {
             accessMode = Schema.AccessMode.READ_ONLY)
     private Instant lastActivityAt;
 
+    @Builder.Default
     @Schema(description = "Flag indicating if the shop is verified (read-only).",
             example = "false",
             accessMode = Schema.AccessMode.READ_ONLY)

@@ -6,7 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE)
 public interface GoodsAttributeValueMapper {
 
     @Mapping(source = "goods.id", target = "goodsId", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

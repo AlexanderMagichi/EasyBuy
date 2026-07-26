@@ -7,6 +7,7 @@ import com.teamchallenge.easybuy.user.entity.UserEntity;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,6 +21,7 @@ import java.util.UUID;
 /**
  * Provides business operations for EmailConfirmationService.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailConfirmationService {
@@ -35,15 +37,27 @@ public class EmailConfirmationService {
     @Value("${spring.mail.username}")
     private String username;
 
+    @Value("${email.enabled:false}")
+    private boolean emailEnabled;
+
     public void send(String emailTo, String subject, String message) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        if (!emailEnabled) {
+            log.info("Email sending is disabled (email.enabled=false). Skipping email to {}", emailTo);
+            return;
+        }
 
-        simpleMailMessage.setFrom(username);
-        simpleMailMessage.setTo(emailTo);
-        simpleMailMessage.setSubject(subject);
-        simpleMailMessage.setText(message);
+        try {
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setFrom(username);
+            simpleMailMessage.setTo(emailTo);
+            simpleMailMessage.setSubject(subject);
+            simpleMailMessage.setText(message);
 
-        javaMailSender.send(simpleMailMessage);
+            javaMailSender.send(simpleMailMessage);
+            log.info("Confirmation email successfully sent to {}", emailTo);
+        } catch (Exception e) {
+            log.error("Failed to send email to {}: {}", emailTo, e.getMessage());
+        }
     }
 
     public void sendConfirmationEmail(UserEntity userEntity) {

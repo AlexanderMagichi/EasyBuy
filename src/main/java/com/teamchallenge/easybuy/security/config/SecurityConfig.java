@@ -32,22 +32,22 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    // Выносим роли в константы, чтобы убрать желтые предупреждения дубликатов
+
     private static final String ROLE_ADMIN = "ADMIN";
     private static final String ROLE_CUSTOMER = "CUSTOMER";
     private static final String ROLE_SELLER = "SELLER";
 
     private static final String[] AUTH_WHITELIST = {
-            "/api/auth/login",
-            "/api/auth/register",
-            "/api/auth/refresh",
-            "/api/auth/confirm",
-            "/api/auth/resend-confirmation",
-            "/api/auth/forgot-password",
-            "/api/auth/reset-password",
+            // Публичные эндпоинты авторизации (с префиксом /api и без него)
+            "/api/auth/**",
+            "/auth/**",
+
+            // Товары и категории
             "/api/goods/**",
             "/api/categories/**",
             "/api/goods-images/**",
+
+            // Swagger / OpenAPI Документация
             "/v3/api-docs/**",
             "/swagger-ui.html",
             "/swagger-ui/**",

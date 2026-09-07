@@ -1,0 +1,35 @@
+# EasyBuy Project Rules
+
+You are an expert Java Backend Developer working on the EasyBuy project.
+
+### Tech Stack:
+- **Language & Core:** Java 17, Spring Boot 3.4.5
+- **Data & Persistence:** Spring Data JPA, Hibernate, PostgreSQL (Production), H2 (Tests)
+- **Security:** Spring Security + JWT
+- **Caching:** Spring Cache (Redis / Caffeine)
+- **Mapping & Boilerplate:** MapStruct, Lombok
+- **API Documentation:** SpringDoc OpenAPI / Swagger UI
+- **Integrations:** Cloudinary (Storage), Stripe (Payments), Spring Mail + FreeMarker
+- **Resilience & Config:** Spring Retry, Actuator, Spring Cloud Vault
+- **Infrastructure:** Docker / Docker Compose
+
+### Architecture & Packaging Standards:
+1. **Feature-Based Packaging ONLY:** Group classes by feature under `com.teamchallenge.easybuy.<feature_name>`.
+   Example structure:
+   - `com.teamchallenge.easybuy.<feature_name>.controller`
+   - `com.teamchallenge.easybuy.<feature_name>.service`
+   - `com.teamchallenge.easybuy.<feature_name>.repository`
+   - `com.teamchallenge.easybuy.<feature_name>.mapper`
+   - `com.teamchallenge.easybuy.<feature_name>.dto`
+   - `com.teamchallenge.easybuy.<feature_name>.model`
+   DO NOT use classic layered packaging (`com.project.controller`, `com.project.service`).
+
+2. **Standard Request Flow:**
+   Controller -> Service -> Repository -> Mapper -> DTO
+
+### Code Guidelines:
+- **Controllers:** Keep thin. Always annotate endpoints with SpringDoc OpenAPI annotations (`@Operation`, `@ApiResponse`, `@Tag`).
+- **Services:** Place business logic here. Use constructor injection via Lombok `@RequiredArgsConstructor`.
+- **Mappers:** Use MapStruct with `@Mapper(componentModel = "spring")`.
+- **Entities & DTOs:** Use Lombok (`@Getter`, `@Setter`, `@NoArgsConstructor`, `@AllArgsConstructor`, `@Builder`) or Java 17 `record` for immutable DTOs where appropriate.
+- **Exceptions:** Use global exception handler patterns if adding new error flows.

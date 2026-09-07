@@ -58,3 +58,4 @@ docs/*.out
 docs/*.txt
 docs/*.ps1
 docs/_*
+.aider*

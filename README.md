@@ -1,65 +1,45 @@
-# EasyBuy Marketplace API
+# AGENTS.md
 
-## 📖 Overview
-EasyBuy is a robust, multi-vendor e-commerce marketplace backend designed to handle complex business logic, from user authentication and shopping cart management to store onboarding and analytics. The RESTful API is built to scale, providing secure, documented, and efficient endpoints for all marketplace operations.
+## Project map
+- EasyBuy is a **Spring Boot 3.4.5 / Java 17** marketplace app with **feature-based packaging** under `src/main/java/com/teamchallenge/easybuy/`.
+- **Repository Context**: [https://github.com/AlexanderMagichi/EasyBuy.git](https://github.com/AlexanderMagichi/EasyBuy.git)
+- Core domains: `auth`, `user`, `shop`, `product`, `payment`, `security`, `infrastructure`, and `common`.
+- Keep edits inside the owning feature; the main flow is `Controller -> Service -> Repository -> Mapper -> DTO`.
 
-## 🛠 Tech Stack
-*   **Core**: Java, Spring Boot
-*   **Database & ORM**: PostgreSQL, Hibernate / Spring Data JPA
-*   **API Documentation**: Swagger / OpenAPI 3.1.0
-*   **Security**: JWT-based Authentication
-*   **Integrations**: Stripe (for shop billing and onboarding)
+## Environments & Live Documentation
+- **Remote Server Deployment**: `http://89.168.115.138:8080`
+- **Interactive Swagger UI (Live)**: [http://89.168.115.138:8080/swagger-ui/index.html#/](http://89.168.115.138:8080/swagger-ui/index.html#/)
+- Agents should reference the live Swagger documentation when ensuring synchronization with deployed schemas.
 
-## 🏗 Project Structure
-The application architecture follows a modular and scalable design. The package structure is logically grouped by domain and technical responsibility (e.g., controllers, services, repositories, entities, DTOs, and security configurations). This separation of concerns ensures high maintainability and adherence to clean architecture principles.
+## Architecture you should preserve
+- `EasyBuyApplication` enables **JPA auditing**, **caching**, **retry**, explicit JPA repositories, and sets the JVM timezone to `UTC`.
+- `shop` is the best reference for patterns: controller/request DTOs in `shop/controller`, business rules in `shop/service`, query composition in `shop/repository/ShopSearchBuilder`, and mapping in `shop/mapper/ShopMapper`.
+- Shop/product side effects are **event-driven**: services publish events, and `ShopEventListener` fan-outs async notification/analytics/audit work.
+- Global API errors are centralized in `common/exception/GlobalExceptionHandler` and return a JSON map with `timestamp`, `status`, `error`, `message`, and `path`.
 
-## 🚀 Core Modules & Features
+## Conventions that matter here
+- MapStruct mappers are Spring beans and often use `unmappedTargetPolicy = ReportingPolicy.IGNORE`; partial updates use `@BeanMapping(nullValuePropertyMappingStrategy = IGNORE)`.
+- Controllers often adapt request DTOs into domain DTOs with small private helper methods before calling services (`ShopController` is the template).
+- Security is JWT-based with method security; public auth/Swagger paths are whitelisted in `security/config/SecurityConfig`.
+- Ownership checks are explicit in service-layer guards (for example `ShopAccessGuard` + seller/admin branching in `ShopService`).
 
-### 👤 User & Authentication
-*   **Authentication**: Secure login, registration, JWT token generation, refresh tokens, and email confirmation workflows.
-*   **User Management**: Profile creation, avatar uploads, and complete password reset flows.
-*   **Delivery Addresses**: CRUD operations for managing user delivery address profiles, including setting a primary/default address.
+## Local workflows
+- Standard build/test: `./mvnw clean test`.
+- Run locally: `./mvnw spring-boot:run`.
+- Dockerized local stack: `docker compose up -d --build` (PostgreSQL `5432`, Redis `6379`, app `8081`, pgAdmin `8080`).
+- Swagger health check script: `./check_swagger.ps1` validates `/swagger-ui.html` and `/v3/api-docs`.
 
-### 🏪 Shop Management
-*   **Store Profiles**: Comprehensive endpoints for managing shops, including nested contact info, tax and legal information, and SEO settings.
-*   **Analytics & Optimization**: Features for tracking shop performance and dedicated endpoints for dead-shop optimization.
-*   **Moderation**: API for maintaining and reversing shop moderation history records.
-*   **Team Memberships**: Delegation of store-scoped roles (such as `MANAGER` or `CONTENT_MANAGER`) with the ability to suspend, reactivate, or revoke access.
-*   **Billing**: Integration for managing shop Stripe onboarding and payouts.
+## Configuration notes
+- Runtime config lives in `src/main/resources/application*.properties`.
+- `application-docker.properties` points to `postgres`/`redis` service names and disables Vault for compose-based runs.
+- Tests use `src/test/resources/application-test.properties` with H2, `spring.cache.type=simple`, Vault off, and stubbed Cloudinary/Mail/Stripe values.
 
-### 📦 Product Catalog
-*   **Categories**: Hierarchical category management.
-*   **Attributes**: Creation of category-specific attributes (`STRING`, `NUMBER`, `BOOLEAN`, `ENUM`) and mapping values to individual goods.
-*   **Goods Management**: API for managing products, supporting extensive filtering by price, stock, ratings, and status (`ACTIVE`, `INACTIVE`, `ARCHIVED`).
-*   **Media**: Endpoints for uploading, updating, and deleting goods images.
+## Testing guidance
+- Reuse `@IntegrationTest` for full-context tests; it sets `@SpringBootTest` plus `@ActiveProfiles("test")`.
+- Test fixtures and assertions usually assume the H2 test profile, not the Docker profile.
+- When changing events, security, mapping, or exceptions, check the related feature tests under `src/test/java/com/teamchallenge/easybuy/`.
 
-### 🛒 Shopping Experience
-*   **Shopping Cart**: Adding new items, updating product quantities, and removing items from the cart.
-*   **Orders**: Order creation and lifecycle tracking (statuses include `CREATED`, `PROCESSING`, `SHIPPED`, `DELIVERED`, `CANCELLED`, `RETURNED`).
-*   **Favorites**: Operations for users to manage their favorite products wishlist.
-
-## 📚 API Documentation
-The API endpoints and schemas are fully documented using OpenAPI 3.1.0.
-*   **Primary Server URL**: `http://89.168.115.138:8080`
-*   **Interactive Swagger UI**: Explore and test the API directly via our deployed documentation:
-    👉 [EasyBuy Swagger UI](http://89.168.115.138:8080/swagger-ui/index.html#/)
-
-## ⚙️ Getting Started
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/AlexanderMagichi/EasyBuy.git](https://github.com/AlexanderMagichi/EasyBuy.git)
-    cd EasyBuy
-    ```
-2.  **Configure the Database:**
-    Ensure your PostgreSQL instance is running. Update the `application.yml` or `.env` file with your specific database credentials and environment variables.
-3.  **Run the Application:**
-    Build and run the Spring Boot application using your IDE or terminal wrapper:
-    ```bash
-    ./mvnw spring-boot:run
-    ```
-
-## 👨‍💻 Author
-**Alexander Mogilnitsky**
-*   [LinkedIn Profile](https://www.linkedin.com/in/%D0%BE%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80-%D0%BC%D0%BE%D0%B3%D0%B8%D0%BB%D1%8C%D0%BD%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9-7808a3272/)
-*   [GitHub](https://github.com/AlexanderMagichi)
+## Before you change code
+- Check whether the change affects event listeners, permissions, or search predicates in another package.
+- Update both request/response DTOs and the MapStruct mapper when adding or renaming shop/product fields.
+- Add new domain exceptions to `GlobalExceptionHandler` so failures stay consistent.

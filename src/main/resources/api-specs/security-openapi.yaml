@@ -261,6 +261,7 @@ components:
         - lastName
         - email
         - password
+        - role
       properties:
         firstName:
           type: "string"
@@ -289,6 +290,11 @@ components:
           pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
         password:
           $ref: "#/components/schemas/PasswordField"
+        role:
+          type: "string"
+          description: "Registration role. Allowed values: CUSTOMER or SELLER."
+          pattern: "CUSTOMER|SELLER"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank"
         addressDto:
           $ref: "./user-openapi.yaml#/components/schemas/AddressDto"
 

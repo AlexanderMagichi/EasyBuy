@@ -14,7 +14,6 @@ import java.util.TimeZone;
         "com.teamchallenge.easybuy.shop.repository",
         "com.teamchallenge.easybuy.product.repository",
         "com.teamchallenge.easybuy.user.repository",
-        "com.teamchallenge.easybuy.auth.repository",
         "com.teamchallenge.easybuy.cart.repository",
         "com.teamchallenge.easybuy.security.repository",
         "com.teamchallenge.easybuy.order.repository",

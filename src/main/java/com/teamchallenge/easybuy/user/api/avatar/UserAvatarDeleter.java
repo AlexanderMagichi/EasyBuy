@@ -28,7 +28,6 @@ public class UserAvatarDeleter {
         String avatarUrl = user.getAvatarUrl();
         if (avatarUrl != null) {
             try {
-                // Извлекаем public_id из URL (примерно так же, как в AuthenticationService)
                 String[] parts = avatarUrl.split("/");
                 String fileWithExtension = parts[parts.length - 1];
                 String publicId = "user-avatars/" + fileWithExtension.split("\\.")[0];

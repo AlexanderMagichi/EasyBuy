@@ -33,8 +33,7 @@ public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             // auth endpoints
-            "/api/auth/**",
-            "/auth/**",
+            "/api/v1/auth/**",
 
             // goods and categories
             "/api/goods/**",

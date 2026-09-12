@@ -17,7 +17,7 @@ paths:
           description: OK
 
   # Эндпоинты авторизации
-  /auth/register:
+  /api/v1/auth/register:
     post:
       tags: [Security]
       operationId: register
@@ -29,7 +29,7 @@ paths:
       responses:
         '200': {description: OK}
 
-  /auth/login:
+  /api/v1/auth/login:
     post:
       tags: [Security]
       operationId: login
@@ -213,6 +213,8 @@ components:
 
     UserRegistrationRequest:
       type: object
+      required:
+        - role
       properties:
         firstName:
           type: string
@@ -223,6 +225,10 @@ components:
           format: email
         password:
           type: string
+        role:
+          type: string
+          pattern: CUSTOMER|SELLER
+          x-field-extra-annotation: '@jakarta.validation.constraints.NotBlank'
 
     UserAuthenticationRequest:
       type: object

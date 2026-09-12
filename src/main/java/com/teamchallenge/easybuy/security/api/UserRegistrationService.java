@@ -31,7 +31,9 @@ public class UserRegistrationService {
     public UserAuthenticationResponse register(final UserRegistrationRequest userRegistrationRequest) {
         String email = userRegistrationRequest.getEmail().toLowerCase(java.util.Locale.ROOT).trim();
         String encryptedPassword = passwordEncoder.encode(userRegistrationRequest.getPassword());
-        UserGrantedAuthority defaultUserGrantedAuthority = UserGrantedAuthority.builder().authority(Authority.USER).build();
+        UserGrantedAuthority defaultUserGrantedAuthority = UserGrantedAuthority.builder()
+                .authority(Authority.valueOf(userRegistrationRequest.getRole()))
+                .build();
 
         UserEntity newUserEntity = registrationDtoConverter.toEntity(userRegistrationRequest);
         newUserEntity.setEmail(email);

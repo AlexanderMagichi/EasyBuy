@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS email_confirmation_token CASCADE;
+DROP TABLE IF EXISTS password_reset_tokens CASCADE;
+DROP TABLE IF EXISTS token CASCADE;

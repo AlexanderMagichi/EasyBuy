@@ -1,0 +1,16 @@
+{
+  "models": [
+    {
+      "title": "Local Qwen 2.5 Coder",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "apiBase": "http://localhost:11434"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Local Qwen 2.5 Coder (Автокомплит)",
+    "provider": "ollama",
+    "model": "qwen2.5-coder:7b",
+    "apiBase": "http://localhost:11434"
+  }
+}

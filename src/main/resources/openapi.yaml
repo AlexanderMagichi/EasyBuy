@@ -29,7 +29,7 @@ paths:
       responses:
         '200': {description: OK}
 
-  /api/v1/auth/login:
+  /api/v1/auth/authenticate:
     post:
       tags: [Security]
       operationId: login

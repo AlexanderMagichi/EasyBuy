@@ -39,6 +39,12 @@ build/
 # AI agent instructions (local use only)
 AGENTS.md
 
+# Archive files (should not be in src/main/java)
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
 # Migration / architecture markdown artifacts
 MIGRATION_*.md
 *_REPORT.md

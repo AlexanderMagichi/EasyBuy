@@ -5,9 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileUploader {
     /**
-     * @param file     Файл для загрузки
-     * @param folder   Папка в облаке (в Cloudinary это может быть префиксом public_id)
-     * @param fileName Имя файла (будет использоваться как public_id)
+     * @param file
+     * @param folder
+     * @param fileName
      */
     void upload(MultipartFile file, String folder, String fileName);
 }

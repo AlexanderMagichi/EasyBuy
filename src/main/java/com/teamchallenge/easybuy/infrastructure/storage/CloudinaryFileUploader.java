@@ -21,13 +21,13 @@ public class CloudinaryFileUploader implements FileUploader {
     @Override
     public void upload(MultipartFile file, String folder, String fileName) {
         try {
-            // В Cloudinary public_id может включать путь (папку)
+
             String publicId = (folder != null && !folder.isEmpty()) ? folder + "/" + fileName : fileName;
 
             Map params = ObjectUtils.asMap(
                     "public_id", publicId,
                     "overwrite", true,
-                    "resource_type", "auto" // Автоматически определит image или raw
+                    "resource_type", "auto"
             );
 
             cloudinary.uploader().upload(file.getBytes(), params);

@@ -38,7 +38,7 @@ public class UserEndpoint {
     private final SecurityPrincipalProvider securityPrincipalProvider;
     private final UserAvatarUploader userAvatarUploader;
     private final UserAvatarLinkProvider userAvatarLinkProvider;
-    private final UserAvatarDeleter userAvatarDeleter; // Добавлен сервис для удаления аватаров
+    private final UserAvatarDeleter userAvatarDeleter;
     private final EmailTokenConformer emailTokenConformer;
 
     @GetMapping
@@ -89,7 +89,7 @@ public class UserEndpoint {
     public ResponseEntity<Void> deleteUserAvatar() {
         var userId = securityPrincipalProvider.getUserId();
         log.info("user.avatar.delete: userId={}", userId);
-        userAvatarDeleter.delete(userId); // Исправлен вызов на новый сервис
+        userAvatarDeleter.delete(userId);
         return ResponseEntity.ok().build();
     }
 

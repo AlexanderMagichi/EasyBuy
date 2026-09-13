@@ -17,7 +17,6 @@ public class UserAvatarLinkProvider {
 
     private final Cloudinary cloudinary;
 
-    // Эти константы должны совпадать с теми, что используются в UserAvatarUploader
     private static final String AVATAR_FOLDER = "user-avatars";
     private static final String AVATAR_NAME_PREFIX = "user-avatar-";
 
@@ -33,15 +32,15 @@ public class UserAvatarLinkProvider {
      */
     public String getLink(final UUID userId) {
         try {
-            // Формируем такой же publicId, как при загрузке: папка + префикс + ID
+
             String publicId = AVATAR_FOLDER + "/" + AVATAR_NAME_PREFIX + userId.toString();
 
-            // Генерируем URL
+
             return cloudinary.url().generate(publicId);
 
         } catch (Exception e) {
             log.error("user.avatar.error: failed to generate URL for userId={}", userId, e);
-            return "default file"; // Или URL на дефолтную картинку
+            return "default file";
         }
     }
 }

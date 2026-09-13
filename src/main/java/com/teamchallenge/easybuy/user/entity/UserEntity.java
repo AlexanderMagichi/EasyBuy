@@ -87,7 +87,7 @@ public class UserEntity extends AuditableEntity implements UserDetails {
     @Column(name = "avatar_url")
     private String avatarUrl;
 
-    // --- Методы UserDetails ---
+    // ---  UserDetails ---
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -116,7 +116,7 @@ public class UserEntity extends AuditableEntity implements UserDetails {
     @Override
     public boolean isEnabled() { return enabled; }
 
-    // --- Логика добавления ролей ---
+    // --- Roles ---
 
     public void addAuthority(UserGrantedAuthority authority) {
         if (this.authorities == null) {
@@ -126,8 +126,7 @@ public class UserEntity extends AuditableEntity implements UserDetails {
         this.authorities.add(authority);
     }
 
-    // --- Переопределение equals/hashCode для JPA сущностей ---
-
+    // --- Object methods ---
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

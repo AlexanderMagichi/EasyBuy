@@ -161,7 +161,7 @@ public class ShopModerationHistory {
         summary.append(actionType.name());
 
         if (previousStatus != null && newStatus != null) {
-            summary.append(": ").append(previousStatus).append(" в†’ ").append(newStatus);
+            summary.append(": ").append(previousStatus).append(" →’ ").append(newStatus);
         }
 
         if (reason != null && !reason.trim().isEmpty()) {

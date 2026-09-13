@@ -18,8 +18,7 @@ import java.util.UUID;
 public class UserAvatarUploader {
 
     private final Cloudinary cloudinary;
-    // Если нужно сохранять ссылку в БД, можно добавить UserRepository
-    // private final UserRepository userRepository;
+
 
     private static final String AVATAR_FOLDER = "user-avatars";
 
@@ -28,7 +27,6 @@ public class UserAvatarUploader {
         try {
             String publicId = "avatar-" + userId.toString();
 
-            // Загрузка файла в Cloudinary
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                     "folder", AVATAR_FOLDER,
                     "public_id", publicId,
@@ -38,11 +36,6 @@ public class UserAvatarUploader {
             String url = (String) uploadResult.get("secure_url");
             log.info("Avatar uploaded to Cloudinary: {}", url);
 
-            // TODO: Если в твоем UserEntity есть поле avatarUrl,
-            // здесь нужно найти пользователя и сохранить этот url в базу:
-            // UserEntity user = userRepository.findById(userId).orElseThrow();
-            // user.setAvatarUrl(url);
-            // userRepository.save(user);
 
         } catch (IOException e) {
             log.error("Failed to upload avatar for user {}", userId, e);

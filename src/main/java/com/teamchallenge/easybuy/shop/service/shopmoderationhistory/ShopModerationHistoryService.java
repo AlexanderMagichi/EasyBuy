@@ -102,7 +102,7 @@ public class ShopModerationHistoryService {
             throw new IllegalStateException("Moderation action already reversed: " + moderationHistoryId);
         }
 
-        // Заменено на UserEntity
+
         UserEntity reversedBy = findUserOrThrow(dto.getReversedByUserId(), "UserEntity for reversal not found: ");
         historyRecord.setReversedByUser(reversedBy);
         historyRecord.setReversalReason(dto.getReversalReason());

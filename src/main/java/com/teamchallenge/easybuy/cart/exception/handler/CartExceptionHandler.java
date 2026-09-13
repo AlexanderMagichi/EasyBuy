@@ -8,6 +8,7 @@ import com.teamchallenge.easybuy.infrastructure.exception.dto.ApiErrorResponse;
 import com.teamchallenge.easybuy.infrastructure.exception.handler.ApiErrorResponseCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -49,6 +50,14 @@ public class CartExceptionHandler {
     public ApiErrorResponse handleShoppingCartNotFoundException(final ShoppingCartNotFoundException exception) {
         ApiErrorResponse apiErrorResponse = apiErrorResponseCreator.buildResponse(exception, HttpStatus.NOT_FOUND);
         log.warn("exception.cart.not_found: message={}", apiErrorResponse.message());
+        return apiErrorResponse;
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiErrorResponse handleOptimisticLockingFailureException(final OptimisticLockingFailureException exception) {
+        ApiErrorResponse apiErrorResponse = apiErrorResponseCreator.buildResponse(exception, HttpStatus.CONFLICT);
+        log.warn("exception.cart.version_conflict: message={}", apiErrorResponse.message());
         return apiErrorResponse;
     }
 }

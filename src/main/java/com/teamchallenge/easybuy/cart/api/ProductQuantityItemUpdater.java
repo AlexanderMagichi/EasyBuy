@@ -59,6 +59,11 @@ public class ProductQuantityItemUpdater {
             log.warn("cart.item.quantity.negative: itemId={}, quantity={}", shoppingCartItemId, newQuantity);
             throw new InvalidItemProductQuantityException(newQuantity);
         }
+        if (newQuantity > item.getGoods().getStock()) {
+            log.warn("cart.item.quantity.stock_exceeded: itemId={}, quantity={}, stock={}",
+                    shoppingCartItemId, newQuantity, item.getGoods().getStock());
+            throw new InvalidItemProductQuantityException(newQuantity);
+        }
         if (productQuantityChange == 0) {
             log.warn("cart.item.quantity.zero_change: itemId={}", shoppingCartItemId);
             throw new InvalidItemProductQuantityException(newQuantity);

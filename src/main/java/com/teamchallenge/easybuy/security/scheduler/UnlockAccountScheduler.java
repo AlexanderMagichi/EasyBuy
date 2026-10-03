@@ -4,6 +4,7 @@ import com.teamchallenge.easybuy.security.repository.LoginAttemptRepository;
 import com.teamchallenge.easybuy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class UnlockAccountScheduler {
         try {
             log.debug("scheduler.unlock.start");
 
-            int released = loginAttemptRepository.resetLockedAccounts();
+            int released = loginAttemptRepository.resetLockedAccounts(Instant.now());
             log.debug("scheduler.unlock.released: count={}", released);
             userRepository.unlockUsers();
 

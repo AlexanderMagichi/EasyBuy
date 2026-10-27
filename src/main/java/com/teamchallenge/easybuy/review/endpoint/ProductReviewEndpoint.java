@@ -1,16 +1,16 @@
-package com.zufar.icedlatte.review.endpoint;
+package com.teamchallenge.easybuy.review.endpoint;
 
-import com.zufar.icedlatte.openapi.dto.ProductReviewDto;
-import com.zufar.icedlatte.openapi.dto.ProductReviewLikeDto;
-import com.zufar.icedlatte.openapi.dto.ProductReviewRatingStats;
-import com.zufar.icedlatte.openapi.dto.ProductReviewRequest;
-import com.zufar.icedlatte.openapi.dto.ProductReviewsAndRatingsWithPagination;
-import com.zufar.icedlatte.review.api.ProductReviewCreator;
-import com.zufar.icedlatte.review.api.ProductReviewDeleter;
-import com.zufar.icedlatte.review.api.ProductReviewLikesUpdater;
-import com.zufar.icedlatte.review.api.ProductReviewsProvider;
-import com.zufar.icedlatte.review.api.ProductReviewsStatisticsProvider;
-import com.zufar.icedlatte.review.validator.GetReviewsRequestValidator;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewDto;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewLikeDto;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewRatingStats;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewRequest;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewsAndRatingsWithPagination;
+import com.teamchallenge.easybuy.review.api.ProductReviewCreator;
+import com.teamchallenge.easybuy.review.api.ProductReviewDeleter;
+import com.teamchallenge.easybuy.review.api.ProductReviewLikesUpdater;
+import com.teamchallenge.easybuy.review.api.ProductReviewsProvider;
+import com.teamchallenge.easybuy.review.api.ProductReviewsStatisticsProvider;
+import com.teamchallenge.easybuy.review.validator.GetReviewsRequestValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Validated
 @RequestMapping(value = ProductReviewEndpoint.PRODUCT_REVIEW_URL)
-public class ProductReviewEndpoint implements com.zufar.icedlatte.openapi.product.review.api.ProductReviewApi {
+public class ProductReviewEndpoint {
 
     public static final String PRODUCT_REVIEW_URL = "/api/v1/products/";
 
@@ -43,7 +43,6 @@ public class ProductReviewEndpoint implements com.zufar.icedlatte.openapi.produc
     private final ProductReviewLikesUpdater productReviewLikesUpdater;
     private final GetReviewsRequestValidator getReviewsRequestValidator;
 
-    @Override
     @PostMapping(value = "/{productId}/reviews")
     public ResponseEntity<ProductReviewDto> addNewProductReview(@PathVariable final UUID productId,
                                                                 @RequestBody final ProductReviewRequest productReviewRequest) {
@@ -53,7 +52,6 @@ public class ProductReviewEndpoint implements com.zufar.icedlatte.openapi.produc
         return ResponseEntity.ok(review);
     }
 
-    @Override
     @DeleteMapping(value = "/{productId}/reviews/{productReviewId}")
     public ResponseEntity<Void> deleteProductReview(@PathVariable final UUID productId,
                                                     @PathVariable final UUID productReviewId) {
@@ -63,7 +61,6 @@ public class ProductReviewEndpoint implements com.zufar.icedlatte.openapi.produc
         return ResponseEntity.ok().build();
     }
 
-    @Override
     @GetMapping(value = "/{productId}/reviews")
     public ResponseEntity<ProductReviewsAndRatingsWithPagination> getProductReviewsAndRatings(
             @PathVariable final UUID productId,
@@ -77,19 +74,16 @@ public class ProductReviewEndpoint implements com.zufar.icedlatte.openapi.produc
                 productId, pageNumber, pageSize, sortAttribute, sortDirection, productRatings));
     }
 
-    @Override
     @GetMapping(value = "/{productId}/review")
     public ResponseEntity<ProductReviewDto> getProductReview(@PathVariable final UUID productId) {
         return ResponseEntity.ok(productReviewsProvider.getProductReviewForUser(productId));
     }
 
-    @Override
     @GetMapping("/{productId}/reviews/statistics")
     public ResponseEntity<ProductReviewRatingStats> getRatingAndReviewStat(@PathVariable final UUID productId) {
         return ResponseEntity.ok(productReviewsStatisticsProvider.get(productId));
     }
 
-    @Override
     @PostMapping(value = "/{productId}/reviews/{productReviewId}/likes")
     public ResponseEntity<ProductReviewDto> addProductReviewLike(@PathVariable final UUID productId,
                                                                  @PathVariable final UUID productReviewId,

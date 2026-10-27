@@ -1,0 +1,96 @@
+package com.teamchallenge.easybuy.review.endpoint;
+
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewDto;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewLikeDto;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewRatingStats;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewRequest;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewsAndRatingsWithPagination;
+import com.teamchallenge.easybuy.review.api.ProductReviewCreator;
+import com.teamchallenge.easybuy.review.api.ProductReviewDeleter;
+import com.teamchallenge.easybuy.review.api.ProductReviewLikesUpdater;
+import com.teamchallenge.easybuy.review.api.ProductReviewsProvider;
+import com.teamchallenge.easybuy.review.api.ProductReviewsStatisticsProvider;
+import com.teamchallenge.easybuy.review.validator.GetReviewsRequestValidator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.UUID;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@Validated
+@RequestMapping(value = ProductReviewEndpoint.PRODUCT_REVIEW_URL)
+public class ProductReviewEndpoint {
+
+    public static final String PRODUCT_REVIEW_URL = "/api/v1/products/";
+
+    private final ProductReviewCreator productReviewCreator;
+    private final ProductReviewDeleter productReviewDeleter;
+    private final ProductReviewsProvider productReviewsProvider;
+    private final ProductReviewsStatisticsProvider productReviewsStatisticsProvider;
+    private final ProductReviewLikesUpdater productReviewLikesUpdater;
+    private final GetReviewsRequestValidator getReviewsRequestValidator;
+
+    @PostMapping(value = "/{productId}/reviews")
+    public ResponseEntity<ProductReviewDto> addNewProductReview(@PathVariable final UUID productId,
+                                                                @RequestBody final ProductReviewRequest productReviewRequest) {
+        log.info("review.adding: productId={}", productId);
+        var review = productReviewCreator.create(productId, productReviewRequest);
+        log.info("review.created: reviewId={}, productId={}", review.getProductReviewId(), productId);
+        return ResponseEntity.ok(review);
+    }
+
+    @DeleteMapping(value = "/{productId}/reviews/{productReviewId}")
+    public ResponseEntity<Void> deleteProductReview(@PathVariable final UUID productId,
+                                                    @PathVariable final UUID productReviewId) {
+        log.info("review.deleting: reviewId={}, productId={}", productReviewId, productId);
+        productReviewDeleter.delete(productId, productReviewId);
+        log.info("review.deleted: reviewId={}", productReviewId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/{productId}/reviews")
+    public ResponseEntity<ProductReviewsAndRatingsWithPagination> getProductReviewsAndRatings(
+            @PathVariable final UUID productId,
+            @RequestParam(name = "page", required = false, defaultValue = "0") final Integer pageNumber,
+            @RequestParam(name = "size", required = false, defaultValue = "50") final Integer pageSize,
+            @RequestParam(name = "sortAttribute", required = false, defaultValue = "createdAt") final String sortAttribute,
+            @RequestParam(name = "sortDirection", required = false, defaultValue = "asc") final String sortDirection,
+            @RequestParam(name = "productRatings", required = false) List<Integer> productRatings) {
+        getReviewsRequestValidator.validate(pageNumber, pageSize, sortAttribute, sortDirection, productRatings);
+        return ResponseEntity.ok(productReviewsProvider.getProductReviews(
+                productId, pageNumber, pageSize, sortAttribute, sortDirection, productRatings));
+    }
+
+    @GetMapping(value = "/{productId}/review")
+    public ResponseEntity<ProductReviewDto> getProductReview(@PathVariable final UUID productId) {
+        return ResponseEntity.ok(productReviewsProvider.getProductReviewForUser(productId));
+    }
+
+    @GetMapping("/{productId}/reviews/statistics")
+    public ResponseEntity<ProductReviewRatingStats> getRatingAndReviewStat(@PathVariable final UUID productId) {
+        return ResponseEntity.ok(productReviewsStatisticsProvider.get(productId));
+    }
+
+    @PostMapping(value = "/{productId}/reviews/{productReviewId}/likes")
+    public ResponseEntity<ProductReviewDto> addProductReviewLike(@PathVariable final UUID productId,
+                                                                 @PathVariable final UUID productReviewId,
+                                                                 @RequestBody final ProductReviewLikeDto request) {
+        log.info("review.rating: reviewId={}, productId={}, vote={}", productReviewId, productId, request.getIsLike() ? "like" : "dislike");
+        var productReview = productReviewLikesUpdater.update(productId, productReviewId, request.getIsLike());
+        log.info("review.rated: reviewId={}, vote={}", productReviewId, request.getIsLike() ? "liked" : "disliked");
+        return ResponseEntity.ok(productReview);
+    }
+}

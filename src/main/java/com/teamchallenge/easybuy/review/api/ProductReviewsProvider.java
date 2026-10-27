@@ -1,0 +1,118 @@
+package com.teamchallenge.easybuy.review.api;
+
+import com.teamchallenge.easybuy.infrastructure.config.PaginationConfig;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewDto;
+import com.teamchallenge.easybuy.openapi.dto.ProductReviewsAndRatingsWithPagination;
+import com.teamchallenge.easybuy.review.converter.ProductReviewDtoConverter;
+import com.teamchallenge.easybuy.review.repository.ProductReviewRepository;
+import com.teamchallenge.easybuy.review.validator.ProductReviewValidator;
+import com.teamchallenge.easybuy.security.api.SecurityPrincipalProvider;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
+
+import static com.teamchallenge.easybuy.infrastructure.util.Utils.createPageableObject;
+import static com.teamchallenge.easybuy.review.converter.ProductReviewDtoConverter.EMPTY_PRODUCT_REVIEW_RESPONSE;
+
+/**
+ * Service providing product review retrieval operations.
+ * Includes pagination, sorting, and rating filters.
+ */
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ProductReviewsProvider {
+
+    private final ProductReviewRepository reviewRepository;
+    private final ProductReviewDtoConverter productReviewDtoConverter;
+    private final ProductReviewValidator productReviewValidator;
+    private final SecurityPrincipalProvider securityPrincipalProvider;
+    private final PaginationConfig paginationConfig;
+
+    /**
+     * Retrieves paginated product reviews with optional rating filters.
+     *
+     * @param productId the product identifier
+     * @param pageNumber optional page number (0-based)
+     * @param pageSize optional page size
+     * @param sortAttribute attribute to sort by (default "createdAt")
+     * @param sortDirection direction of sort ("asc" or "desc")
+     * @param productRatings optional list of rating values to filter
+     * @return paginated reviews and rating statistics
+     */
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, readOnly = true)
+    public ProductReviewsAndRatingsWithPagination getProductReviews(final UUID productId,
+                                                                    final Integer pageNumber,
+                                                                    final Integer pageSize,
+                                                                    final String sortAttribute,
+                                                                    final String sortDirection,
+                                                                    final List<Integer> productRatings) {
+        productReviewValidator.validateProductExists(productId);
+
+        int page = pageNumber != null ? pageNumber : paginationConfig.getDefaultPageNumber();
+        int size = pageSize != null ? pageSize : paginationConfig.getReviews().getDefaultPageSize();
+        if (page < 0) {
+            throw new IllegalArgumentException("Page number must be non-negative, got: " + page);
+        }
+        if (size < 1) {
+            throw new IllegalArgumentException("Page size must be at least 1, got: " + size);
+        }
+        String sortAttr = sortAttribute != null ? sortAttribute : paginationConfig.getReviews().getDefaultSortAttribute();
+        String sortDir = sortDirection != null ? sortDirection : paginationConfig.getReviews().getDefaultSortDirection();
+
+        if (productRatings != null && productRatings.stream().anyMatch(r -> r == null || r < 1 || r > 5)) {
+            throw new IllegalArgumentException("Product ratings must be integers between 1 and 5");
+        }
+
+        var responsePage = reviewRepository
+                .findAllProductReviews(productId, productRatings, createPageableObject(page, size, sortAttr, sortDir))
+                .map(productReviewDtoConverter::toProductReviewDto);
+        return productReviewDtoConverter.toProductReviewsAndRatingsWithPagination(responsePage);
+    }
+
+    /**
+     * Retrieves the review for the current user for a given product.
+     *
+     * @param productId the product identifier
+     * @return the product review DTO, or empty response if not found
+     */
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, readOnly = true)
+    public ProductReviewDto getProductReviewForUser(final UUID productId) {
+        productReviewValidator.validateProductExists(productId);
+        var userId = securityPrincipalProvider.getUserId();
+        return reviewRepository.findByUserIdAndProductId(userId, productId)
+                .map(productReviewDtoConverter::toProductReviewDto)
+                .orElse(EMPTY_PRODUCT_REVIEW_RESPONSE);
+    }
+
+    /**
+     * Retrieves paginated reviews authored by the current user.
+     *
+     * @param pageNumber optional page number
+     * @param pageSize optional page size
+     * @param sortAttribute attribute to sort by
+     * @param sortDirection sort direction
+     * @return paginated reviews and rating statistics for the user
+     */
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, readOnly = true)
+    public ProductReviewsAndRatingsWithPagination getUserReviews(final Integer pageNumber,
+                                                                 final Integer pageSize,
+                                                                 final String sortAttribute,
+                                                                 final String sortDirection) {
+        var userId = securityPrincipalProvider.getUserId();
+        int page = pageNumber != null ? pageNumber : paginationConfig.getDefaultPageNumber();
+        int size = pageSize != null ? pageSize : paginationConfig.getReviews().getDefaultPageSize();
+        String sortAttr = sortAttribute != null ? sortAttribute : paginationConfig.getReviews().getDefaultSortAttribute();
+        String sortDir = sortDirection != null ? sortDirection : paginationConfig.getReviews().getDefaultSortDirection();
+        var responsePage = reviewRepository
+                .findAllByUserId(userId, createPageableObject(page, size, sortAttr, sortDir))
+                .map(productReviewDtoConverter::toProductReviewDto);
+        return productReviewDtoConverter.toProductReviewsAndRatingsWithPagination(responsePage);
+    }
+}
